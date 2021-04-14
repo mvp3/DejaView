@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dejaview", "Dejaview.csproj", "{AFCD1AB3-D6A2-47CD-94A3-DBFF12D65F7E}"
 EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "DejaviewInstaller", "Installer\DejaviewInstaller.wixproj", "{650FF498-642A-4779-8DD6-AE28F6FC1975}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		All|Any CPU = All|Any CPU
@@ -36,6 +38,20 @@ Global
 		{AFCD1AB3-D6A2-47CD-94A3-DBFF12D65F7E}.Release|x64.Build.0 = Release|x64
 		{AFCD1AB3-D6A2-47CD-94A3-DBFF12D65F7E}.Release|x86.ActiveCfg = Release|x86
 		{AFCD1AB3-D6A2-47CD-94A3-DBFF12D65F7E}.Release|x86.Build.0 = Release|x86
+		{650FF498-642A-4779-8DD6-AE28F6FC1975}.All|Any CPU.ActiveCfg = Debug|x86
+		{650FF498-642A-4779-8DD6-AE28F6FC1975}.All|Any CPU.Build.0 = Debug|x86
+		{650FF498-642A-4779-8DD6-AE28F6FC1975}.All|x64.ActiveCfg = Debug|x86
+		{650FF498-642A-4779-8DD6-AE28F6FC1975}.All|x64.Build.0 = Debug|x86
+		{650FF498-642A-4779-8DD6-AE28F6FC1975}.All|x86.ActiveCfg = Debug|x86
+		{650FF498-642A-4779-8DD6-AE28F6FC1975}.All|x86.Build.0 = Debug|x86
+		{650FF498-642A-4779-8DD6-AE28F6FC1975}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{650FF498-642A-4779-8DD6-AE28F6FC1975}.Debug|x64.ActiveCfg = Debug|x86
+		{650FF498-642A-4779-8DD6-AE28F6FC1975}.Debug|x86.ActiveCfg = Debug|x86
+		{650FF498-642A-4779-8DD6-AE28F6FC1975}.Debug|x86.Build.0 = Debug|x86
+		{650FF498-642A-4779-8DD6-AE28F6FC1975}.Release|Any CPU.ActiveCfg = Release|x86
+		{650FF498-642A-4779-8DD6-AE28F6FC1975}.Release|x64.ActiveCfg = Release|x86
+		{650FF498-642A-4779-8DD6-AE28F6FC1975}.Release|x86.ActiveCfg = Release|x86
+		{650FF498-642A-4779-8DD6-AE28F6FC1975}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

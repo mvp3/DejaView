@@ -1,7 +1,7 @@
 ﻿/**
  * Copyright (C) 2021 M. V. Pereira - All Rights Reserved
  * 
- * This AddIn is available at: http://lexem.cc/dejaview/
+ * This AddIn is available at: https://dejaview.lexem.cc/
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,10 +56,9 @@ namespace Dejaview
         {
             this.tab1 = this.Factory.CreateRibbonTab();
             this.groupDejaview = this.Factory.CreateRibbonGroup();
-            this.chkEnable = this.Factory.CreateRibbonCheckBox();
-            this.chkLocation = this.Factory.CreateRibbonCheckBox();
-            this.chkPrompt = this.Factory.CreateRibbonCheckBox();
             this.btnRemove = this.Factory.CreateRibbonButton();
+            this.btnUpdate = this.Factory.CreateRibbonButton();
+            this.btnSettings = this.Factory.CreateRibbonButton();
             this.tab1.SuspendLayout();
             this.groupDejaview.SuspendLayout();
             this.SuspendLayout();
@@ -73,40 +72,11 @@ namespace Dejaview
             // 
             // groupDejaview
             // 
-            this.groupDejaview.Items.Add(this.chkEnable);
-            this.groupDejaview.Items.Add(this.chkLocation);
-            this.groupDejaview.Items.Add(this.chkPrompt);
             this.groupDejaview.Items.Add(this.btnRemove);
+            this.groupDejaview.Items.Add(this.btnUpdate);
+            this.groupDejaview.Items.Add(this.btnSettings);
             this.groupDejaview.Label = "Deja View";
             this.groupDejaview.Name = "groupDejaview";
-            // 
-            // chkEnable
-            // 
-            this.chkEnable.Checked = true;
-            this.chkEnable.Label = "Enable";
-            this.chkEnable.Name = "chkEnable";
-            this.chkEnable.ScreenTip = "Enable Deja View";
-            this.chkEnable.SuperTip = "This option allows a quick and easy means to temporarily enable / disable Deja Vi" +
-    "ew. ";
-            this.chkEnable.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.chkEnable_Click);
-            // 
-            // chkLocation
-            // 
-            this.chkLocation.Checked = true;
-            this.chkLocation.Label = "Location";
-            this.chkLocation.Name = "chkLocation";
-            this.chkLocation.ScreenTip = "Window Location";
-            this.chkLocation.SuperTip = "Deja View will remember the document window\'s location. Default is checked. ";
-            this.chkLocation.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.chkLocation_Click);
-            // 
-            // chkPrompt
-            // 
-            this.chkPrompt.Label = "Prompt";
-            this.chkPrompt.Name = "chkPrompt";
-            this.chkPrompt.ScreenTip = "Ask Before Saving";
-            this.chkPrompt.SuperTip = "If checked, Deja View will ask before saving view settings to this document. Defa" +
-    "ult is unchecked.";
-            this.chkPrompt.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.chkPrompt_Click);
             // 
             // btnRemove
             // 
@@ -118,6 +88,28 @@ namespace Dejaview
             this.btnRemove.ShowImage = true;
             this.btnRemove.SuperTip = "Remove all Deja View tags from this document.";
             this.btnRemove.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnRemove_Click);
+            // 
+            // btnUpdate
+            // 
+            this.btnUpdate.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btnUpdate.Label = "Check for Update";
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.OfficeImageId = "DataSourceCatalogServerScript";
+            this.btnUpdate.ScreenTip = "Check for Updates";
+            this.btnUpdate.ShowImage = true;
+            this.btnUpdate.SuperTip = "Check the Deja View website for updates to this Add-in.";
+            this.btnUpdate.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnUpdate_Click);
+            // 
+            // btnSettings
+            // 
+            this.btnSettings.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btnSettings.Label = "Options";
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.OfficeImageId = "OmsViewAccountSetting";
+            this.btnSettings.ScreenTip = "Open Options Dialog";
+            this.btnSettings.ShowImage = true;
+            this.btnSettings.SuperTip = "View Deja View options dialog.";
+            this.btnSettings.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnSettings_Click);
             // 
             // DejaviewRibbon
             // 
@@ -137,10 +129,9 @@ namespace Dejaview
 
         internal Microsoft.Office.Tools.Ribbon.RibbonTab tab1;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup groupDejaview;
-        internal Microsoft.Office.Tools.Ribbon.RibbonCheckBox chkEnable;
-        internal Microsoft.Office.Tools.Ribbon.RibbonCheckBox chkLocation;
-        internal Microsoft.Office.Tools.Ribbon.RibbonCheckBox chkPrompt;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btnRemove;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btnSettings;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btnUpdate;
     }
 
     partial class ThisRibbonCollection

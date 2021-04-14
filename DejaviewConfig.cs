@@ -1,7 +1,7 @@
 ﻿/**
  * Copyright (C) 2021 M. V. Pereira - All Rights Reserved
  * 
- * This AddIn is available at: http://lexem.cc/dejaview/
+ * This AddIn is available at: https://dejaview.lexem.cc/
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,11 +41,6 @@ namespace Dejaview
         /// </summary>
         public bool Enable { get; set; }
         /// <summary>
-        /// Flag for including the Word application window's location
-        /// in the DejaviewSet of parameters.
-        /// </summary>
-        public bool Location { get; set; }
-        /// <summary>
         /// Flag for prompting before saving.
         /// </summary>
         public bool Prompt { get; set; }
@@ -55,19 +50,40 @@ namespace Dejaview
         public bool CheckForUpdates { get; set; }
         /// <summary>
         /// Fully formed URL for to check for updates.
-        /// Example: https://lexem.cc/dejaview/latest/
+        /// Example: https://dejaview.lexem.cc/latest/
         /// </summary>
         public string UpdateURL { get; set; }
 
-        /*
-        public bool ShowNavigationPanel { get; set; }
-        public int NavigationPanelWidth { get; set; }
-        public int WindowWidth { get; set; }
-        public int WindowHeight { get; set; }
-        public int WindowZoom { get; set; }
-        public int WindowViewType { get; set; }
-        public bool DraftView { get; set; }
-        */
+        /// <summary>
+        /// Remember the Word application window location
+        /// in the DejaviewSet of parameters.
+        /// </summary>
+        public bool RememberWindowLocation { get; set; }
+        /// <summary>
+        /// Remember the state and width of the Navigation Panel
+        /// in the DejaviewSet of parameters.
+        /// </summary>
+        public bool RememberNavigationPanel { get; set; }
+        /// <summary>
+        /// Remember the Word application window view type 
+        /// in the DejaviewSet of parameters.
+        /// </summary>
+        public bool RememberWindowType { get; set; }
+        /// <summary>
+        /// Remember the Word application window zoom 
+        /// in the DejaviewSet of parameters.
+        /// </summary>
+        public bool RememberZoom { get; set; }
+        /// <summary>
+        /// Remember the Word application rulers
+        /// in the DejaviewSet of parameters.
+        /// </summary>
+        public bool RememberRulers { get; set; }
+        /// <summary>
+        /// Remember the Word application ribbon 
+        /// in the DejaviewSet of parameters.
+        /// </summary>
+        public bool RememberRibbon { get; set; }
 
         /// <summary>
         /// Standard method for getting an active instance object of 
@@ -99,16 +115,22 @@ namespace Dejaview
         private void SetDefaults()
         {
             Enable = true;
-            Location = true;
+            RememberWindowLocation = true;
             Prompt = false;
             CheckForUpdates = true;
-            UpdateURL = "http://lexem.cc/dejaview/latest/";
+            UpdateURL = "http://dejaview.lexem.cc/latest/";
+
+            RememberWindowLocation = true;
+            RememberNavigationPanel = true;
+            RememberWindowType = true;
+            RememberZoom = true;
+            RememberRulers = true;
+            RememberRibbon = true;
 
             /*
-            ShowNavigationPanel = true;
             NavigationPanelWidth = 250;
             WindowWidth = 800;
-            WindowZoom = 100;
+            RememberZoom = 100;
             WindowViewType = (int)Microsoft.Office.Interop.Word.WdViewType.wdNormalView;
             DraftView = true;
             */
@@ -135,14 +157,24 @@ namespace Dejaview
                     {
                         if (n.Name == "Enable" && !string.IsNullOrEmpty(n.InnerText))
                             Enable = bool.Parse(n.InnerText);
-                        else if (n.Name == "Location" && !string.IsNullOrEmpty(n.InnerText))
-                            Location = bool.Parse(n.InnerText);
                         else if (n.Name == "Prompt" && !string.IsNullOrEmpty(n.InnerText))
                             Prompt = bool.Parse(n.InnerText);
                         else if (n.Name == "CheckForUpdates" && !string.IsNullOrEmpty(n.InnerText))
                             CheckForUpdates = bool.Parse(n.InnerText);
                         else if (n.Name == "UpdateURL" && !string.IsNullOrEmpty(n.InnerText))
                             UpdateURL = n.InnerText;
+                        else if (n.Name == "RememberWindowLocation" && !string.IsNullOrEmpty(n.InnerText))
+                            RememberWindowLocation = bool.Parse(n.InnerText);
+                        else if (n.Name == "RememberNavigationPanel" && !string.IsNullOrEmpty(n.InnerText))
+                            RememberNavigationPanel = bool.Parse(n.InnerText);
+                        else if (n.Name == "RememberWindowType" && !string.IsNullOrEmpty(n.InnerText))
+                            RememberWindowType = bool.Parse(n.InnerText);
+                        else if (n.Name == "RememberZoom" && !string.IsNullOrEmpty(n.InnerText))
+                            RememberZoom = bool.Parse(n.InnerText);
+                        else if (n.Name == "RememberRulers" && !string.IsNullOrEmpty(n.InnerText))
+                            RememberRulers = bool.Parse(n.InnerText);
+                        else if (n.Name == "RememberRibbon" && !string.IsNullOrEmpty(n.InnerText))
+                            RememberRibbon = bool.Parse(n.InnerText);
                     }
                 }
                 catch (Exception ex)
@@ -152,7 +184,6 @@ namespace Dejaview
             }
             Debug.WriteLine("DejaviewConfig::LoadFromConfig() -> success");
             Debug.WriteLine("  Enable    => " + Enable);
-            Debug.WriteLine("  Location  => " + Location);
             Debug.WriteLine("  Prompt    => " + Prompt);
             Debug.WriteLine("  Check     => " + CheckForUpdates);
             Debug.WriteLine("  UpdateURL => " + UpdateURL);
@@ -177,10 +208,15 @@ namespace Dejaview
                         w.WriteStartElement("Dejaview");
 
                         w.WriteElementString("Enable", Enable.ToString());
-                        w.WriteElementString("Location", Location.ToString());
                         w.WriteElementString("Prompt", Prompt.ToString());
                         w.WriteElementString("CheckForUpdates", CheckForUpdates.ToString());
                         w.WriteElementString("UpdateURL", UpdateURL);
+                        w.WriteElementString("RememberWindowLocation", RememberWindowLocation.ToString());
+                        w.WriteElementString("RememberNavigationPanel", RememberNavigationPanel.ToString());
+                        w.WriteElementString("RememberWindowType", RememberWindowType.ToString());
+                        w.WriteElementString("RememberZoom", RememberZoom.ToString());
+                        w.WriteElementString("RememberRulers", RememberRulers.ToString());
+                        w.WriteElementString("RememberRibbon", RememberRibbon.ToString());
 
                         /*
                         w.WriteStartElement("Defaults");
@@ -204,7 +240,6 @@ namespace Dejaview
                 }
                 Debug.WriteLine("DejaviewConfig::Save() -> success");
                 Debug.WriteLine("  Enable    => " + Enable);
-                Debug.WriteLine("  Location  => " + Location);
                 Debug.WriteLine("  Prompt    => " + Prompt);
                 Debug.WriteLine("  Check     => " + CheckForUpdates);
                 Debug.WriteLine("  UpdateURL => " + UpdateURL);

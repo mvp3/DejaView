@@ -116,7 +116,7 @@
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+    <DefineConstants>VSTO40</DefineConstants>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <!--
@@ -180,6 +180,12 @@
     can be found.
   -->
   <ItemGroup>
+    <Compile Include="BasicDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BasicDialog.Designer.cs">
+      <DependentUpon>BasicDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="DejaviewConfig.cs" />
     <Compile Include="DejaviewRibbon.cs">
       <SubType>Component</SubType>
@@ -188,11 +194,23 @@
       <DependentUpon>DejaviewRibbon.cs</DependentUpon>
     </Compile>
     <Compile Include="DejaviewSet.cs" />
+    <Compile Include="OptionsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OptionsDialog.Designer.cs">
+      <DependentUpon>OptionsDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="BasicDialog.resx">
+      <DependentUpon>BasicDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DejaviewRibbon.resx">
       <DependentUpon>DejaviewRibbon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OptionsDialog.resx">
+      <DependentUpon>OptionsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

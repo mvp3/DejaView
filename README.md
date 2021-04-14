@@ -15,7 +15,7 @@ The Deja View add-in has one user interface (UI) component, namely a ribbon grou
 is installed and loads correctly at the startup of Microsoft Word, it will be accessible under
 the "Add-ins" tab of the main ribbon.
 
-![Ribbon (Dark)](https://lexem.cc/dejaview/images/ribbon_dark.png)
+![Ribbon (Dark)](https://dejaview.lexem.cc/images/ribbon_dark.png)
  
 ##### Enable
 This option allows a quick and easy means to temporarily enable / disable the Deja View add-in. 
@@ -70,7 +70,7 @@ The **Dejaview.dll**, **Dejaview.dll.manifest**, and **Dejaview.vsto** files hav
 installation project built using [Wix toolset for Visual Studio](https://wixtoolset.org/).
 
 #### Binary
-The latest MSI installation binary may be downloaded here: [https://lexem.cc/dejaview/latest](https://lexem.cc/dejaview/latest)
+The latest MSI installation binary may be downloaded here: [https://dejaview.lexem.cc/latest](https://dejaview.lexem.cc/latest)
 
 #### Built With
 Visual Studio Community 2019
