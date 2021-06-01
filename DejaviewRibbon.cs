@@ -42,7 +42,7 @@ namespace Dejaview
         private void btnUpdate_Click(object sender, RibbonControlEventArgs e)
         {
             Thread updateThread = new Thread(DejaviewAddIn.CheckForUpdate);
-            updateThread.Start();
+            updateThread.Start(false);
         }
 
         private void btnSettings_Click(object sender, RibbonControlEventArgs e)

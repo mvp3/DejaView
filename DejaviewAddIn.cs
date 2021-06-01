@@ -19,6 +19,7 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Security.Cryptography;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
@@ -27,6 +28,8 @@ using System.Collections.Generic;
 using Office = Microsoft.Office.Core;
 using Word = Microsoft.Office.Interop.Word;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace Dejaview
 {
@@ -42,6 +45,12 @@ namespace Dejaview
         /// screens.
         /// </summary>
         private DejaviewSet djvSet = null;
+
+        /// <summary>
+        /// Private member that indicates if Deja View tags were loaded from 
+        /// the current active document.
+        /// </summary>
+        private bool loaded = false;
 
         /// <summary>
         /// Called when this Add-in is initialized.
@@ -133,6 +142,7 @@ namespace Dejaview
                             doc.ActiveWindow.ToggleRibbon();
                     }
                 }
+                loaded = true;
 
                 DisplayStatus("Document view restored.");
 
@@ -182,10 +192,11 @@ namespace Dejaview
                 {
                     djvSet.WindowWidth = doc.ActiveWindow.Width;
                     djvSet.WindowHeight = doc.ActiveWindow.Height;
-                    djvSet.WindowLeft = (doc.ActiveWindow.Left < 0) ? 0 : doc.ActiveWindow.Left;
-                    djvSet.WindowTop = (doc.ActiveWindow.Top < 0) ? 0 : doc.ActiveWindow.Top;
+                    djvSet.WindowLeft = doc.ActiveWindow.Left;
+                    djvSet.WindowTop = doc.ActiveWindow.Top;
 
                     DejaviewSet.WindowLocation wloc = new DejaviewSet.WindowLocation();
+                    wloc.DisplayArrangementUID = GetDisplayArrangementUID();
                     wloc.ScreenUID = GetActiveScreenUID();
                     wloc.WindowTop = djvSet.WindowTop;
                     wloc.WindowLeft = djvSet.WindowLeft;
@@ -302,6 +313,9 @@ namespace Dejaview
                 foreach (DejaviewSet.WindowLocation loc in djvSet.Locations)
                 {
                     xml.Append("<location>");
+                    xml.Append("<dauid>");
+                    xml.Append(loc.DisplayArrangementUID);
+                    xml.Append("</dauid>");
                     xml.Append("<uid>");
                     xml.Append(loc.ScreenUID);
                     xml.Append("</uid>");
@@ -330,6 +344,16 @@ namespace Dejaview
             Debug.WriteLine("New Dejaview tags saved");
 
             DisplayStatus("Document view saved.");
+        }
+
+        /// <summary>
+        /// Status of whether or not Deja View tags were loaded from the current active document.
+        /// </summary>
+        /// <returns>Return <code>true</code> if Deja View tags were loaded from this document, 
+        /// otherwise <code>false</code></returns>
+        internal bool IsLoaded()
+        {
+            return loaded;
         }
 
         /// <summary>
@@ -386,7 +410,9 @@ namespace Dejaview
                                     var locationNodes = loc.ChildNodes;
                                     foreach (XmlNode nl in locationNodes)
                                     {
-                                        if (nl.Name == "uid" && !string.IsNullOrEmpty(nl.InnerText))
+                                        if (nl.Name == "dauid" && !string.IsNullOrEmpty(nl.InnerText))
+                                            wl.DisplayArrangementUID = nl.InnerText;
+                                        else if (nl.Name == "uid" && !string.IsNullOrEmpty(nl.InnerText))
                                             wl.ScreenUID = nl.InnerText;
                                         else if (nl.Name == "top" && !string.IsNullOrEmpty(nl.InnerText))
                                             wl.WindowTop = int.Parse(nl.InnerText);
@@ -458,29 +484,56 @@ namespace Dejaview
             Screen screen = Screen.FromPoint(new Point(app.Left, app.Top));
             DejaviewSet.WindowLocation windowLocation = null;
 
+            // Make sure a valid DejaviewSet is stored in this document
             if (ds.Locations != null)
             {
                 bool matched = false;
                 DateTime latest = DateTime.MinValue;
 
-                // Try to set the document to display on a screen that has the same ScreenUID
-                foreach (Screen scrn in Screen.AllScreens)
+                string dauid = GetDisplayArrangementUID();
+
+                // First try to match a Display Arrangement
+                foreach (DejaviewSet.WindowLocation wl in ds.Locations)
                 {
-                    Debug.WriteLine(" [Screen: " + GetScreenUID(scrn) + "]");
-                    foreach (DejaviewSet.WindowLocation wl in ds.Locations)
+                    if (dauid == wl.DisplayArrangementUID)
                     {
-                        Debug.WriteLine("   [WL: " + wl.ScreenUID + ", " + wl.LastViewed + "]");
-                        if (wl.ScreenUID == GetScreenUID(scrn))
+                        latest = wl.LastViewed;
+                        windowLocation = wl;
+                        foreach (Screen scrn in Screen.AllScreens)
                         {
-                            Debug.WriteLine("     *SELECTED*");
-                            latest = wl.LastViewed;
-                            screen = scrn;
-                            windowLocation = wl;
-                            matched = true;
-                            break;
+                            if (wl.ScreenUID == GetScreenUID(scrn))
+                            {
+                                screen = scrn;
+                                break;
+                            }
                         }
+                        matched = true;
+                        break;
                     }
-                    if (matched) break;
+                }
+
+                // If a Display Arrangement is not matched, then try to set the document to
+                // display on a screen that has the same ScreenUID
+                if (!matched)
+                {
+                    foreach (Screen scrn in Screen.AllScreens)
+                    {
+                        Debug.WriteLine(" [Screen: " + GetScreenUID(scrn) + "]");
+                        foreach (DejaviewSet.WindowLocation wl in ds.Locations)
+                        {
+                            Debug.WriteLine("   [WL: " + wl.ScreenUID + ", " + wl.LastViewed + "]");
+                            if (wl.ScreenUID == GetScreenUID(scrn))
+                            {
+                                Debug.WriteLine("     *SELECTED*");
+                                latest = wl.LastViewed;
+                                screen = scrn;
+                                windowLocation = wl;
+                                matched = true;
+                                break;
+                            }
+                        }
+                        if (matched) break;
+                    }
                 }
             }
 
@@ -496,14 +549,19 @@ namespace Dejaview
             // If 'Window Location' option is not selected then do not set window location
             if (!DejaviewConfig.Instance.RememberWindowLocation) return;
 
+            Debug.WriteLine("     [Left: " + ds.WindowLeft + "]");
+            Debug.WriteLine("     [ Top: " + ds.WindowTop + "]");
+
             // If remembered, simply set coordinates
             if (windowLocation != null)
             {
+                Debug.WriteLine("     >> setting location");
                 app.Left = windowLocation.WindowLeft;
                 app.Top = windowLocation.WindowTop;
             }
             else
             {
+                Debug.WriteLine("     >> constructing new location");
                 // If Word window is not viewable, then center on current screen.
                 if (!workingArea.Contains(new Point(app.Left, app.Top)))
                 {
@@ -523,6 +581,42 @@ namespace Dejaview
                     app.Top = (int)((workingArea.Height / 2) * dpiAdjust - (app.Height / 2));
                 }
                 // Otherwise let Word display as normal.
+            }
+        }
+
+        /// <summary>
+        /// Returns a unique identifier (in hash format) uniquely identifying
+        /// the current Display Arrangement of the computer.
+        /// </summary>
+        /// <returns>The current Display Arrangement of the computer</returns>
+        internal static string GetDisplayArrangementUID()
+        {
+            StringBuilder str = new StringBuilder();
+            foreach (Screen scr in Screen.AllScreens)
+            {
+                str.Append(GetScreenUID(scr));
+            }
+            return GetHashCode(str.ToString());
+        }
+
+        /// <summary>
+        /// Returns a SHA1 hashcode for the string provided.
+        /// </summary>
+        /// <param name="input">Input string for the hashcode generator</param>
+        /// <returns>SHA1 hashcode for <code>input</code></returns>
+        internal static string GetHashCode(string input)
+        {
+            using (var algo = new SHA1Managed())
+            {
+                algo.ComputeHash(Encoding.UTF8.GetBytes(input));
+
+                // Get has value in array of bytes
+                var result = algo.Hash;
+
+                // Return as hexadecimal string
+                return string.Join(
+                    string.Empty,
+                    result.Select(x => x.ToString("x2")));
             }
         }
 
@@ -548,6 +642,41 @@ namespace Dejaview
         internal static string GetScreenUID(Screen scr)
         {
             return scr.DeviceName + scr.WorkingArea.ToString();
+        }
+
+        /// <summary>
+        /// Returns a human readable name for the screen based on the screen's UID.
+        /// 
+        /// For example, a UID is in the form: '\\.\DISPLAY1{X=-1920,Y=0,Width=1920,Height=1050}'
+        /// The name for this screen would be: 'Display 1 (1920 x 1050) [Left]'
+        /// </summary>
+        /// <param name="uid">Screen UID</param>
+        /// <returns>A human readable name</returns>
+        internal static string GetScreenNameFromUID(string uid)
+        {
+            try
+            {
+                int i = uid.IndexOf('{');
+                string n = uid.Substring(i - 1, 1);
+                string b = uid.Substring(i);
+
+                var m = Regex.Match(b, @"{X=(\d+|-\d+),\s*Y=(\d+|-\d+),\s*Width=(\d+),Height=(\d+)}");
+
+                StringBuilder str = new StringBuilder("Display ");
+                str.Append(n);
+                str.Append(" (");
+                str.Append(m.Groups[3].Value);
+                str.Append(" x ");
+                str.Append(m.Groups[4].Value);
+                str.Append(")");
+                if (int.Parse(m.Groups[1].Value) < 0) str.Append(" [Left]");
+
+                return str.ToString();
+            }
+            catch (Exception ex)
+            {
+                return uid;
+            }
         }
 
         /// <summary>
@@ -661,14 +790,18 @@ namespace Dejaview
             str.AppendLine();
 
             DejaviewSet.WindowLocation wloc = new DejaviewSet.WindowLocation();
+            wloc.DisplayArrangementUID = GetDisplayArrangementUID();
             wloc.ScreenUID = GetActiveScreenUID();
             wloc.WindowTop = this.Application.ActiveWindow.Top;
             wloc.WindowLeft = this.Application.ActiveWindow.Left;
             wloc.LastViewed = DateTime.Now;
 
             str.AppendLine("Window Location: ");
+            str.Append("   Display Arrangement: ");
+            str.Append(wloc.DisplayArrangementUID);
+            str.AppendLine();
             str.Append("   Screen: ");
-            str.Append(wloc.ScreenUID);
+            str.Append(GetScreenNameFromUID(wloc.ScreenUID));
             str.AppendLine();
             str.Append("   \tTop: \t");
             str.Append(wloc.WindowTop);
@@ -769,8 +902,11 @@ namespace Dejaview
             foreach (DejaviewSet.WindowLocation wl in djvSet.Locations)
             {
                 str.Append((sid == wl.ScreenUID) ? "*" : " ");
+                str.Append("   Display Arrangement: ");
+                str.Append(wl.DisplayArrangementUID);
+                str.AppendLine();
                 str.Append("   Screen: ");
-                str.Append(wl.ScreenUID);
+                str.Append(GetScreenNameFromUID(wl.ScreenUID));
                 str.AppendLine();
                 str.Append("   \tTop: \t");
                 str.Append(wl.WindowTop);
@@ -789,17 +925,18 @@ namespace Dejaview
         /// <summary>
         /// Thread compatible method invoked to check for updates.
         /// </summary>
-        public static void CheckForUpdate()
+        public static void CheckForUpdate(object silent = null)
         {
             try
             {
                 using (var client = new WebClient())
                 {
                     Version lVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+                    Debug.WriteLine("CheckForUpdate() lVersion => " + lVersion);
 
                     string url = DejaviewConfig.Instance.UpdateURL;
                     client.Headers.Add("User-Agent", "Deja View Update Client " + lVersion.ToString());
-                    string str = client.DownloadString(url + "check.php").Trim();
+                    string str = client.DownloadString(url).Trim();
                     int dash = str.IndexOf('-') + 1;
                     str = str.Substring(dash, str.Length - dash - 3) + "0";
 
@@ -814,11 +951,19 @@ namespace Dejaview
                             Process.Start(url);
                         }
                     }
+                    else if (silent != null && silent is bool && !(bool)silent)
+                    {
+                        MessageBox.Show(null, "You are using the latest version of Deja View.", "Up to Date", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("CheckForUpdate() => " + ex.Message);
+                if (silent != null && silent is bool && !(bool)silent)
+                {
+                    MessageBox.Show(null, "An error occurred while checking for an update:\n\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 

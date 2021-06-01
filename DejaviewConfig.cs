@@ -112,13 +112,13 @@ namespace Dejaview
             }
         }
 
-        private void SetDefaults()
+        public void SetDefaults()
         {
             Enable = true;
             RememberWindowLocation = true;
             Prompt = false;
             CheckForUpdates = true;
-            UpdateURL = "http://dejaview.lexem.cc/latest/";
+            UpdateURL = "https://dejaview.lexem.cc/autoupdate";
 
             RememberWindowLocation = true;
             RememberNavigationPanel = true;
@@ -126,14 +126,6 @@ namespace Dejaview
             RememberZoom = true;
             RememberRulers = true;
             RememberRibbon = true;
-
-            /*
-            NavigationPanelWidth = 250;
-            WindowWidth = 800;
-            RememberZoom = 100;
-            WindowViewType = (int)Microsoft.Office.Interop.Word.WdViewType.wdNormalView;
-            DraftView = true;
-            */
 
             Debug.WriteLine("DejaviewConfig::SetDefaults() -> done");
         }

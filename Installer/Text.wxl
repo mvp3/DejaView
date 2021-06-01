@@ -4,8 +4,10 @@
   <String Id="WelcomeDlg_Title">Deja View (Microsoft Word Add-in)</String>
   <String Id="WelcomeDlgBitmap">WixUI_Bmp_Dialog</String>
   <String Id="WelcomeDlgDescription">This will install the Deja View Word add-in. You may be prompted to install a the free certificate used to authenticate Deja View. Once installed, you can access the features from the Add-ins tab in Word.</String>
-  <String Id="WelcomeUpdateDlgDescriptionUpdate">This will update the Deja View add-in for Microsoft Word.</String>
-  <String Id="WelcomeDlgTitle">{\WixUI_Font_Title}Deja View Installer</String>
+
+  <String Id="MaintenanceTypeDlg_Title">Deja View (Microsoft Word Add-in)</String>
+  <String Id="MaintenanceTypeDlgBitmap">WixUI_Bmp_Dialog</String>
+  <String Id="MaintenanceTypeDlgDescription">This will update the Deja View add-in for Microsoft Word.</String>
 
   <String Id="UserExit_Title">Deja View (Microsoft Word Add-in)</String>
   <String Id="UserExitBitmap">WixUI_Bmp_Dialog</String>

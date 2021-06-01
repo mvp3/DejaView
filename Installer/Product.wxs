@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="0483DD72-F3A5-4D13-9264-312D2D8621AF" 
+ 
+  <?define sourceFolder="C:\OneDrive\src\Visual Studio\Projects\Dejaview\"?>
+  
+  <!-- GUID: 0483DD72-F3A5-4D13-9264-312D2D8621AF -->
+  <!-- Not using GUID for upgrade purposes -->
+	<Product Id="*" 
            Name="Deja View (Microsoft Word Add-in)" 
            Language="1033" 
-           Version="1.0.0" 
+           Version="1.0.2" 
            Manufacturer="Lexem" 
            UpgradeCode="a63cf7f8-1206-4b59-acaf-e949effd6afa">
     
@@ -12,7 +17,8 @@
       Compressed="yes" 
       InstallScope="perMachine" />
     
-		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." 
+                  MigrateFeatures="yes" />
     
     <MediaTemplate EmbedCab="yes" />
     
@@ -32,15 +38,18 @@
       <![CDATA[Installed OR VSTORUNTIMEREDIST>="10.0.30319"]]>
     </Condition>
 
+    <Icon Id="icon.ico" SourceFile="$(var.sourceFolder)\dejaview.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+    
     <WixVariable Id="WixUIDialogBmp" Value="logo_dialog.png" />
     
     <UI Id="UserInterface">
       <Property Id="WIXUI_INSTALLDIR" Value="TARGETDIR" />
       <Property Id="WixUI_Mode" Value="Custom" />
       
-      <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="10" />
-      <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" Bold="yes" />
-      <TextStyle Id="WixUI_Font_Title"  FaceName="Tahoma" Size="14" Bold="yes" />
+      <TextStyle Id="WixUI_Font_Normal" FaceName="Calibri" Size="10" />
+      <TextStyle Id="WixUI_Font_Bigger" FaceName="Calibri" Size="11" />
+      <TextStyle Id="WixUI_Font_Title"  FaceName="Calibri" Size="12" Bold="yes" />
       
       <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />      
 
@@ -50,12 +59,14 @@
       <DialogRef Id="ErrorDlg" />
       <DialogRef Id="FilesInUse" />
       <DialogRef Id="FatalError" />
+      <DialogRef Id="MaintenanceTypeDlg" />
       <!-- 
       <DialogRef Id="UserExit" />
       -->
 
       <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
       <Publish Dialog="WelcomeDlg" Control="Next" Event="EndDialog" Value="Return" Order="2"></Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="Reinstall" Event="EndDialog" Value="Return" Order="3">1</Publish>
 
     </UI>
     <UIRef Id="WixUI_Common" />

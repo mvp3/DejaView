@@ -92,6 +92,14 @@ namespace Dejaview
         public class WindowLocation : IComparable<WindowLocation>
         {
             /// <summary>
+            /// Unique Identifier of the Display Arrangement for the current 
+            /// device. A Display Arrangement represents: (a) the number of screens, 
+            /// (b) the size of each screen, and (c) the order of each screen in 
+            /// relation to one another. This allows Deja View to index a document's
+            /// view settings per Display Arrangement.
+            /// </summary>
+            public string DisplayArrangementUID { get; set; }
+            /// <summary>
             /// Unique Identifier of the Screen to which this Location belongs.
             /// </summary>
             public string ScreenUID { get; set; }

@@ -63,8 +63,12 @@ namespace Dejaview
             this.chkAutoUpdate = new System.Windows.Forms.CheckBox();
             this.lblVersion = new System.Windows.Forms.Label();
             this.tip = new System.Windows.Forms.ToolTip(this.components);
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtUpdateURL = new System.Windows.Forms.TextBox();
+            this.btnSetDefaults = new System.Windows.Forms.Button();
             this.grpRemember.SuspendLayout();
             this.grpSettings.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // grpRemember
@@ -77,7 +81,7 @@ namespace Dejaview
             this.grpRemember.Controls.Add(this.chkRibbon);
             this.grpRemember.Controls.Add(this.chkNavigationPanel);
             this.grpRemember.Controls.Add(this.chkLocation);
-            this.grpRemember.Location = new System.Drawing.Point(12, 127);
+            this.grpRemember.Location = new System.Drawing.Point(12, 178);
             this.grpRemember.Name = "grpRemember";
             this.grpRemember.Size = new System.Drawing.Size(288, 100);
             this.grpRemember.TabIndex = 0;
@@ -164,7 +168,7 @@ namespace Dejaview
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Location = new System.Drawing.Point(219, 237);
+            this.btnClose.Location = new System.Drawing.Point(219, 289);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 1;
@@ -177,6 +181,8 @@ namespace Dejaview
             // 
             this.grpSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.grpSettings.Controls.Add(this.btnSetDefaults);
+            this.grpSettings.Controls.Add(this.groupBox1);
             this.grpSettings.Controls.Add(this.btnViewCurrent);
             this.grpSettings.Controls.Add(this.btnViewTags);
             this.grpSettings.Controls.Add(this.chkEnable);
@@ -184,7 +190,7 @@ namespace Dejaview
             this.grpSettings.Controls.Add(this.chkAutoUpdate);
             this.grpSettings.Location = new System.Drawing.Point(12, 12);
             this.grpSettings.Name = "grpSettings";
-            this.grpSettings.Size = new System.Drawing.Size(288, 109);
+            this.grpSettings.Size = new System.Drawing.Size(288, 160);
             this.grpSettings.TabIndex = 2;
             this.grpSettings.TabStop = false;
             this.grpSettings.Text = "Add-in Settings";
@@ -260,18 +266,52 @@ namespace Dejaview
             // 
             this.lblVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblVersion.AutoSize = true;
-            this.lblVersion.Location = new System.Drawing.Point(15, 242);
+            this.lblVersion.Location = new System.Drawing.Point(15, 294);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(47, 13);
             this.lblVersion.TabIndex = 3;
             this.lblVersion.Text = "(version)";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.txtUpdateURL);
+            this.groupBox1.Location = new System.Drawing.Point(6, 104);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(276, 50);
+            this.groupBox1.TabIndex = 5;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Update URL";
+            // 
+            // txtUpdateURL
+            // 
+            this.txtUpdateURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtUpdateURL.Location = new System.Drawing.Point(6, 19);
+            this.txtUpdateURL.Name = "txtUpdateURL";
+            this.txtUpdateURL.Size = new System.Drawing.Size(264, 20);
+            this.txtUpdateURL.TabIndex = 0;
+            // 
+            // btnSetDefaults
+            // 
+            this.btnSetDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSetDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSetDefaults.Location = new System.Drawing.Point(207, 77);
+            this.btnSetDefaults.Name = "btnSetDefaults";
+            this.btnSetDefaults.Size = new System.Drawing.Size(75, 23);
+            this.btnSetDefaults.TabIndex = 6;
+            this.btnSetDefaults.Text = "Defaults";
+            this.tip.SetToolTip(this.btnSetDefaults, "Set all options to default");
+            this.btnSetDefaults.UseVisualStyleBackColor = true;
+            this.btnSetDefaults.Click += new System.EventHandler(this.btnSetDefaults_Click);
             // 
             // OptionsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(312, 272);
+            this.ClientSize = new System.Drawing.Size(312, 324);
             this.ControlBox = false;
             this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.grpSettings);
@@ -284,11 +324,14 @@ namespace Dejaview
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Deja View Options";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OptionsDialog_FormClosing);
             this.Load += new System.EventHandler(this.OptionsDialog_Load);
             this.grpRemember.ResumeLayout(false);
             this.grpRemember.PerformLayout();
             this.grpSettings.ResumeLayout(false);
             this.grpSettings.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -312,5 +355,8 @@ namespace Dejaview
         private System.Windows.Forms.CheckBox chkWindowType;
         private System.Windows.Forms.CheckBox chkRulers;
         private System.Windows.Forms.Button btnViewCurrent;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TextBox txtUpdateURL;
+        private System.Windows.Forms.Button btnSetDefaults;
     }
 }

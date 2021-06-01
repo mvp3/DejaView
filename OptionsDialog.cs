@@ -30,9 +30,21 @@ namespace Dejaview
 {
     public partial class OptionsDialog : Form
     {
+        /// <summary>
+        /// Used for checking to see if the update URL textbox changes
+        /// </summary>
+        private string updateURL = null;
+
+        /// <summary>
+        /// Used for bypassing the change events
+        /// </summary>
+        private bool bypassChange = false;
+
         public OptionsDialog()
         {
+            bypassChange = true;
             InitializeComponent();
+            bypassChange = false;
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -42,6 +54,8 @@ namespace Dejaview
 
         private void OptionsDialog_Load(object sender, EventArgs e)
         {
+            bypassChange = true;
+
             chkEnable.Checked = DejaviewConfig.Instance.Enable;
             chkAutoUpdate.Checked = DejaviewConfig.Instance.CheckForUpdates;
             chkPrompt.Checked = DejaviewConfig.Instance.Prompt;
@@ -53,12 +67,30 @@ namespace Dejaview
             chkRulers.Checked = DejaviewConfig.Instance.RememberRulers;
             chkRibbon.Checked = DejaviewConfig.Instance.RememberRibbon;
 
+            txtUpdateURL.Text = DejaviewConfig.Instance.UpdateURL;
+            updateURL = txtUpdateURL.Text;
+
             setEnabled(chkEnable.Checked);
 
             btnViewTags.Enabled = Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled;
 
             Version lVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             lblVersion.Text = "Version: " + lVersion.ToString();
+
+            bypassChange = false;
+        }
+
+        private void OptionsDialog_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (txtUpdateURL.Text != updateURL)
+            {
+                DialogResult r = MessageBox.Show(this, "The update URL has changed.\n\nDo you want to save these changes?", "Save Changes?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (r == DialogResult.Yes)
+                {
+                    DejaviewConfig.Instance.UpdateURL = txtUpdateURL.Text;
+                    DejaviewConfig.Instance.Save();
+                }
+            }
         }
 
         private void setEnabled(bool enabled)
@@ -72,60 +104,70 @@ namespace Dejaview
 
         private void chkAutoUpdate_CheckedChanged(object sender, EventArgs e)
         {
+            if (bypassChange) return;
             DejaviewConfig.Instance.CheckForUpdates = chkAutoUpdate.Checked;
             DejaviewConfig.Instance.Save();
         }
 
         private void chkEnable_CheckedChanged(object sender, EventArgs e)
         {
+            setEnabled(chkEnable.Checked);
+
+            if (bypassChange) return;
+
             DejaviewConfig.Instance.Enable = chkEnable.Checked;
             DejaviewConfig.Instance.Save();
 
-            setEnabled(chkEnable.Checked);
-
             // If switching to enabled invoke DocumentOpen method to read Dejaview tags
-            if (chkEnable.Enabled)
+            if (chkEnable.Enabled && !Globals.DejaviewAddIn.IsLoaded())
                 Globals.DejaviewAddIn.DejaviewAddIn_DocumentOpen(Globals.DejaviewAddIn.Application.ActiveDocument);
         }
 
         private void chkPrompt_CheckedChanged(object sender, EventArgs e)
         {
+            if (bypassChange) return;
             DejaviewConfig.Instance.Prompt = chkPrompt.Checked;
             DejaviewConfig.Instance.Save();
         }
 
         private void chkLocation_CheckedChanged(object sender, EventArgs e)
         {
+            if (bypassChange) return;
             DejaviewConfig.Instance.RememberWindowLocation = chkLocation.Checked;
             DejaviewConfig.Instance.Save();
         }
 
         private void chkNav_CheckedChanged(object sender, EventArgs e)
         {
+            if (bypassChange) return;
             DejaviewConfig.Instance.RememberNavigationPanel = chkNavigationPanel.Checked;
             DejaviewConfig.Instance.Save();
         }
 
         private void chkWindowType_CheckedChanged(object sender, EventArgs e)
         {
+            if (bypassChange) return;
             DejaviewConfig.Instance.RememberWindowType = chkWindowType.Checked;
             DejaviewConfig.Instance.Save();
         }
 
         private void chkZoom_CheckedChanged(object sender, EventArgs e)
         {
+            if (bypassChange) return;
             DejaviewConfig.Instance.RememberZoom = chkZoom.Checked;
             DejaviewConfig.Instance.Save();
         }
 
         private void chkRulers_CheckedChanged(object sender, EventArgs e)
         {
+            if (bypassChange) return;
             DejaviewConfig.Instance.RememberRulers = chkRulers.Checked;
             DejaviewConfig.Instance.Save();
         }
 
         private void chkRibbon_CheckedChanged(object sender, EventArgs e)
         {
+            if (bypassChange) return;
             DejaviewConfig.Instance.RememberRibbon = chkRibbon.Checked;
             DejaviewConfig.Instance.Save();
         }
@@ -140,6 +182,18 @@ namespace Dejaview
         {
             BasicDialog bd = new BasicDialog("Current View", Globals.DejaviewAddIn.GetCurrentParameters());
             bd.Show();
+        }
+
+        private void btnSetDefaults_Click(object sender, EventArgs e)
+        {
+            DialogResult r = MessageBox.Show(this, "This will restore all Deja View options to default.\n\nDo you want to continue?", "Overwrite Settings?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (r == DialogResult.Yes)
+            {
+                bypassChange = true;
+                DejaviewConfig.Instance.SetDefaults();
+                OptionsDialog_Load(this, null);
+                bypassChange = false;
+            }
         }
     }
 }
