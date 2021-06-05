@@ -140,8 +140,6 @@ namespace Dejaview
                     xdoc.Load(fs);
 
                     var djv = xdoc.SelectSingleNode("//*[local-name()='Dejaview']");
-                    if (djv == null) 
-                        djv = xdoc.SelectSingleNode("//*[local-name()='Perview']");
                     if (djv == null) return;
 
                     var nodes = djv.ChildNodes;
