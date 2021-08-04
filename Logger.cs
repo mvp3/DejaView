@@ -45,10 +45,10 @@ namespace Dejaview
         }
 
         /// <summary>
-        /// Instances of this class should be created using Logger.Instance.
+        /// Shared instances of this class should be created using Logger.Instance.
         /// </summary>
         /// <see cref="Instance"/>
-        private Logger()
+        internal Logger()
         {
             _instance = this;
         }

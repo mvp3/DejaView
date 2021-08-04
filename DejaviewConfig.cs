@@ -112,7 +112,7 @@ namespace Dejaview
             {
                 Debug.WriteLine("DejaviewConfig::DejaviewConfig() => " + ex.StackTrace);
                 Globals.DejaviewAddIn.DisplayStatus(ex.Message);
-                Logger.Instance.Add(ex);
+                Globals.DejaviewAddIn.Log(ex);
             }
         }
 
@@ -182,7 +182,7 @@ namespace Dejaview
                 catch (Exception ex)
                 {
                     Debug.WriteLine("DejaviewConfig::LoadFromConfig() => " + ex.StackTrace);
-                    Logger.Instance.Add(ex);
+                    Globals.DejaviewAddIn.Log(ex);
                 }
             }
             Debug.WriteLine("DejaviewConfig::LoadFromConfig() -> success");
@@ -191,7 +191,7 @@ namespace Dejaview
             Debug.WriteLine("  Check     => " + CheckForUpdates);
             Debug.WriteLine("  UpdateURL => " + UpdateURL);
 
-            Logger.Instance.Add("Successfully loaded configuration.");
+            Globals.DejaviewAddIn.Log("Successfully loaded configuration.");
         }
 
         /// <summary>
@@ -249,12 +249,12 @@ namespace Dejaview
                 Debug.WriteLine("  Check     => " + CheckForUpdates);
                 Debug.WriteLine("  UpdateURL => " + UpdateURL);
 
-                Logger.Instance.Add("Successfully saved configuration.");
+                Globals.DejaviewAddIn.Log("Successfully saved configuration.");
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("DejaviewConfig::Save() => " + ex.StackTrace);
-                Logger.Instance.Add(ex);
+                Globals.DejaviewAddIn.Log(ex);
             }
         }
     }

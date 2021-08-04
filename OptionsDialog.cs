@@ -198,7 +198,7 @@ namespace Dejaview
 
         private void OptionsDialog_DoubleClick(object sender, EventArgs e)
         {
-            BasicDialog bd = new BasicDialog("Log", Logger.Instance.ToString());
+            BasicDialog bd = new BasicDialog("Log", Globals.DejaviewAddIn.GetLogger().ToString());
             bd.Show();
         }
     }

@@ -30,6 +30,7 @@ using Word = Microsoft.Office.Interop.Word;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Linq;
+using System.Collections;
 
 namespace Dejaview
 {
@@ -53,25 +54,30 @@ namespace Dejaview
         private bool loaded = false;
 
         /// <summary>
+        /// Collection of unique Logger instances, each keyed to its own 
+        /// ActiveDocument.
+        /// </summary>
+        private Hashtable loggers = new Hashtable();
+
+        /// <summary>
         /// Called when this Add-in is initialized.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <seealso cref="InternalStartup"/>
-        private void ThisAddIn_Startup(object sender, System.EventArgs e)
+        private void ThisAddIn_Startup(object sender, EventArgs e)
         {
             try
             {
                 if (!DejaviewConfig.Instance.Enable) return;
                 
                 // Fire the DocumentOpen event for the first time
-                if (this.Application.Documents.Count >= 1)
-                    DejaviewAddIn_DocumentOpen(this.Application.ActiveDocument);
+                if (Application.Documents.Count >= 1)
+                    DejaviewAddIn_DocumentOpen(Application.ActiveDocument);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Error opening DejaviewAddIn::DejaviewAddIn_Startup() => " + ex.Message);
-                Logger.Instance.Add(ex);
             }
 
             // Check for updates on a separate thread to ensure
@@ -89,17 +95,55 @@ namespace Dejaview
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <seealso cref="InternalStartup"/>
-        private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
+        private void ThisAddIn_Shutdown(object sender, EventArgs e)
         {
+        }
+
+        /// <summary>
+        /// Get the unique Logger for the ActiveDocument.
+        /// </summary>
+        /// <returns>Logger instance</returns>
+        internal Logger GetLogger()
+        {
+            return (Logger)loggers[Globals.DejaviewAddIn.Application.ActiveWindow.Caption];
+        }
+
+        /// <summary>
+        /// Convenience method for logging an event associated with the ActiveDocument.
+        /// </summary>
+        /// <example>Globals.DejaviewAddIn.Log("Window restored.");</example>
+        /// <param name="description">String description of the event.</param>
+        internal void Log(string description)
+        {
+            Logger logger = GetLogger();
+            if (logger != null) logger.Add(description);
+        }
+
+        /// <summary>
+        /// Convenience method for logging an Deja View exception associated with the ActiveDocument.
+        /// </summary>
+        /// <example>Globals.DejaviewAddIn.Log(new Exception("Failed."));</example>
+        /// <param name="description">Exception representing an event.</param>
+        internal void Log(Exception ex)
+        {
+            Logger logger = GetLogger();
+            if (logger != null) logger.Add(ex);
         }
 
         /// <summary>
         /// Method called when a document is opened.
         /// </summary>
-        /// <param name="doc">Active Word document that opened</param>
+        /// <param name="doc">Active Word document that opened.</param>
         internal void DejaviewAddIn_DocumentOpen(Word.Document doc)
         {
             if (!DejaviewConfig.Instance.Enable) return;
+
+            // Create a unique instance of Logger for this document.
+            loggers.Add(doc.ActiveWindow.Caption, new Logger());
+
+            // Create first log event as the title of the ActiveDocument window.
+            Log(doc.ActiveWindow.Caption);
+
             try
             {
                 djvSet = GetDejaviewFromDocument(doc);
@@ -113,25 +157,25 @@ namespace Dejaview
                     Office.CommandBar nav = Application.CommandBars["Navigation"];
                     nav.Visible = djvSet.ShowNavigationPanel;
                     nav.Width = djvSet.NavigationPanelWidth;
-                    Logger.Instance.Add("Navigation panel restored (" + djvSet.ShowNavigationPanel + ", " + djvSet.NavigationPanelWidth + ").");
+                    Log("Navigation panel restored (" + djvSet.ShowNavigationPanel + ", " + djvSet.NavigationPanelWidth + ").");
                 }
 
                 if (DejaviewConfig.Instance.RememberWindowType)
                 {
                     doc.ActiveWindow.View.Type = (Word.WdViewType)djvSet.WindowViewType;
-                    Logger.Instance.Add("Window type restored (" + (Word.WdViewType)djvSet.WindowViewType + ").");
+                    Log("Window type restored (" + (Word.WdViewType)djvSet.WindowViewType + ").");
                 }
 
                 if (DejaviewConfig.Instance.RememberZoom)
                 {
                     doc.ActiveWindow.View.Zoom.Percentage = djvSet.WindowZoom;
-                    Logger.Instance.Add("Window zoom restored (" + djvSet.WindowZoom + ").");
+                    Log("Window zoom restored (" + djvSet.WindowZoom + ").");
                 }
 
                 if (DejaviewConfig.Instance.RememberRulers)
                 {
                     doc.ActiveWindow.DisplayRulers = djvSet.DisplayRulers;
-                    Logger.Instance.Add("Window rulers restored (" + djvSet.DisplayRulers + ").");
+                    Log("Window rulers restored (" + djvSet.DisplayRulers + ").");
                 }
 
                 if (DejaviewConfig.Instance.RememberRibbon)
@@ -148,7 +192,7 @@ namespace Dejaview
                             (djvSet.RibbonHeight < 100 && ribbon.Height > 100))
                         {
                             doc.ActiveWindow.ToggleRibbon();
-                            Logger.Instance.Add("Window ribbon toggled (height: " + djvSet.RibbonHeight + ").");
+                            Log("Window ribbon toggled (height: " + djvSet.RibbonHeight + ").");
                         }
                     }
                 }
@@ -498,6 +542,9 @@ namespace Dejaview
         /// <param name="ds">DejaviewSet for the active document</param>
         private static void SetShowable(Word.Application app, DejaviewSet ds)
         {
+            // Get Logger
+            Logger logger = Globals.DejaviewAddIn.GetLogger();
+
             // Setup key variables
             Screen screen = Screen.FromPoint(new Point(app.Left, app.Top));
             DejaviewSet.WindowLocation windowLocation = null;
@@ -536,7 +583,7 @@ namespace Dejaview
                         }
                         matched = true;
                         Debug.WriteLine(" Display Arrangement MATCHED!");
-                        Logger.Instance.Add("Window location found in Display Arrangement.");
+                        logger.Add("Window location found in Display Arrangement.");
                         break;
                     }
                 }
@@ -559,14 +606,14 @@ namespace Dejaview
                                 screen = scrn;
                                 windowLocation = wl;
                                 matched = true;
-                                Logger.Instance.Add("Window location found for matching Screen.");
+                                logger.Add("Window location found for matching Screen.");
                                 break;
                             }
                         }
                         if (matched) break;
                     }
                 }
-                if (!matched) Logger.Instance.Add("Window location not found.");
+                if (!matched) logger.Add("Window location not found.");
             }
 
             // Get working area from the designated screen
@@ -578,10 +625,10 @@ namespace Dejaview
             if (ds.WindowHeight < 100) ds.WindowHeight = (int)(workingArea.Height - Math.Round(workingArea.Height * 0.2));
 
             app.Width = ds.WindowWidth;
-            Logger.Instance.Add("Window width restored (" + ds.WindowWidth + ")");
+            logger.Add("Window width restored (" + ds.WindowWidth + ")");
 
             app.Height = ds.WindowHeight;
-            Logger.Instance.Add("Window height restored (" + ds.WindowHeight + ")");
+            logger.Add("Window height restored (" + ds.WindowHeight + ")");
 
             // If 'Window Location' option is not selected then do not set window location
             if (!DejaviewConfig.Instance.RememberWindowLocation) return;
@@ -595,7 +642,7 @@ namespace Dejaview
                 Debug.WriteLine("     >> setting location");
                 app.Left = windowLocation.WindowLeft;
                 app.Top = windowLocation.WindowTop;
-                Logger.Instance.Add("Window location restored (" + app.Left + ", " + app.Top + ").");
+                logger.Add("Window location restored (" + app.Left + ", " + app.Top + ").");
             }
             else
             {
@@ -619,7 +666,7 @@ namespace Dejaview
                     app.Left = (int)((workingArea.Width / 2) * dpiAdjust - (app.Width / 2));
                     app.Top = (int)((workingArea.Height / 2) * dpiAdjust - (app.Height / 2));
 
-                    Logger.Instance.Add("Window location reset (was not viewable).");
+                    logger.Add("Window location reset (was not viewable).");
                 }
                 // Otherwise let Word display as normal.
             }
@@ -716,7 +763,7 @@ namespace Dejaview
             }
             catch (Exception ex)
             {
-                Logger.Instance.Add(ex);
+                Globals.DejaviewAddIn.GetLogger().Add(ex);
                 return uid;
             }
         }
@@ -727,8 +774,8 @@ namespace Dejaview
         /// <param name="txt">Text to display in Word's status bar</param>
         internal void DisplayStatus(string txt)
         {
-            this.Application.StatusBar = txt;
-            Logger.Instance.Add(txt);
+            Application.StatusBar = txt;
+            Log(txt);
         }
 
         /// <summary>
@@ -1003,7 +1050,7 @@ namespace Dejaview
             catch (Exception ex)
             {
                 Debug.WriteLine("CheckForUpdate() => " + ex.Message);
-                Logger.Instance.Add("Error while checking for an update: " + ex);
+                Globals.DejaviewAddIn.GetLogger().Add("Error while checking for an update: " + ex);
                 if (silent != null && silent is bool && !(bool)silent)
                 {
                     MessageBox.Show(null, "An error occurred while checking for an update:\n\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
