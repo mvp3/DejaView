@@ -71,6 +71,7 @@ namespace Dejaview
             catch (Exception ex)
             {
                 Debug.WriteLine("Error opening DejaviewAddIn::DejaviewAddIn_Startup() => " + ex.Message);
+                Logger.Instance.Add(ex);
             }
 
             // Check for updates on a separate thread to ensure
@@ -107,25 +108,31 @@ namespace Dejaview
                 if (doc.ActiveWindow.WindowState == Word.WdWindowState.wdWindowStateMinimize)
                     doc.ActiveWindow.WindowState = Word.WdWindowState.wdWindowStateNormal;
 
-                if (DejaviewConfig.Instance.RememberWindowLocation)
-                {
-                    if (doc.ActiveWindow.WindowState == Word.WdWindowState.wdWindowStateNormal)
-                        SetShowable(doc.Application, djvSet);
-                }
-
                 if (DejaviewConfig.Instance.RememberNavigationPanel)
                 {
                     Office.CommandBar nav = Application.CommandBars["Navigation"];
                     nav.Visible = djvSet.ShowNavigationPanel;
                     nav.Width = djvSet.NavigationPanelWidth;
+                    Logger.Instance.Add("Navigation panel restored (" + djvSet.ShowNavigationPanel + ", " + djvSet.NavigationPanelWidth + ").");
                 }
 
                 if (DejaviewConfig.Instance.RememberWindowType)
+                {
                     doc.ActiveWindow.View.Type = (Word.WdViewType)djvSet.WindowViewType;
+                    Logger.Instance.Add("Window type restored (" + (Word.WdViewType)djvSet.WindowViewType + ").");
+                }
+
                 if (DejaviewConfig.Instance.RememberZoom)
+                {
                     doc.ActiveWindow.View.Zoom.Percentage = djvSet.WindowZoom;
+                    Logger.Instance.Add("Window zoom restored (" + djvSet.WindowZoom + ").");
+                }
+
                 if (DejaviewConfig.Instance.RememberRulers)
+                {
                     doc.ActiveWindow.DisplayRulers = djvSet.DisplayRulers;
+                    Logger.Instance.Add("Window rulers restored (" + djvSet.DisplayRulers + ").");
+                }
 
                 if (DejaviewConfig.Instance.RememberRibbon)
                 {
@@ -139,9 +146,18 @@ namespace Dejaview
                         // misbehave.
                         if ((djvSet.RibbonHeight > 100 && ribbon.Height < 100) ||
                             (djvSet.RibbonHeight < 100 && ribbon.Height > 100))
+                        {
                             doc.ActiveWindow.ToggleRibbon();
+                            Logger.Instance.Add("Window ribbon toggled (height: " + djvSet.RibbonHeight + ").");
+                        }
                     }
                 }
+
+                // Attempt to restore window
+                if (doc.ActiveWindow.WindowState == Word.WdWindowState.wdWindowStateNormal)
+                    SetShowable(doc.Application, djvSet);
+
+                // Set the 'loaded' flag
                 loaded = true;
 
                 DisplayStatus("Document view restored.");
@@ -463,7 +479,9 @@ namespace Dejaview
                 djvSet = null;
                 var xml = doc.CustomXMLParts["Dejaview"];
                 if (xml != null) xml.Delete();
+                doc.Save();
                 Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
+                DisplayStatus("Deja View tags removed from this document.");
             }
             catch (Exception ex)
             {
@@ -492,22 +510,33 @@ namespace Dejaview
 
                 string dauid = GetDisplayArrangementUID();
 
+                Debug.WriteLine(" Checking for a Display Arrangement...");
+                Debug.WriteLine("   dauid: " + dauid);
+
                 // First try to match a Display Arrangement
                 foreach (DejaviewSet.WindowLocation wl in ds.Locations)
                 {
+                    Debug.WriteLine("    - " + wl.DisplayArrangementUID);
                     if (dauid == wl.DisplayArrangementUID)
                     {
+                        Debug.WriteLine("      * matched *");
                         latest = wl.LastViewed;
                         windowLocation = wl;
+                        Debug.WriteLine("      enumerating screens:");
+                        Debug.WriteLine("        > " + wl.ScreenUID);
                         foreach (Screen scrn in Screen.AllScreens)
                         {
+                            Debug.WriteLine("        - " + scrn);
                             if (wl.ScreenUID == GetScreenUID(scrn))
                             {
+                                Debug.WriteLine("        * match *");
                                 screen = scrn;
                                 break;
                             }
                         }
                         matched = true;
+                        Debug.WriteLine(" Display Arrangement MATCHED!");
+                        Logger.Instance.Add("Window location found in Display Arrangement.");
                         break;
                     }
                 }
@@ -516,6 +545,7 @@ namespace Dejaview
                 // display on a screen that has the same ScreenUID
                 if (!matched)
                 {
+                    Debug.WriteLine(" Display Arrangement not matched.");
                     foreach (Screen scrn in Screen.AllScreens)
                     {
                         Debug.WriteLine(" [Screen: " + GetScreenUID(scrn) + "]");
@@ -529,22 +559,29 @@ namespace Dejaview
                                 screen = scrn;
                                 windowLocation = wl;
                                 matched = true;
+                                Logger.Instance.Add("Window location found for matching Screen.");
                                 break;
                             }
                         }
                         if (matched) break;
                     }
                 }
+                if (!matched) Logger.Instance.Add("Window location not found.");
             }
 
+            // Get working area from the designated screen
             Rectangle workingArea = screen.WorkingArea;
 
             // If for some reason the height or width of the window is less 
             // than 100 pixels, then set it to a proportionate size.
             if (ds.WindowWidth < 100) ds.WindowWidth = (int)(workingArea.Width - Math.Round(workingArea.Width * 0.3));
             if (ds.WindowHeight < 100) ds.WindowHeight = (int)(workingArea.Height - Math.Round(workingArea.Height * 0.2));
+
             app.Width = ds.WindowWidth;
+            Logger.Instance.Add("Window width restored (" + ds.WindowWidth + ")");
+
             app.Height = ds.WindowHeight;
+            Logger.Instance.Add("Window height restored (" + ds.WindowHeight + ")");
 
             // If 'Window Location' option is not selected then do not set window location
             if (!DejaviewConfig.Instance.RememberWindowLocation) return;
@@ -558,10 +595,12 @@ namespace Dejaview
                 Debug.WriteLine("     >> setting location");
                 app.Left = windowLocation.WindowLeft;
                 app.Top = windowLocation.WindowTop;
+                Logger.Instance.Add("Window location restored (" + app.Left + ", " + app.Top + ").");
             }
             else
             {
                 Debug.WriteLine("     >> constructing new location");
+
                 // If Word window is not viewable, then center on current screen.
                 if (!workingArea.Contains(new Point(app.Left, app.Top)))
                 {
@@ -579,6 +618,8 @@ namespace Dejaview
                     }
                     app.Left = (int)((workingArea.Width / 2) * dpiAdjust - (app.Width / 2));
                     app.Top = (int)((workingArea.Height / 2) * dpiAdjust - (app.Height / 2));
+
+                    Logger.Instance.Add("Window location reset (was not viewable).");
                 }
                 // Otherwise let Word display as normal.
             }
@@ -675,6 +716,7 @@ namespace Dejaview
             }
             catch (Exception ex)
             {
+                Logger.Instance.Add(ex);
                 return uid;
             }
         }
@@ -686,6 +728,7 @@ namespace Dejaview
         internal void DisplayStatus(string txt)
         {
             this.Application.StatusBar = txt;
+            Logger.Instance.Add(txt);
         }
 
         /// <summary>
@@ -960,6 +1003,7 @@ namespace Dejaview
             catch (Exception ex)
             {
                 Debug.WriteLine("CheckForUpdate() => " + ex.Message);
+                Logger.Instance.Add("Error while checking for an update: " + ex);
                 if (silent != null && silent is bool && !(bool)silent)
                 {
                     MessageBox.Show(null, "An error occurred while checking for an update:\n\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

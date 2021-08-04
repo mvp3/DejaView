@@ -21,6 +21,9 @@ using System.Windows.Forms;
 
 namespace Dejaview
 {
+    /// <summary>
+    /// A basic form for displaying text in a scrolling pane.
+    /// </summary>
     public partial class BasicDialog : Form
     {
         public BasicDialog(string title, string str)
