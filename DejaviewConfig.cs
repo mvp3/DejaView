@@ -53,7 +53,6 @@ namespace Dejaview
         /// Example: https://dejaview.lexem.cc/latest/
         /// </summary>
         public string UpdateURL { get; set; }
-
         /// <summary>
         /// Remember the Word application window location
         /// in the DejaviewSet of parameters.
@@ -94,6 +93,10 @@ namespace Dejaview
             get { return _instance ?? new DejaviewConfig(); }
         }
 
+        /// <summary>
+        /// Instances of this class should be created using DejaviewConfig.Instance.
+        /// </summary>
+        /// <see cref="Instance"/>
         private DejaviewConfig()
         {
             _instance = this;
@@ -109,9 +112,15 @@ namespace Dejaview
             {
                 Debug.WriteLine("DejaviewConfig::DejaviewConfig() => " + ex.StackTrace);
                 Globals.DejaviewAddIn.DisplayStatus(ex.Message);
+                Logger.Instance.Add(ex);
             }
         }
 
+        /// <summary>
+        /// Reset all in memory configuration settings to default. 
+        /// Save() must be called to write these to the file.
+        /// </summary>
+        /// <see cref="Save"/>
         public void SetDefaults()
         {
             Enable = true;
@@ -130,6 +139,9 @@ namespace Dejaview
             Debug.WriteLine("DejaviewConfig::SetDefaults() -> done");
         }
 
+        /// <summary>
+        /// A helper method that is automatically called by the constructor.
+        /// </summary>
         private void LoadFromConfig()
         {
             using (FileStream fs = File.OpenRead(configFile))
@@ -170,6 +182,7 @@ namespace Dejaview
                 catch (Exception ex)
                 {
                     Debug.WriteLine("DejaviewConfig::LoadFromConfig() => " + ex.StackTrace);
+                    Logger.Instance.Add(ex);
                 }
             }
             Debug.WriteLine("DejaviewConfig::LoadFromConfig() -> success");
@@ -177,6 +190,8 @@ namespace Dejaview
             Debug.WriteLine("  Prompt    => " + Prompt);
             Debug.WriteLine("  Check     => " + CheckForUpdates);
             Debug.WriteLine("  UpdateURL => " + UpdateURL);
+
+            Logger.Instance.Add("Successfully loaded configuration.");
         }
 
         /// <summary>
@@ -233,10 +248,13 @@ namespace Dejaview
                 Debug.WriteLine("  Prompt    => " + Prompt);
                 Debug.WriteLine("  Check     => " + CheckForUpdates);
                 Debug.WriteLine("  UpdateURL => " + UpdateURL);
+
+                Logger.Instance.Add("Successfully saved configuration.");
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("DejaviewConfig::Save() => " + ex.StackTrace);
+                Logger.Instance.Add(ex);
             }
         }
     }

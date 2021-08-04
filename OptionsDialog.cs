@@ -195,5 +195,11 @@ namespace Dejaview
                 bypassChange = false;
             }
         }
+
+        private void OptionsDialog_DoubleClick(object sender, EventArgs e)
+        {
+            BasicDialog bd = new BasicDialog("Log", Logger.Instance.ToString());
+            bd.Show();
+        }
     }
 }

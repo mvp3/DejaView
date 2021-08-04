@@ -56,6 +56,9 @@ namespace Dejaview
             this.chkLocation = new System.Windows.Forms.CheckBox();
             this.btnClose = new System.Windows.Forms.Button();
             this.grpSettings = new System.Windows.Forms.GroupBox();
+            this.btnSetDefaults = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtUpdateURL = new System.Windows.Forms.TextBox();
             this.btnViewCurrent = new System.Windows.Forms.Button();
             this.btnViewTags = new System.Windows.Forms.Button();
             this.chkEnable = new System.Windows.Forms.CheckBox();
@@ -63,9 +66,6 @@ namespace Dejaview
             this.chkAutoUpdate = new System.Windows.Forms.CheckBox();
             this.lblVersion = new System.Windows.Forms.Label();
             this.tip = new System.Windows.Forms.ToolTip(this.components);
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.txtUpdateURL = new System.Windows.Forms.TextBox();
-            this.btnSetDefaults = new System.Windows.Forms.Button();
             this.grpRemember.SuspendLayout();
             this.grpSettings.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -195,6 +195,40 @@ namespace Dejaview
             this.grpSettings.TabStop = false;
             this.grpSettings.Text = "Add-in Settings";
             // 
+            // btnSetDefaults
+            // 
+            this.btnSetDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSetDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSetDefaults.Location = new System.Drawing.Point(207, 77);
+            this.btnSetDefaults.Name = "btnSetDefaults";
+            this.btnSetDefaults.Size = new System.Drawing.Size(75, 23);
+            this.btnSetDefaults.TabIndex = 6;
+            this.btnSetDefaults.Text = "Defaults";
+            this.tip.SetToolTip(this.btnSetDefaults, "Set all options to default");
+            this.btnSetDefaults.UseVisualStyleBackColor = true;
+            this.btnSetDefaults.Click += new System.EventHandler(this.btnSetDefaults_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.txtUpdateURL);
+            this.groupBox1.Location = new System.Drawing.Point(6, 104);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(276, 50);
+            this.groupBox1.TabIndex = 5;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Update URL";
+            // 
+            // txtUpdateURL
+            // 
+            this.txtUpdateURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtUpdateURL.Location = new System.Drawing.Point(6, 19);
+            this.txtUpdateURL.Name = "txtUpdateURL";
+            this.txtUpdateURL.Size = new System.Drawing.Size(264, 20);
+            this.txtUpdateURL.TabIndex = 0;
+            // 
             // btnViewCurrent
             // 
             this.btnViewCurrent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -272,40 +306,6 @@ namespace Dejaview
             this.lblVersion.TabIndex = 3;
             this.lblVersion.Text = "(version)";
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.txtUpdateURL);
-            this.groupBox1.Location = new System.Drawing.Point(6, 104);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(276, 50);
-            this.groupBox1.TabIndex = 5;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Update URL";
-            // 
-            // txtUpdateURL
-            // 
-            this.txtUpdateURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtUpdateURL.Location = new System.Drawing.Point(6, 19);
-            this.txtUpdateURL.Name = "txtUpdateURL";
-            this.txtUpdateURL.Size = new System.Drawing.Size(264, 20);
-            this.txtUpdateURL.TabIndex = 0;
-            // 
-            // btnSetDefaults
-            // 
-            this.btnSetDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSetDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSetDefaults.Location = new System.Drawing.Point(207, 77);
-            this.btnSetDefaults.Name = "btnSetDefaults";
-            this.btnSetDefaults.Size = new System.Drawing.Size(75, 23);
-            this.btnSetDefaults.TabIndex = 6;
-            this.btnSetDefaults.Text = "Defaults";
-            this.tip.SetToolTip(this.btnSetDefaults, "Set all options to default");
-            this.btnSetDefaults.UseVisualStyleBackColor = true;
-            this.btnSetDefaults.Click += new System.EventHandler(this.btnSetDefaults_Click);
-            // 
             // OptionsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -326,6 +326,7 @@ namespace Dejaview
             this.Text = "Deja View Options";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OptionsDialog_FormClosing);
             this.Load += new System.EventHandler(this.OptionsDialog_Load);
+            this.DoubleClick += new System.EventHandler(this.OptionsDialog_DoubleClick);
             this.grpRemember.ResumeLayout(false);
             this.grpRemember.PerformLayout();
             this.grpSettings.ResumeLayout(false);
