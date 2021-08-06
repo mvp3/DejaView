@@ -37,7 +37,7 @@ namespace Dejaview
         private static DejaviewConfig _instance = null;
 
         /// <summary>
-        /// Flag for enabling Dejaview.
+        /// Flag for enabling Deja View.
         /// </summary>
         public bool Enable { get; set; }
         /// <summary>
@@ -182,7 +182,6 @@ namespace Dejaview
                 catch (Exception ex)
                 {
                     Debug.WriteLine("DejaviewConfig::LoadFromConfig() => " + ex.StackTrace);
-                    Globals.DejaviewAddIn.Log(ex);
                 }
             }
             Debug.WriteLine("DejaviewConfig::LoadFromConfig() -> success");
@@ -190,8 +189,6 @@ namespace Dejaview
             Debug.WriteLine("  Prompt    => " + Prompt);
             Debug.WriteLine("  Check     => " + CheckForUpdates);
             Debug.WriteLine("  UpdateURL => " + UpdateURL);
-
-            Globals.DejaviewAddIn.Log("Successfully loaded configuration.");
         }
 
         /// <summary>

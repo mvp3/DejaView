@@ -118,7 +118,7 @@ namespace Dejaview
             DejaviewConfig.Instance.Enable = chkEnable.Checked;
             DejaviewConfig.Instance.Save();
 
-            // If switching to enabled invoke DocumentOpen method to read Dejaview tags
+            // If switching to enabled invoke DocumentOpen method to read Deja View tags
             if (chkEnable.Enabled && !Globals.DejaviewAddIn.IsLoaded())
                 Globals.DejaviewAddIn.DejaviewAddIn_DocumentOpen(Globals.DejaviewAddIn.Application.ActiveDocument);
         }
@@ -174,13 +174,15 @@ namespace Dejaview
 
         private void btnViewTags_Click(object sender, EventArgs e)
         {
-            BasicDialog bd = new BasicDialog("Deja View Tags", Globals.DejaviewAddIn.GetSavedTags());
+            DejaviewSet d = Globals.DejaviewAddIn.GetDejaviewSet();
+            BasicDialog bd = new BasicDialog("Deja View Tags", Globals.DejaviewAddIn.GetTags(d));
             bd.Show();
         }
 
         private void btnViewCurrent_Click(object sender, EventArgs e)
         {
-            BasicDialog bd = new BasicDialog("Current View", Globals.DejaviewAddIn.GetCurrentParameters());
+            DejaviewSet d = Globals.DejaviewAddIn.GetCurrentDejaviewSet();
+            BasicDialog bd = new BasicDialog("Current View", Globals.DejaviewAddIn.GetTags(d));
             bd.Show();
         }
 
@@ -197,6 +199,12 @@ namespace Dejaview
         }
 
         private void OptionsDialog_DoubleClick(object sender, EventArgs e)
+        {
+            BasicDialog bd = new BasicDialog("Log", Globals.DejaviewAddIn.GetLogger().ToString());
+            bd.Show();
+        }
+
+        private void btnLogs_Click(object sender, EventArgs e)
         {
             BasicDialog bd = new BasicDialog("Log", Globals.DejaviewAddIn.GetLogger().ToString());
             bd.Show();

@@ -81,6 +81,29 @@ namespace Dejaview
         public bool DisplayRulers { get; set; }
 
         /// <summary>
+        /// Method for comparing two DejaviewSet objects. Only the following
+        /// attributes will be compared: top, left, height, width, state, 
+        /// view type, zoom level, rulers, navigation panel, and ribbon.
+        /// </summary>
+        /// <param name="djvSet"></param>
+        /// <returns></returns>
+        public bool Equals(DejaviewSet djvSet)
+        {
+            if (WindowHeight != djvSet.WindowHeight ||
+                WindowLeft != djvSet.WindowLeft ||
+                WindowState != djvSet.WindowState ||
+                WindowTop != djvSet.WindowTop ||
+                WindowViewType != djvSet.WindowViewType ||
+                WindowWidth != djvSet.WindowWidth ||
+                WindowZoom != djvSet.WindowZoom ||
+                DisplayRulers != djvSet.DisplayRulers ||
+                NavigationPanelWidth != djvSet.NavigationPanelWidth ||
+                RibbonHeight != djvSet.RibbonHeight) return false;
+
+            return true;
+        }
+
+        /// <summary>
         /// Inner class representing the window location of the document. 
         /// This added dimension allows for retainig a document's viewing 
         /// location per computer display screen. 
@@ -115,6 +138,25 @@ namespace Dejaview
             /// Timestamp of the last time the window was viewed on this screen.
             /// </summary>
             public DateTime LastViewed { get; set; }
+
+            /// <summary>
+            /// Method used to see if two WindowLocation objects refer to the same screen.
+            /// </summary>
+            /// <param name="other">The WindowLocation object to compare.</param>
+            /// <returns>True if the DisplayArrangementUID and ScreenUID match./returns>
+            public bool SameScreenAs(WindowLocation other)
+            {
+                if (string.IsNullOrEmpty(DisplayArrangementUID) ||
+                    string.IsNullOrEmpty(other.DisplayArrangementUID) ||
+                    !DisplayArrangementUID.Equals(other.DisplayArrangementUID))
+                    return false;
+
+                if (string.IsNullOrEmpty(ScreenUID) ||
+                    string.IsNullOrEmpty(other.ScreenUID))
+                    return false;
+
+                return ScreenUID.Equals(other.ScreenUID);
+            }
 
             /// <summary>
             /// Method used for comparing and sorting instances of this object.

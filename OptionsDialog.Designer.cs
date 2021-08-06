@@ -47,6 +47,7 @@ namespace Dejaview
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptionsDialog));
             this.grpRemember = new System.Windows.Forms.GroupBox();
             this.chkWindowType = new System.Windows.Forms.CheckBox();
             this.chkRulers = new System.Windows.Forms.CheckBox();
@@ -66,6 +67,7 @@ namespace Dejaview
             this.chkAutoUpdate = new System.Windows.Forms.CheckBox();
             this.lblVersion = new System.Windows.Forms.Label();
             this.tip = new System.Windows.Forms.ToolTip(this.components);
+            this.btnLogs = new System.Windows.Forms.Button();
             this.grpRemember.SuspendLayout();
             this.grpSettings.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -306,6 +308,17 @@ namespace Dejaview
             this.lblVersion.TabIndex = 3;
             this.lblVersion.Text = "(version)";
             // 
+            // btnLogs
+            // 
+            this.btnLogs.Image = ((System.Drawing.Image)(resources.GetObject("btnLogs.Image")));
+            this.btnLogs.Location = new System.Drawing.Point(189, 289);
+            this.btnLogs.Name = "btnLogs";
+            this.btnLogs.Size = new System.Drawing.Size(24, 23);
+            this.btnLogs.TabIndex = 4;
+            this.tip.SetToolTip(this.btnLogs, "View logs");
+            this.btnLogs.UseVisualStyleBackColor = true;
+            this.btnLogs.Click += new System.EventHandler(this.btnLogs_Click);
+            // 
             // OptionsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -313,6 +326,7 @@ namespace Dejaview
             this.CancelButton = this.btnClose;
             this.ClientSize = new System.Drawing.Size(312, 324);
             this.ControlBox = false;
+            this.Controls.Add(this.btnLogs);
             this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.grpSettings);
             this.Controls.Add(this.btnClose);
@@ -359,5 +373,6 @@ namespace Dejaview
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox txtUpdateURL;
         private System.Windows.Forms.Button btnSetDefaults;
+        private System.Windows.Forms.Button btnLogs;
     }
 }
