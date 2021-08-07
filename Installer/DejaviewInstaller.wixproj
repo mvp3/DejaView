@@ -6,7 +6,7 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>650ff498-642a-4779-8dd6-ae28f6fc1975</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>DejaViewInstaller-1.0.3</OutputName>
+    <OutputName>DejaViewInstaller-1.0.4</OutputName>
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">

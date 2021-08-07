@@ -33,7 +33,7 @@
     <PublishUrl>C:\OneDrive\www\lexis.cc\dejaview\</PublishUrl>
     <InstallUrl>https://lexem.cc/dejaview/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>1.0.1.15</ApplicationVersion>
+    <ApplicationVersion>1.0.4.21</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>1</UpdateInterval>
@@ -118,6 +118,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DefineConstants>VSTO40</DefineConstants>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Dejaview.xml</DocumentationFile>
   </PropertyGroup>
   <!--
     This section specifies references for the project.
@@ -222,6 +223,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include=".editorconfig" />
     <None Include="CONTRIBUTING.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

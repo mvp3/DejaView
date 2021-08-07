@@ -28,6 +28,9 @@ using System.Windows.Forms;
 
 namespace Dejaview
 {
+    /// <summary>
+    /// Dialog containing all of the configurable options for Deja View.
+    /// </summary>
     public partial class OptionsDialog : Form
     {
         /// <summary>
@@ -40,6 +43,9 @@ namespace Dejaview
         /// </summary>
         private bool bypassChange = false;
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public OptionsDialog()
         {
             bypassChange = true;

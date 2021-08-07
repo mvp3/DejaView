@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CS1587: XML comment is not placed on a valid language element
+dotnet_diagnostic.CS1587.severity = silent
