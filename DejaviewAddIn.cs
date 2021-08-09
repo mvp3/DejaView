@@ -129,7 +129,7 @@ namespace Dejaview
         /// Convenience method for logging an Deja View exception associated with the ActiveDocument.
         /// </summary>
         /// <example>Globals.DejaviewAddIn.Log(new Exception("Failed."));</example>
-        /// <param name="description">Exception representing an event.</param>
+        /// <param name="ex">Exception representing the event</param>
         internal void Log(Exception ex)
         {
             try
@@ -908,17 +908,15 @@ namespace Dejaview
                     str.Append(djvSet.WindowState);
                     break;
             }
-            str.AppendLine();
             if (djvSet.WindowState == 0)
             {
-                str.Append("   Window Width: \t");
+                str.Append("   (width: ");
                 str.Append(djvSet.WindowWidth);
-                str.AppendLine();
-                str.Append("   Window Height: \t");
+                str.Append(", height: ");
                 str.Append(djvSet.WindowHeight);
+                str.Append(")");
                 str.AppendLine();
             }
-            str.AppendLine();
 
             str.Append("Document View: \t");
             switch (djvSet.WindowViewType)
@@ -946,19 +944,18 @@ namespace Dejaview
                     str.Append(djvSet.WindowViewType);
                     break;
             }
-            str.AppendLine();
-            str.Append("   Zoom: \t\t");
+            str.Append("   (zoom: ");
             str.Append(djvSet.WindowZoom);
-            str.Append("%");
+            str.Append("%)");
             str.AppendLine();
             str.Append("View Rulers: \t");
             str.Append(djvSet.DisplayRulers);
             str.AppendLine();
             str.Append("View Navigation: \t");
             str.Append(djvSet.ShowNavigationPanel);
-            str.AppendLine();
-            str.Append("   Width: \t\t");
+            str.Append("   (width: ");
             str.Append(djvSet.NavigationPanelWidth);
+            str.Append(")");
             str.AppendLine();
             str.Append("Ribbon Height: \t");
             str.Append(djvSet.RibbonHeight);
@@ -968,24 +965,24 @@ namespace Dejaview
             if (djvSet.Locations != null)
             {
                 string sid = GetActiveScreenUID();
-                str.AppendLine("Window Location: ");
+                str.AppendLine("Window Locations: ");
                 foreach (DejaviewSet.WindowLocation wl in djvSet.Locations)
                 {
-                    str.Append((sid == wl.ScreenUID) ? "*" : " ");
-                    str.Append("   Display Arrangement: ");
+                    str.Append((sid == wl.ScreenUID) ? " * " : "   ");
+                    str.Append("Screen: ");
+                    str.Append(GetScreenNameFromUID(wl.ScreenUID));
+                    str.Append("  (top: ");
+                    str.Append(wl.WindowTop);
+                    str.Append(", left: ");
+                    str.Append(wl.WindowLeft);
+                    str.Append(")");
+                    str.AppendLine();
+                    str.Append("      Display Arrangement: ");
                     str.Append(wl.DisplayArrangementUID);
                     str.AppendLine();
-                    str.Append("   Screen: ");
-                    str.Append(GetScreenNameFromUID(wl.ScreenUID));
-                    str.AppendLine();
-                    str.Append("   \tTop: \t");
-                    str.Append(wl.WindowTop);
-                    str.AppendLine();
-                    str.Append("   \tLeft: \t");
-                    str.Append(wl.WindowLeft);
-                    str.AppendLine();
-                    str.Append("   \tLast viewed: ");
+                    str.Append("      Last viewed: ");
                     str.Append(wl.LastViewed);
+                    str.AppendLine();
                     str.AppendLine();
                 }
             }

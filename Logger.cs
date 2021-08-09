@@ -66,7 +66,7 @@ namespace Dejaview
         /// Logs an event. Automatically creates a <code>LoggerEvent</code> given
         /// a string description.
         /// </summary>
-        /// <param name="e">Event information</param>
+        /// <param name="description">String description of event</param>
         public void Add(string description)
         {
             events.Add(new LoggerEvent(description));
@@ -76,7 +76,7 @@ namespace Dejaview
         /// Logs an event. Automatically creates a <code>LoggerEvent</code> given
         /// a <code>Exception</code>.
         /// </summary>
-        /// <param name="e">Event information</param>
+        /// <param name="ex">Exception that represents the event</param>
         public void Add(Exception ex)
         {
             events.Add(new LoggerEvent(ex.Message.ToString()));
@@ -111,6 +111,11 @@ namespace Dejaview
             return events.ToArray();
         }
 
+        /// <summary>
+        /// Returns a string of this Logger instance, which lists every
+        /// event, one per line.
+        /// </summary>
+        /// <returns>All events, one per line</returns>
         public override string ToString()
         {
             StringBuilder str = new StringBuilder();

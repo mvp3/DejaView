@@ -26,16 +26,29 @@ namespace Dejaview
     /// </summary>
     public partial class BasicDialog : Form
     {
-        public BasicDialog(string title, string str)
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="caption">String to display as the caption of the dialog</param>
+        /// <param name="text">String to be displayed as the main text</param>
+        public BasicDialog(string caption, string text)
         {
             InitializeComponent();
-            this.Text = title;
-            txt.Text = str;
+            StartPosition = FormStartPosition.Manual;
+            Top = Cursor.Position.Y;
+            Left = Cursor.Position.X;
+            Text = caption;
+            txt.Text = text;
         }
 
-        public void setText(string str)
+        /// <summary>
+        /// Sets the string to be displayed as the main text in the body of the dialog.
+        /// This method is used as an alternative to the default constructor.
+        /// </summary>
+        /// <param name="text">String to be displayed as the main text</param>
+        public void setText(string text)
         {
-            txt.Text = str;
+            txt.Text = text;
         }
 
         private void BasicDialog_Load(object sender, EventArgs e)
