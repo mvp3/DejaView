@@ -33,7 +33,7 @@
     <PublishUrl>C:\OneDrive\www\lexis.cc\dejaview\</PublishUrl>
     <InstallUrl>https://lexem.cc/dejaview/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>1.0.4.21</ApplicationVersion>
+    <ApplicationVersion>1.0.0.21</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>1</UpdateInterval>

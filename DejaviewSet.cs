@@ -143,7 +143,7 @@ namespace Dejaview
             /// Method used to see if two WindowLocation objects refer to the same screen.
             /// </summary>
             /// <param name="other">The WindowLocation object to compare.</param>
-            /// <returns>True if the DisplayArrangementUID and ScreenUID match./returns>
+            /// <returns>True if the DisplayArrangementUID and ScreenUID match.</returns>
             public bool SameScreenAs(WindowLocation other)
             {
                 if (string.IsNullOrEmpty(DisplayArrangementUID) ||

@@ -6,7 +6,7 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>650ff498-642a-4779-8dd6-ae28f6fc1975</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>DejaViewInstaller-1.0.4</OutputName>
+    <OutputName>DejaViewInstaller-1.0.0</OutputName>
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -40,7 +40,9 @@
     <Error Text="The WiX Toolset v3.11 (or newer) build tools must be installed to build this project. To download the WiX Toolset, see http://wixtoolset.org/releases/" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>xcopy "!(TargetPath)" C:\OneDrive\www\dejaview.lexem.cc\download\ /Y &amp; explorer C:\OneDrive\www\dejaview.lexem.cc\download\</PostBuildEvent>
+    <PostBuildEvent>xcopy /y "!(TargetPath)" "C:\OneDrive\www\dejaview.lexem.cc\download\"
+explorer "C:\OneDrive\www\dejaview.lexem.cc\download\"
+%40set ERRORLEVEL=0</PostBuildEvent>
   </PropertyGroup>
   <!--
 	To modify your build process, add your task inside one of the targets below and uncomment it.

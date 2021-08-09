@@ -85,6 +85,9 @@ Save and restore the setting to show rulers.
 Save and restore the settings for how the ribbon should be displayed. Typically the ribbon is expanded 
 and pinned. But users may wish to hide the ribbon when viewing certain documents.
 
+##### View Logs (button)
+This button shows a dialog that displays the Deja View logs for the current instance corresponding to the active document.
+
 ### Custom XML Parts
 Invisibly and quietly, Deja View embeds a small XML segment (called "tags" in the user interface) 
 into the XML-based Word document (.docx) when it is saved. Changes to application window view 

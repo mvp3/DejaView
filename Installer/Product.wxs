@@ -8,7 +8,7 @@
 	<Product Id="*" 
            Name="Deja View (Microsoft Word Add-in)" 
            Language="1033" 
-           Version="1.0.4" 
+           Version="1.0.0" 
            Manufacturer="Lexem" 
            UpgradeCode="a63cf7f8-1206-4b59-acaf-e949effd6afa">
     
