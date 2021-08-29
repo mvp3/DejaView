@@ -35,8 +35,8 @@ namespace Dejaview
         {
             InitializeComponent();
             StartPosition = FormStartPosition.Manual;
-            Top = Cursor.Position.Y;
-            Left = Cursor.Position.X;
+            Top = Cursor.Position.Y - (Height / 2);
+            Left = Cursor.Position.X - (Width / 2);
             Text = caption;
             txt.Text = text;
         }

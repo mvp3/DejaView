@@ -49,7 +49,8 @@ namespace Dejaview
 
         /// <summary>
         /// Collection of unique Logger instances, each keyed to its own 
-        /// ActiveDocument.
+        /// ActiveDocument. This is necessary since Microsoft Word
+        /// uses a shared instance of this Add-in across all open documents.
         /// </summary>
         private Hashtable loggers = new Hashtable();
 
@@ -344,13 +345,20 @@ namespace Dejaview
 
                 loaded = true;
             }
-            catch (NullReferenceException)
+            catch (DejaViewException ex)
             {
                 Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
+                Log(ex.Message);
             }
-            catch (IndexOutOfRangeException)
+            catch (NullReferenceException ex)
             {
                 Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
+                Log("Error: " + ex.Message);
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
+                Log("Index error: " + ex.Message);
             }
             catch (Exception ex)
             {
@@ -515,14 +523,24 @@ namespace Dejaview
         /// <returns>A DejaviewSet from the Word document</returns>
         public DejaviewSet GetDejaviewFromDocument(Word.Document doc)
         {
-            var xml = doc.CustomXMLParts["Dejaview"];
+            Office.CustomXMLPart xml = null;
+            
+            try
+            {
+                xml = doc.CustomXMLParts["Dejaview"];
+            }
+            catch (Exception)
+            {
+                throw new DejaViewNoTagsException();
+            }
+
             if (xml == null) return null;
 
             XmlDocument xdoc = new XmlDocument();
             xdoc.LoadXml(xml.XML);
 
             var root = xdoc.SelectSingleNode("//*[local-name()='lexidata']");
-            if (root == null) return null;
+            if (root == null) throw new DejaViewInvalidTagException();
 
             Debug.WriteLine("**********************************");
             Debug.WriteLine(root.OuterXml);

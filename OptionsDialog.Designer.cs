@@ -47,7 +47,6 @@ namespace Dejaview
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptionsDialog));
             this.grpRemember = new System.Windows.Forms.GroupBox();
             this.chkWindowType = new System.Windows.Forms.CheckBox();
             this.chkRulers = new System.Windows.Forms.CheckBox();
@@ -310,7 +309,7 @@ namespace Dejaview
             // 
             // btnLogs
             // 
-            this.btnLogs.Image = ((System.Drawing.Image)(resources.GetObject("btnLogs.Image")));
+            this.btnLogs.Image = global::Dejaview.Properties.Resources.Log_16x;
             this.btnLogs.Location = new System.Drawing.Point(189, 289);
             this.btnLogs.Name = "btnLogs";
             this.btnLogs.Size = new System.Drawing.Size(24, 23);
