@@ -187,7 +187,7 @@ namespace Dejaview
 
         private void btnViewCurrent_Click(object sender, EventArgs e)
         {
-            DejaviewSet d = Globals.DejaviewAddIn.GetCurrentDejaviewSet();
+            DejaviewSet d = Globals.DejaviewAddIn.GetDejaviewSetFromDisplay();
             BasicDialog bd = new BasicDialog("Current View", Globals.DejaviewAddIn.GetTags(d));
             bd.Show();
         }

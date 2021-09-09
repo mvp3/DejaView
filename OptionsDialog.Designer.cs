@@ -95,10 +95,10 @@ namespace Dejaview
             this.chkWindowType.Location = new System.Drawing.Point(6, 71);
             this.chkWindowType.Name = "chkWindowType";
             this.chkWindowType.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-            this.chkWindowType.Size = new System.Drawing.Size(98, 17);
+            this.chkWindowType.Size = new System.Drawing.Size(90, 17);
             this.chkWindowType.TabIndex = 7;
-            this.chkWindowType.Text = "Window Type";
-            this.tip.SetToolTip(this.chkWindowType, "Save and restore the document window view type");
+            this.chkWindowType.Text = "View Layout";
+            this.tip.SetToolTip(this.chkWindowType, "Save and restore the document window view layout");
             this.chkWindowType.UseVisualStyleBackColor = true;
             this.chkWindowType.CheckedChanged += new System.EventHandler(this.chkWindowType_CheckedChanged);
             // 
@@ -107,9 +107,9 @@ namespace Dejaview
             this.chkRulers.AutoSize = true;
             this.chkRulers.Location = new System.Drawing.Point(137, 48);
             this.chkRulers.Name = "chkRulers";
-            this.chkRulers.Size = new System.Drawing.Size(56, 17);
+            this.chkRulers.Size = new System.Drawing.Size(51, 17);
             this.chkRulers.TabIndex = 6;
-            this.chkRulers.Text = "Rulers";
+            this.chkRulers.Text = "Ruler";
             this.tip.SetToolTip(this.chkRulers, "Save and restore the setting to show rulers");
             this.chkRulers.UseVisualStyleBackColor = true;
             this.chkRulers.CheckedChanged += new System.EventHandler(this.chkRulers_CheckedChanged);
@@ -145,10 +145,10 @@ namespace Dejaview
             this.chkNavigationPanel.Location = new System.Drawing.Point(6, 48);
             this.chkNavigationPanel.Name = "chkNavigationPanel";
             this.chkNavigationPanel.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-            this.chkNavigationPanel.Size = new System.Drawing.Size(113, 17);
+            this.chkNavigationPanel.Size = new System.Drawing.Size(111, 17);
             this.chkNavigationPanel.TabIndex = 2;
-            this.chkNavigationPanel.Text = "Navigation Panel";
-            this.tip.SetToolTip(this.chkNavigationPanel, "Save and restore the visibility and width details for side navigation panel");
+            this.chkNavigationPanel.Text = "Navigation Pane";
+            this.tip.SetToolTip(this.chkNavigationPanel, "Save and restore the visibility and width details for side navigation pane");
             this.chkNavigationPanel.UseVisualStyleBackColor = true;
             this.chkNavigationPanel.CheckedChanged += new System.EventHandler(this.chkNav_CheckedChanged);
             // 

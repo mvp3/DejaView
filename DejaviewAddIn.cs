@@ -171,7 +171,7 @@ namespace Dejaview
         /// on the current ActiveWindow display parameters.
         /// </summary>
         /// <returns>DejaviewSet object containing current view parameters</returns>
-        internal DejaviewSet GetCurrentDejaviewSet()
+        internal DejaviewSet GetDejaviewSetFromDisplay()
         {
             DejaviewSet djvSet = new DejaviewSet();
             djvSet.WindowHeight = Application.Height;
@@ -282,7 +282,7 @@ namespace Dejaview
 
             try
             {
-                DejaviewSet djvSet = GetDejaviewFromDocument(doc);
+                DejaviewSet djvSet = GetDejaviewSetFromDocument(doc);
 
                 doc.ActiveWindow.WindowState = (Word.WdWindowState)djvSet.WindowState;
                 if (doc.ActiveWindow.WindowState == Word.WdWindowState.wdWindowStateMinimize)
@@ -298,8 +298,17 @@ namespace Dejaview
 
                 if (DejaviewConfig.Instance.RememberWindowType)
                 {
-                    doc.ActiveWindow.View.Type = (Word.WdViewType)djvSet.WindowViewType;
-                    Log("Window type restored (" + (Word.WdViewType)djvSet.WindowViewType + ").");
+                    try
+                    {
+                        doc.ActiveWindow.View.Type = (Word.WdViewType)djvSet.WindowViewType;
+                        Log("Window type restored (" + (Word.WdViewType)djvSet.WindowViewType + ").");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log("Window type could not be restored (type=" + djvSet.WindowViewType + ").");
+                        doc.ActiveWindow.View.Type = Word.WdViewType.wdNormalView;
+                        Log("Window type set to Normal.");
+                    }
                 }
 
                 if (DejaviewConfig.Instance.RememberZoom)
@@ -364,6 +373,7 @@ namespace Dejaview
             {
                 Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
                 DisplayStatus("Could not restore document view. " + ex.Message);
+                Debug.WriteLine(ex.StackTrace);
             }
         }
 
@@ -380,11 +390,11 @@ namespace Dejaview
         {
             if (!DejaviewConfig.Instance.Enable) return;
 
-            DejaviewSet _djvSet = GetCurrentDejaviewSet();
+            DejaviewSet djvSetDisplay = GetDejaviewSetFromDisplay();
             DejaviewSet djvSet = GetDejaviewSet();
 
             // If the window has not changed then abort the save.
-            if (_djvSet.Equals(djvSet)) return;
+            if (djvSetDisplay.Equals(djvSet)) return;
 
             try
             {
@@ -396,7 +406,9 @@ namespace Dejaview
                 }
                 if (!save) return;
 
-                UpdateDejaviewSet(_djvSet);
+                UpdateDejaviewSet(djvSetDisplay);
+
+                djvSet = GetDejaviewSet();
 
                 SaveDejaviewToDocument(doc, djvSet);
 
@@ -416,19 +428,29 @@ namespace Dejaview
         /// <param name="djvSet">DejaviewSet object to save to document</param>
         private void SaveDejaviewToDocument(Word.Document doc, DejaviewSet djvSet)
         {
+            // Abort save if the djvSet object is empty
+            if (djvSet == null || (djvSet.WindowWidth == 0 && djvSet.WindowHeight == 0)) return;
+
             // First check to see if a Deja View CustomXMLParts already exists.
             // If so, delete it. This is the way that Microsoft updates
             // the Custom XML parts.
             try
             {
                 var cp = doc.CustomXMLParts["Dejaview"];
-                if (cp != null) cp.Delete();
-                Debug.WriteLine("Old Deja View tags removed");
+                try
+                {
+                    if (cp != null) cp.Delete();
+                    Debug.WriteLine("Old Deja View tags removed");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("SetDejaviewToDocument() => " + ex.StackTrace);
+                    DisplayStatus("Could not remove previously document view parameters.");
+                }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("SetDejaviewToDocument() => " + ex.StackTrace);
-                DisplayStatus("Could not remove previously document view parameters.");
+                Debug.WriteLine("No Deja View tags found; new document?");
             }
 
             StringBuilder xml = new StringBuilder("<lexidata xmlns=\"Dejaview\">", 1024);
@@ -521,7 +543,7 @@ namespace Dejaview
         /// </summary>
         /// <param name="doc">Microsoft Word document</param>
         /// <returns>A DejaviewSet from the Word document</returns>
-        public DejaviewSet GetDejaviewFromDocument(Word.Document doc)
+        public DejaviewSet GetDejaviewSetFromDocument(Word.Document doc)
         {
             Office.CustomXMLPart xml = null;
             
