@@ -266,7 +266,7 @@
     </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>C30F3DF133C20FE833EB34FC1A54333B8A86D26B</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>E361B9DB8C313D7426B173A231431600CE473344</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestTimestampUrl>http://timestamp.digicert.com</ManifestTimestampUrl>

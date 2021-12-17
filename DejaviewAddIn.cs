@@ -303,7 +303,7 @@ namespace Dejaview
                         doc.ActiveWindow.View.Type = (Word.WdViewType)djvSet.WindowViewType;
                         Log("Window type restored (" + (Word.WdViewType)djvSet.WindowViewType + ").");
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         Log("Window type could not be restored (type=" + djvSet.WindowViewType + ").");
                         doc.ActiveWindow.View.Type = Word.WdViewType.wdNormalView;
@@ -313,14 +313,30 @@ namespace Dejaview
 
                 if (DejaviewConfig.Instance.RememberZoom)
                 {
-                    doc.ActiveWindow.View.Zoom.Percentage = djvSet.WindowZoom;
-                    Log("Window zoom restored (" + djvSet.WindowZoom + ").");
+                    try
+                    {
+                        doc.ActiveWindow.View.Zoom.Percentage = djvSet.WindowZoom;
+                        Log("Window zoom restored (" + djvSet.WindowZoom + ").");
+                    }
+                    catch (Exception)
+                    {
+                        Log("Window zoom could not be restored (zoom=" + djvSet.WindowZoom + ").");
+                        doc.ActiveWindow.View.Zoom.Percentage = 100;
+                        Log("Window zoom set to 100%.");
+                    }
                 }
 
                 if (DejaviewConfig.Instance.RememberRulers)
                 {
-                    doc.ActiveWindow.DisplayRulers = djvSet.DisplayRulers;
-                    Log("Window rulers restored (" + djvSet.DisplayRulers + ").");
+                    try
+                    {
+                        doc.ActiveWindow.DisplayRulers = djvSet.DisplayRulers;
+                        Log("Window rulers restored (" + djvSet.DisplayRulers + ").");
+                    }
+                    catch (Exception)
+                    {
+                        Log("Window rulers could not be restored (rulers=" + djvSet.DisplayRulers+ ").");
+                    }
                 }
 
                 if (DejaviewConfig.Instance.RememberRibbon)
@@ -448,7 +464,7 @@ namespace Dejaview
                     DisplayStatus("Could not remove previously document view parameters.");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Debug.WriteLine("No Deja View tags found; new document?");
             }
