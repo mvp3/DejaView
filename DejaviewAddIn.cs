@@ -186,9 +186,8 @@ namespace Dejaview
             djvSet.WindowZoom = Application.ActiveWindow.View.Zoom.Percentage;
             djvSet.DisplayRulers = Application.ActiveWindow.DisplayRulers;
 
-            Office.CommandBar nav = Application.CommandBars["Navigation"];
-            djvSet.ShowNavigationPanel = nav.Visible;
-            djvSet.NavigationPanelWidth = nav.Width;
+            djvSet.ShowNavigationPanel = Application.TaskPanes[Word.WdTaskPanes.wdTaskPaneNav].Visible;
+            djvSet.NavigationPanelWidth = Application.CommandBars["Navigation"].Width;
 
             Office.CommandBar ribbon = Application.CommandBars["Ribbon"];
             djvSet.RibbonHeight = ribbon.Height;
@@ -288,14 +287,6 @@ namespace Dejaview
                 if (doc.ActiveWindow.WindowState == Word.WdWindowState.wdWindowStateMinimize)
                     doc.ActiveWindow.WindowState = Word.WdWindowState.wdWindowStateNormal;
 
-                if (DejaviewConfig.Instance.RememberNavigationPanel)
-                {
-                    Office.CommandBar nav = Application.CommandBars["Navigation"];
-                    nav.Visible = djvSet.ShowNavigationPanel;
-                    nav.Width = djvSet.NavigationPanelWidth;
-                    Log("Navigation panel restored (" + djvSet.ShowNavigationPanel + ", " + djvSet.NavigationPanelWidth + ").");
-                }
-
                 if (DejaviewConfig.Instance.RememberWindowType)
                 {
                     try
@@ -355,6 +346,20 @@ namespace Dejaview
                             doc.ActiveWindow.ToggleRibbon();
                             Log("Window ribbon toggled (height: " + djvSet.RibbonHeight + ").");
                         }
+                    }
+                }
+
+                if (DejaviewConfig.Instance.RememberNavigationPanel)
+                {
+                    if (djvSet.ShowNavigationPanel)
+                    {
+                        Application.TaskPanes[Word.WdTaskPanes.wdTaskPaneNav].Visible = true;
+                        Application.CommandBars["Navigation"].Width = djvSet.NavigationPanelWidth;
+                        Log("Navigation panel restored (" + djvSet.ShowNavigationPanel + ", " + djvSet.NavigationPanelWidth + ").");
+                    }
+                    else
+                    {
+                        Application.TaskPanes[Word.WdTaskPanes.wdTaskPaneNav].Visible = false;
                     }
                 }
 
