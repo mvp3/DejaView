@@ -266,23 +266,14 @@ namespace Dejaview
         }
 
         /// <summary>
-        /// Method called when a document is opened.
+        /// Set the view of a given document.
         /// </summary>
-        /// <param name="doc">Active Word document that opened.</param>
-        internal void DejaviewAddIn_DocumentOpen(Word.Document doc)
+        /// <param name="doc">Document to be displayed</param>
+        /// <param name="djvSet">DejaviewSet representing the view parameters to be set</param>
+        internal void SetDocumentView(Word.Document doc, DejaviewSet djvSet)
         {
-            if (!DejaviewConfig.Instance.Enable) return;
-
-            // Create a unique instance of Logger for this document.
-            loggers.Add(doc.ActiveWindow.Caption, new Logger());
-
-            // Create first log event as the title of the ActiveDocument window.
-            Log(doc.ActiveWindow.Caption);
-
             try
             {
-                DejaviewSet djvSet = GetDejaviewSetFromDocument(doc);
-
                 doc.ActiveWindow.WindowState = (Word.WdWindowState)djvSet.WindowState;
                 if (doc.ActiveWindow.WindowState == Word.WdWindowState.wdWindowStateMinimize)
                     doc.ActiveWindow.WindowState = Word.WdWindowState.wdWindowStateNormal;
@@ -326,7 +317,7 @@ namespace Dejaview
                     }
                     catch (Exception)
                     {
-                        Log("Window rulers could not be restored (rulers=" + djvSet.DisplayRulers+ ").");
+                        Log("Window rulers could not be restored (rulers=" + djvSet.DisplayRulers + ").");
                     }
                 }
 
@@ -374,6 +365,48 @@ namespace Dejaview
                 SetButtonTip();
 
                 loaded = true;
+            }
+            catch (DejaViewException ex)
+            {
+                Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
+                Log(ex.Message);
+            }
+            catch (NullReferenceException ex)
+            {
+                Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
+                Log("Error: " + ex.Message);
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
+                Log("Index error: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
+                DisplayStatus("Could not restore document view. " + ex.Message);
+                Debug.WriteLine(ex.StackTrace);
+            }
+        }
+
+        /// <summary>
+        /// Method called when a document is opened.
+        /// </summary>
+        /// <param name="doc">Active Word document that opened.</param>
+        internal void DejaviewAddIn_DocumentOpen(Word.Document doc)
+        {
+            if (!DejaviewConfig.Instance.Enable) return;
+
+            // Create a unique instance of Logger for this document.
+            loggers.Add(doc.ActiveWindow.Caption, new Logger());
+
+            // Create first log event as the title of the ActiveDocument window.
+            Log(doc.ActiveWindow.Caption);
+
+            try
+            {
+                DejaviewSet djvSet = GetDejaviewSetFromDocument(doc);
+                SetDocumentView(doc, djvSet);
             }
             catch (DejaViewException ex)
             {
@@ -490,6 +523,12 @@ namespace Dejaview
             xml.Append("<height>");
             xml.Append(djvSet.WindowHeight);
             xml.Append("</height>");
+            xml.Append("<left>");
+            xml.Append(djvSet.WindowLeft);
+            xml.Append("</left>");
+            xml.Append("<top>");
+            xml.Append(djvSet.WindowTop);
+            xml.Append("</top>");
             xml.Append("<windowstate>");
             xml.Append(djvSet.WindowState);
             xml.Append("</windowstate>");
@@ -645,6 +684,10 @@ namespace Dejaview
                             djvSet.WindowWidth = int.Parse(n.InnerText);
                         else if (n.Name == "height" && !string.IsNullOrEmpty(n.InnerText))
                             djvSet.WindowHeight = int.Parse(n.InnerText);
+                        else if (n.Name == "left" && !string.IsNullOrEmpty(n.InnerText))
+                            djvSet.WindowLeft = int.Parse(n.InnerText);
+                        else if (n.Name == "top" && !string.IsNullOrEmpty(n.InnerText))
+                            djvSet.WindowTop = int.Parse(n.InnerText);
                         else if (n.Name == "windowstate" && !string.IsNullOrEmpty(n.InnerText))
                             djvSet.WindowState = int.Parse(n.InnerText);
                         else if (n.Name == "view" && !string.IsNullOrEmpty(n.InnerText))

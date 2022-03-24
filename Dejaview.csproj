@@ -33,7 +33,7 @@
     <PublishUrl>C:\OneDrive\www\lexis.cc\dejaview\</PublishUrl>
     <InstallUrl>https://lexem.cc/dejaview/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>1.0.0.21</ApplicationVersion>
+    <ApplicationVersion>1.0.0.22</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>1</UpdateInterval>
@@ -252,6 +252,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="dejaview.ico" />
+    <None Include="Resources\ApplyCodeChanges_16x.png" />
+    <None Include="Resources\DefaultConstraint_16x.png" />
+    <None Include="Resources\Time_yellow_7x_16x.png" />
+    <None Include="Resources\XMLCommentTag_16x.png" />
     <None Include="Resources\Log_16x.png" />
   </ItemGroup>
   <PropertyGroup>
@@ -266,7 +270,7 @@
     </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>E361B9DB8C313D7426B173A231431600CE473344</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>6957E893B85291282DDE7F06F0DDC7B469F00CC5</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestTimestampUrl>http://timestamp.digicert.com</ManifestTimestampUrl>

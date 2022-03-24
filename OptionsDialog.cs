@@ -215,5 +215,25 @@ namespace Dejaview
             BasicDialog bd = new BasicDialog("Log", Globals.DejaviewAddIn.GetLogger().ToString());
             bd.Show();
         }
+
+        private void btnApply_Click(object sender, EventArgs e)
+        {
+            // Get Logger
+            Logger logger = Globals.DejaviewAddIn.GetLogger();
+            logger.Add("Checking views...");
+
+            DejaviewSet s = Globals.DejaviewAddIn.GetDejaviewSet();
+            DejaviewSet d = Globals.DejaviewAddIn.GetDejaviewSetFromDisplay();
+            if (d.Equals(s))
+            {
+                logger.Add("  Current view and saved view match!");
+                MessageBox.Show(this, "The current document view is the same as the last saved document view.", "Same", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                logger.Add("  Applying saved view.");
+                Globals.DejaviewAddIn.SetDocumentView(Globals.DejaviewAddIn.Application.ActiveDocument, s);
+            }
+        }
     }
 }
