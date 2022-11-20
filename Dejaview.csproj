@@ -31,9 +31,9 @@
     <IsWebBootstrapper>True</IsWebBootstrapper>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <PublishUrl>C:\OneDrive\www\lexis.cc\dejaview\</PublishUrl>
-    <InstallUrl>https://lexem.cc/dejaview/</InstallUrl>
+    <InstallUrl>https://dejaview.lexem.cc/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>1.0.0.22</ApplicationVersion>
+    <ApplicationVersion>1.0.0.24</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>1</UpdateInterval>
@@ -196,6 +196,12 @@
       <DependentUpon>DejaviewRibbon.cs</DependentUpon>
     </Compile>
     <Compile Include="DejaviewSet.cs" />
+    <Compile Include="InfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InfoForm.Designer.cs">
+      <DependentUpon>InfoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Logger.cs" />
     <Compile Include="OptionsDialog.cs">
       <SubType>Form</SubType>
@@ -211,6 +217,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DejaviewRibbon.resx">
       <DependentUpon>DejaviewRibbon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InfoForm.resx">
+      <DependentUpon>InfoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OptionsDialog.resx">
       <DependentUpon>OptionsDialog.cs</DependentUpon>
@@ -270,7 +279,7 @@
     </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>6957E893B85291282DDE7F06F0DDC7B469F00CC5</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>37ACBDFC139E1E76FCD3F2F356B68241713E33BC</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestTimestampUrl>http://timestamp.digicert.com</ManifestTimestampUrl>

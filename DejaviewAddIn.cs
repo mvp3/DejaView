@@ -54,6 +54,8 @@ namespace Dejaview
         /// </summary>
         private Hashtable loggers = new Hashtable();
 
+        private bool initialized = false;
+
         /// <summary>
         /// Private member that indicates if Deja View tags were loaded from 
         /// the current ActiveDocument.
@@ -66,15 +68,16 @@ namespace Dejaview
         /// <param name="sender">Sender object</param>
         /// <param name="e">Event arguments</param>
         /// <seealso cref="InternalStartup"/>
-        private void ThisAddIn_Startup(object sender, EventArgs e)
+        private void DejaviewAddIn_Startup(object sender, EventArgs e)
         {
+            //new InfoForm("DejaView started (" + Application.ActiveDocument.Name + "): " + DateTime.Now);
             try
             {
                 if (!DejaviewConfig.Instance.Enable) return;
-                
+
                 // Fire the DocumentOpen event for the first time
-                if (Application.Documents.Count >= 1)
-                    DejaviewAddIn_DocumentOpen(Application.ActiveDocument);
+                DejaviewAddIn_DocumentOpen(Application.ActiveDocument);
+                this.Log("DejaView loaded (" + Application.ActiveDocument.Name + "): " + DateTime.Now);
             }
             catch (Exception ex)
             {
@@ -96,8 +99,21 @@ namespace Dejaview
         /// <param name="sender">Sender object</param>
         /// <param name="e">Event arguments</param>
         /// <seealso cref="InternalStartup"/>
-        private void ThisAddIn_Shutdown(object sender, EventArgs e)
+        private void DejaviewAddIn_Shutdown(object sender, EventArgs e)
         {
+        }
+
+        /// <summary>
+        /// A trigger method to ensure that DejaView initializes a document's 
+        /// settings upon opening each document.
+        /// 
+        /// Without this trigger, DejaView properties are not always applied 
+        /// when a document opens because the VSTO plugin is already initialized.
+        /// </summary>
+        private void InitializeCustom()
+        { 
+            if (!initialized) Globals.DejaviewAddIn.Application.DocumentOpen += new Word.ApplicationEvents4_DocumentOpenEventHandler(DejaviewAddIn_DocumentOpen);
+            initialized = true;
         }
 
         /// <summary>
@@ -395,6 +411,7 @@ namespace Dejaview
         /// <param name="doc">Active Word document that opened.</param>
         internal void DejaviewAddIn_DocumentOpen(Word.Document doc)
         {
+            //new InfoForm("Document Opened (" + doc.ActiveWindow.Caption + "): " + DateTime.Now);
             if (!DejaviewConfig.Instance.Enable) return;
 
             // Create a unique instance of Logger for this document.
@@ -1148,9 +1165,9 @@ namespace Dejaview
         /// </summary>
         private void InternalStartup()
         {
-            this.Startup += new EventHandler(ThisAddIn_Startup);
-            this.Shutdown += new EventHandler(ThisAddIn_Shutdown);
-            this.Application.DocumentOpen += DejaviewAddIn_DocumentOpen;
+            this.Startup += new EventHandler(DejaviewAddIn_Startup);
+            this.Shutdown += new EventHandler(DejaviewAddIn_Shutdown);
+            //this.Application.DocumentOpen += DejaviewAddIn_DocumentOpen;
             this.Application.DocumentBeforeSave += DejaviewAddIn_DocumentBeforeSave;
         }
 

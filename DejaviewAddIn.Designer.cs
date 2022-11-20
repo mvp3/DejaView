@@ -10,8 +10,7 @@
 
 #pragma warning disable 414
 namespace Dejaview {
-    
-    
+
     /// 
     [Microsoft.VisualStudio.Tools.Applications.Runtime.StartupObjectAttribute(0)]
     [global::System.Security.Permissions.PermissionSetAttribute(global::System.Security.Permissions.SecurityAction.Demand, Name="FullTrust")]
@@ -48,6 +47,7 @@ namespace Dejaview {
             this.InitializeControls();
             this.InitializeComponents();
             this.InitializeData();
+            this.InitializeCustom();
         }
         
         /// 
