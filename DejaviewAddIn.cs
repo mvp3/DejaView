@@ -31,6 +31,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Collections;
+using System.Drawing.Imaging;
 
 namespace Dejaview
 {
@@ -54,13 +55,20 @@ namespace Dejaview
         /// </summary>
         private Hashtable loggers = new Hashtable();
 
-        private bool initialized = false;
+        /// <summary>
+        /// Collection that retains what documents have had their view set 
+        /// by DV. Each element in this Collection is a bool flag keyed to its own
+        /// ActiveDocument, indicating if that document's view settings have been 
+        /// applied. This is necessary since Microsoft Word does not reliably 
+        /// fire the DocumentOpen event when a document is opened.
+        /// </summary>
+        private Hashtable views = new Hashtable();
 
         /// <summary>
-        /// Private member that indicates if Deja View tags were loaded from 
-        /// the current ActiveDocument.
+        /// Used by the InitializeCustom() method to prevent registering duplicate 
+        /// event handlers.
         /// </summary>
-        private bool loaded = false;
+        private bool initialized = false;
 
         /// <summary>
         /// Called when this Add-in is initialized.
@@ -70,7 +78,7 @@ namespace Dejaview
         /// <seealso cref="InternalStartup"/>
         private void DejaviewAddIn_Startup(object sender, EventArgs e)
         {
-            //new InfoForm("DejaView started (" + Application.ActiveDocument.Name + "): " + DateTime.Now);
+            //new InfoForm("DejaView started " + DateTime.Now, Application.ActiveDocument.Name);
             try
             {
                 if (!DejaviewConfig.Instance.Enable) return;
@@ -111,297 +119,55 @@ namespace Dejaview
         /// when a document opens because the VSTO plugin is already initialized.
         /// </summary>
         private void InitializeCustom()
-        { 
-            if (!initialized) Globals.DejaviewAddIn.Application.DocumentOpen += new Word.ApplicationEvents4_DocumentOpenEventHandler(DejaviewAddIn_DocumentOpen);
+        {
+            if (!initialized)
+            {
+                //Globals.DejaviewAddIn.Application.DocumentOpen += new Word.ApplicationEvents4_DocumentOpenEventHandler(DejaviewAddIn_DocumentOpen);
+                //Globals.DejaviewAddIn.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(DejaviewAddIn_DocumentBeforeSave);
+                Word.ApplicationEvents4_Event wdEvents4 = (Word.ApplicationEvents4_Event)this.Application;
+                wdEvents4.DocumentOpen += new Word.ApplicationEvents4_DocumentOpenEventHandler(DejaviewAddIn_DocumentOpen);
+                wdEvents4.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(DejaviewAddIn_DocumentBeforeSave);
+                wdEvents4.NewDocument += new Word.ApplicationEvents4_NewDocumentEventHandler(DejaviewAddIn_NewDocument);
+                wdEvents4.DocumentChange += new Word.ApplicationEvents4_DocumentChangeEventHandler(DejaviewAddIn_DocumentChange);
+            }
             initialized = true;
         }
 
         /// <summary>
-        /// Get the unique Logger for the ActiveDocument.
+        /// Method called when a new document is created.
         /// </summary>
-        /// <returns>Logger instance</returns>
-        internal Logger GetLogger()
+        /// <param name="doc">Active Word document newly created.</param>
+        internal void DejaviewAddIn_NewDocument(Word.Document doc)
         {
-            return (Logger)loggers[Globals.DejaviewAddIn.Application.ActiveWindow.Caption];
+            // TODO: Set defaults!
         }
 
         /// <summary>
-        /// Convenience method for logging an event associated with the ActiveDocument.
+        /// Method called when a change occurs in the document.
+        /// This method is necessary since opening an existing document
+        /// is not always caught by ApplicationEvents4_DocumentOpenEventHandler.
         /// </summary>
-        /// <example>Globals.DejaviewAddIn.Log("Window restored.");</example>
-        /// <param name="description">String description of the event.</param>
-        internal void Log(string description)
+        internal void DejaviewAddIn_DocumentChange()
         {
-            try
+            string title = Application.ActiveWindow.Caption;
+            // If the Active document has not had its view set by DJ
+            if (views.ContainsKey(title) && !(bool)views[title])
             {
-                GetLogger().Add(description);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("DejaviewAddIn::Log(string) => " + ex.StackTrace);
-            }
-        }
+                // Get Logger
+                Logger logger = GetLogger();
+                logger.Add("Checking views...");
 
-        /// <summary>
-        /// Convenience method for logging an Deja View exception associated with the ActiveDocument.
-        /// </summary>
-        /// <example>Globals.DejaviewAddIn.Log(new Exception("Failed."));</example>
-        /// <param name="ex">Exception representing the event</param>
-        internal void Log(Exception ex)
-        {
-            try
-            {
-                GetLogger().Add(ex);
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("DejaviewAddIn::Log(exception) => " + e.StackTrace);
-            }
-        }
-
-        /// <summary>
-        /// This method retrieves the DejaviewSet associated with the ActiveDocument.
-        /// </summary>
-        /// <returns>DejaviewSet object associated with the ActiveDocument</returns>
-        internal DejaviewSet GetDejaviewSet()
-        {
-            DejaviewSet djvSet = (DejaviewSet)djvSets[Globals.DejaviewAddIn.Application.ActiveWindow.Caption];
-            return djvSet ?? new DejaviewSet();
-        }
-
-        /// <summary>
-        /// This method links the provided DejaviewSet object to the ActiveDocument and then stores it
-        /// in a Collection for easy retrieval. If a DejaviewSet object is already associated with the ActiveDocument
-        /// that object is simply updated.
-        /// </summary>
-        /// <param name="djvSet">DejaviewSet object to link to the ActiveDocument</param>
-        internal void SetDejaviewSet(DejaviewSet djvSet)
-        {
-            string c = Globals.DejaviewAddIn.Application.ActiveWindow.Caption;
-            if (djvSets.Contains(c)) djvSets.Remove(c);
-            djvSets.Add(c, djvSet);
-        }
-
-        /// <summary>
-        /// This method creates a new DejaviewSet object and then assigns values to it based
-        /// on the current ActiveWindow display parameters.
-        /// </summary>
-        /// <returns>DejaviewSet object containing current view parameters</returns>
-        internal DejaviewSet GetDejaviewSetFromDisplay()
-        {
-            DejaviewSet djvSet = new DejaviewSet();
-            djvSet.WindowHeight = Application.Height;
-            djvSet.WindowLeft = Application.Left;
-            djvSet.WindowState = (int)Application.WindowState;
-            djvSet.WindowTop = Application.Top;
-            djvSet.WindowWidth = Application.Width;
-
-            djvSet.WindowViewType = (int)Application.ActiveWindow.View.Type;
-            if (djvSet.WindowViewType == (int)Word.WdViewType.wdNormalView) djvSet.DraftView = true;
-
-            djvSet.WindowZoom = Application.ActiveWindow.View.Zoom.Percentage;
-            djvSet.DisplayRulers = Application.ActiveWindow.DisplayRulers;
-
-            djvSet.ShowNavigationPanel = Application.TaskPanes[Word.WdTaskPanes.wdTaskPaneNav].Visible;
-            djvSet.NavigationPanelWidth = Application.CommandBars["Navigation"].Width;
-
-            Office.CommandBar ribbon = Application.CommandBars["Ribbon"];
-            djvSet.RibbonHeight = ribbon.Height;
-
-            return djvSet;
-        }
-
-        /// <summary>
-        /// Updates the DejaviewSet object associated with the ActiveDocument with the
-        /// values of the provided DejaviewSet object.
-        /// </summary>
-        /// <param name="newSet">DejaviewSet object containing new values</param>
-        internal void UpdateDejaviewSet(DejaviewSet newSet)
-        {
-            DejaviewSet djvSet = GetDejaviewSet();
-            djvSet.WindowHeight = newSet.WindowHeight;
-            djvSet.WindowLeft = newSet.WindowLeft;
-            djvSet.WindowState = newSet.WindowState;
-            djvSet.WindowTop = newSet.WindowTop;
-            djvSet.WindowWidth = newSet.WindowWidth;
-            djvSet.WindowViewType = newSet.WindowViewType;
-            djvSet.WindowZoom = newSet.WindowZoom;
-            djvSet.DisplayRulers = newSet.DisplayRulers;
-            djvSet.ShowNavigationPanel = newSet.ShowNavigationPanel;
-            djvSet.NavigationPanelWidth = newSet.NavigationPanelWidth;
-            djvSet.RibbonHeight = newSet.RibbonHeight;
-
-            DejaviewSet.WindowLocation wloc = new DejaviewSet.WindowLocation();
-            wloc.DisplayArrangementUID = GetDisplayArrangementUID();
-            wloc.ScreenUID = GetActiveScreenUID();
-            wloc.WindowTop = djvSet.WindowTop;
-            wloc.WindowLeft = djvSet.WindowLeft;
-            wloc.LastViewed = DateTime.Now;
-
-            List<DejaviewSet.WindowLocation> locList = new List<DejaviewSet.WindowLocation>();
-            if (djvSet.Locations != null)
-            {
-                bool exists = false;
-                locList.AddRange(djvSet.Locations);
-                foreach (DejaviewSet.WindowLocation _wloc in djvSet.Locations)
+                DejaviewSet s = GetDejaviewSet();
+                DejaviewSet d = GetDejaviewSetFromDisplay();
+                if (d.Equals(s))
                 {
-                    if (_wloc.ScreenUID == wloc.ScreenUID)
-                    {
-                        exists = true;
-                        _wloc.WindowTop = wloc.WindowTop;
-                        _wloc.WindowLeft = wloc.WindowLeft;
-                        _wloc.LastViewed = DateTime.Now;
-                    }
+                    logger.Add("  Current view and saved view match, no changes.");
                 }
-                if (!exists) locList.Add(wloc);
-            }
-            else
-            {
-                locList.Add(wloc);
-            }
-
-            // Remove all WindowLocation objects that have the same 
-            // DisplayArrangementUID and ScreenID as a WindowLocation in the new set.
-            if (newSet.Locations != null)
-            {
-                foreach (DejaviewSet.WindowLocation ol in djvSet.Locations)
+                else
                 {
-                    foreach (DejaviewSet.WindowLocation nl in newSet.Locations)
-                    {
-                        try
-                        {
-                            if (ol.SameScreenAs(nl)) locList.Remove(ol);
-                        }
-                        catch { }
-                    }
+                    logger.Add("  Applying saved view.");
+                    SetDocumentView(Application.ActiveDocument, s);
                 }
-                locList.AddRange(newSet.Locations);
-            }
-            djvSet.Locations = locList.ToArray();
-            SetDejaviewSet(djvSet);
-        }
-
-        /// <summary>
-        /// Set the view of a given document.
-        /// </summary>
-        /// <param name="doc">Document to be displayed</param>
-        /// <param name="djvSet">DejaviewSet representing the view parameters to be set</param>
-        internal void SetDocumentView(Word.Document doc, DejaviewSet djvSet)
-        {
-            try
-            {
-                doc.ActiveWindow.WindowState = (Word.WdWindowState)djvSet.WindowState;
-                if (doc.ActiveWindow.WindowState == Word.WdWindowState.wdWindowStateMinimize)
-                    doc.ActiveWindow.WindowState = Word.WdWindowState.wdWindowStateNormal;
-
-                if (DejaviewConfig.Instance.RememberWindowType)
-                {
-                    try
-                    {
-                        doc.ActiveWindow.View.Type = (Word.WdViewType)djvSet.WindowViewType;
-                        Log("Window type restored (" + (Word.WdViewType)djvSet.WindowViewType + ").");
-                    }
-                    catch (Exception)
-                    {
-                        Log("Window type could not be restored (type=" + djvSet.WindowViewType + ").");
-                        doc.ActiveWindow.View.Type = Word.WdViewType.wdNormalView;
-                        Log("Window type set to Normal.");
-                    }
-                }
-
-                if (DejaviewConfig.Instance.RememberZoom)
-                {
-                    try
-                    {
-                        doc.ActiveWindow.View.Zoom.Percentage = djvSet.WindowZoom;
-                        Log("Window zoom restored (" + djvSet.WindowZoom + ").");
-                    }
-                    catch (Exception)
-                    {
-                        Log("Window zoom could not be restored (zoom=" + djvSet.WindowZoom + ").");
-                        doc.ActiveWindow.View.Zoom.Percentage = 100;
-                        Log("Window zoom set to 100%.");
-                    }
-                }
-
-                if (DejaviewConfig.Instance.RememberRulers)
-                {
-                    try
-                    {
-                        doc.ActiveWindow.DisplayRulers = djvSet.DisplayRulers;
-                        Log("Window rulers restored (" + djvSet.DisplayRulers + ").");
-                    }
-                    catch (Exception)
-                    {
-                        Log("Window rulers could not be restored (rulers=" + djvSet.DisplayRulers + ").");
-                    }
-                }
-
-                if (DejaviewConfig.Instance.RememberRibbon)
-                {
-                    Office.CommandBar ribbon = Application.CommandBars["Ribbon"];
-                    if (djvSet.RibbonHeight != 0 && djvSet.RibbonHeight != ribbon.Height)
-                    {
-                        // Use 100 as a toggle threshold instead of simply checking
-                        // the saved hieght against the present display height.
-                        // If the document is opened on another computer with
-                        // a different screen resolution a simple toggle will
-                        // misbehave.
-                        if ((djvSet.RibbonHeight > 100 && ribbon.Height < 100) ||
-                            (djvSet.RibbonHeight < 100 && ribbon.Height > 100))
-                        {
-                            doc.ActiveWindow.ToggleRibbon();
-                            Log("Window ribbon toggled (height: " + djvSet.RibbonHeight + ").");
-                        }
-                    }
-                }
-
-                if (DejaviewConfig.Instance.RememberNavigationPanel)
-                {
-                    if (djvSet.ShowNavigationPanel)
-                    {
-                        Application.TaskPanes[Word.WdTaskPanes.wdTaskPaneNav].Visible = true;
-                        Application.CommandBars["Navigation"].Width = djvSet.NavigationPanelWidth;
-                        Log("Navigation panel restored (" + djvSet.ShowNavigationPanel + ", " + djvSet.NavigationPanelWidth + ").");
-                    }
-                    else
-                    {
-                        Application.TaskPanes[Word.WdTaskPanes.wdTaskPaneNav].Visible = false;
-                    }
-                }
-
-                // Attempt to restore window
-                if (doc.ActiveWindow.WindowState == Word.WdWindowState.wdWindowStateNormal)
-                    SetShowable(doc.Application, djvSet);
-
-                SetDejaviewSet(djvSet);
-
-                DisplayStatus("Document view restored.");
-
-                SetButtonTip();
-
-                loaded = true;
-            }
-            catch (DejaViewException ex)
-            {
-                Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
-                Log(ex.Message);
-            }
-            catch (NullReferenceException ex)
-            {
-                Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
-                Log("Error: " + ex.Message);
-            }
-            catch (IndexOutOfRangeException ex)
-            {
-                Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
-                Log("Index error: " + ex.Message);
-            }
-            catch (Exception ex)
-            {
-                Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
-                DisplayStatus("Could not restore document view. " + ex.Message);
-                Debug.WriteLine(ex.StackTrace);
             }
         }
 
@@ -411,7 +177,6 @@ namespace Dejaview
         /// <param name="doc">Active Word document that opened.</param>
         internal void DejaviewAddIn_DocumentOpen(Word.Document doc)
         {
-            //new InfoForm("Document Opened (" + doc.ActiveWindow.Caption + "): " + DateTime.Now);
             if (!DejaviewConfig.Instance.Enable) return;
 
             // Create a unique instance of Logger for this document.
@@ -444,6 +209,7 @@ namespace Dejaview
             {
                 Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
                 DisplayStatus("Could not restore document view. " + ex.Message);
+                new InfoForm("Could not restore document view: " + ex.Message, doc.ActiveWindow.Caption);
                 Debug.WriteLine(ex.StackTrace);
             }
         }
@@ -605,13 +371,15 @@ namespace Dejaview
         }
 
         /// <summary>
-        /// Status of whether or not Deja View tags were loaded from the current active document.
+        /// Status of whether or not Deja View tags were loaded for the specified document.
         /// </summary>
-        /// <returns>Return <code>true</code> if Deja View tags were loaded from this document, 
+        /// <param name="doc">Microsoft Word document</param>
+        /// <returns>Return <code>true</code> if Deja View tags were loaded from <code>doc</code>, 
         /// otherwise <code>false</code></returns>
-        internal bool IsLoaded()
+        internal bool IsLoaded(Word.Document doc)
         {
-            return loaded;
+            if (doc == null) return false;
+            return (views.ContainsKey(doc.ActiveWindow.Caption) && (bool)views[doc.ActiveWindow.Caption]);
         }
 
         /// <summary>
@@ -747,6 +515,299 @@ namespace Dejaview
             {
                 Debug.WriteLine("DejaviewRibbon::btnClear_Click() => " + ex.StackTrace);
                 DisplayStatus("Could not clear tags: " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get the unique Logger for the ActiveDocument.
+        /// </summary>
+        /// <returns>Logger instance</returns>
+        internal Logger GetLogger()
+        {
+            return (Logger)loggers[Globals.DejaviewAddIn.Application.ActiveWindow.Caption];
+        }
+
+        /// <summary>
+        /// Convenience method for logging an event associated with the ActiveDocument.
+        /// </summary>
+        /// <example>Globals.DejaviewAddIn.Log("Window restored.");</example>
+        /// <param name="description">String description of the event.</param>
+        internal void Log(string description)
+        {
+            try
+            {
+                GetLogger().Add(description);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("DejaviewAddIn::Log(string) => " + ex.StackTrace);
+            }
+        }
+
+        /// <summary>
+        /// Convenience method for logging an Deja View exception associated with the ActiveDocument.
+        /// </summary>
+        /// <example>Globals.DejaviewAddIn.Log(new Exception("Failed."));</example>
+        /// <param name="ex">Exception representing the event</param>
+        internal void Log(Exception ex)
+        {
+            try
+            {
+                GetLogger().Add(ex);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("DejaviewAddIn::Log(exception) => " + e.StackTrace);
+            }
+        }
+
+        /// <summary>
+        /// This method retrieves the DejaviewSet associated with the ActiveDocument.
+        /// </summary>
+        /// <returns>DejaviewSet object associated with the ActiveDocument</returns>
+        internal DejaviewSet GetDejaviewSet()
+        {
+            DejaviewSet djvSet = (DejaviewSet)djvSets[Globals.DejaviewAddIn.Application.ActiveWindow.Caption];
+            return djvSet ?? new DejaviewSet();
+        }
+
+        /// <summary>
+        /// This method links the provided DejaviewSet object to the ActiveDocument and then stores it
+        /// in a Collection for easy retrieval. If a DejaviewSet object is already associated with the ActiveDocument
+        /// that object is simply updated.
+        /// </summary>
+        /// <param name="djvSet">DejaviewSet object to link to the ActiveDocument</param>
+        internal void SetDejaviewSet(DejaviewSet djvSet)
+        {
+            string c = Globals.DejaviewAddIn.Application.ActiveWindow.Caption;
+            if (djvSets.Contains(c)) djvSets.Remove(c);
+            djvSets.Add(c, djvSet);
+        }
+
+        /// <summary>
+        /// This method creates a new DejaviewSet object and then assigns values to it based
+        /// on the current ActiveWindow display parameters.
+        /// </summary>
+        /// <returns>DejaviewSet object containing current view parameters</returns>
+        internal DejaviewSet GetDejaviewSetFromDisplay()
+        {
+            DejaviewSet djvSet = new DejaviewSet();
+            djvSet.WindowState = (int)Application.WindowState;
+            if (djvSet.WindowState != (int)Word.WdWindowState.wdWindowStateMinimize)
+            {
+                djvSet.WindowTop = Application.Top;
+                djvSet.WindowLeft = Application.Left;
+                djvSet.WindowWidth = Application.Width;
+                djvSet.WindowHeight = Application.Height;
+            }
+
+            djvSet.WindowViewType = (int)Application.ActiveWindow.View.Type;
+            if (djvSet.WindowViewType == (int)Word.WdViewType.wdNormalView) djvSet.DraftView = true;
+
+            djvSet.WindowZoom = Application.ActiveWindow.View.Zoom.Percentage;
+            djvSet.DisplayRulers = Application.ActiveWindow.DisplayRulers;
+
+            djvSet.ShowNavigationPanel = Application.TaskPanes[Word.WdTaskPanes.wdTaskPaneNav].Visible;
+            djvSet.NavigationPanelWidth = Application.CommandBars["Navigation"].Width;
+
+            Office.CommandBar ribbon = Application.CommandBars["Ribbon"];
+            djvSet.RibbonHeight = ribbon.Height;
+
+            return djvSet;
+        }
+
+        /// <summary>
+        /// Updates the DejaviewSet object associated with the ActiveDocument with the
+        /// values of the provided DejaviewSet object.
+        /// </summary>
+        /// <param name="newSet">DejaviewSet object containing new values</param>
+        internal void UpdateDejaviewSet(DejaviewSet newSet)
+        {
+            DejaviewSet djvSet = GetDejaviewSet();
+            djvSet.WindowState = newSet.WindowState;
+            djvSet.WindowHeight = newSet.WindowHeight;
+            djvSet.WindowLeft = newSet.WindowLeft;
+            djvSet.WindowTop = newSet.WindowTop;
+            djvSet.WindowWidth = newSet.WindowWidth;
+            djvSet.WindowViewType = newSet.WindowViewType;
+            djvSet.WindowZoom = newSet.WindowZoom;
+            djvSet.DisplayRulers = newSet.DisplayRulers;
+            djvSet.ShowNavigationPanel = newSet.ShowNavigationPanel;
+            djvSet.NavigationPanelWidth = newSet.NavigationPanelWidth;
+            djvSet.RibbonHeight = newSet.RibbonHeight;
+
+            DejaviewSet.WindowLocation wloc = new DejaviewSet.WindowLocation();
+            wloc.DisplayArrangementUID = GetDisplayArrangementUID();
+            wloc.ScreenUID = GetActiveScreenUID();
+            wloc.WindowTop = djvSet.WindowTop;
+            wloc.WindowLeft = djvSet.WindowLeft;
+            wloc.LastViewed = DateTime.Now;
+
+            List<DejaviewSet.WindowLocation> locList = new List<DejaviewSet.WindowLocation>();
+            if (djvSet.Locations != null)
+            {
+                bool exists = false;
+                locList.AddRange(djvSet.Locations);
+                foreach (DejaviewSet.WindowLocation _wloc in djvSet.Locations)
+                {
+                    if (_wloc.ScreenUID == wloc.ScreenUID)
+                    {
+                        exists = true;
+                        _wloc.WindowTop = wloc.WindowTop;
+                        _wloc.WindowLeft = wloc.WindowLeft;
+                        _wloc.LastViewed = DateTime.Now;
+                    }
+                }
+                if (!exists) locList.Add(wloc);
+            }
+            else
+            {
+                locList.Add(wloc);
+            }
+
+            // Remove all WindowLocation objects that have the same 
+            // DisplayArrangementUID and ScreenID as a WindowLocation in the new set.
+            if (newSet.Locations != null)
+            {
+                foreach (DejaviewSet.WindowLocation ol in djvSet.Locations)
+                {
+                    foreach (DejaviewSet.WindowLocation nl in newSet.Locations)
+                    {
+                        try
+                        {
+                            if (ol.SameScreenAs(nl)) locList.Remove(ol);
+                        }
+                        catch { }
+                    }
+                }
+                locList.AddRange(newSet.Locations);
+            }
+            djvSet.Locations = locList.ToArray();
+            SetDejaviewSet(djvSet);
+        }
+
+        /// <summary>
+        /// Set the view of a given document.
+        /// </summary>
+        /// <param name="doc">Document to be displayed</param>
+        /// <param name="djvSet">DejaviewSet representing the view parameters to be set</param>
+        internal void SetDocumentView(Word.Document doc, DejaviewSet djvSet)
+        {
+            try
+            {
+                if ((Word.WdWindowState)djvSet.WindowState == Word.WdWindowState.wdWindowStateMinimize)
+                    doc.ActiveWindow.WindowState = Word.WdWindowState.wdWindowStateNormal;
+                else
+                    doc.ActiveWindow.WindowState = (Word.WdWindowState)djvSet.WindowState;
+
+                if (DejaviewConfig.Instance.RememberWindowType)
+                {
+                    try
+                    {
+                        doc.ActiveWindow.View.Type = (Word.WdViewType)djvSet.WindowViewType;
+                        Log("Window type restored (" + (Word.WdViewType)djvSet.WindowViewType + ").");
+                    }
+                    catch (Exception)
+                    {
+                        Log("Window type could not be restored (type=" + djvSet.WindowViewType + ").");
+                        doc.ActiveWindow.View.Type = Word.WdViewType.wdNormalView;
+                        Log("Window type set to Normal.");
+                    }
+                }
+
+                if (DejaviewConfig.Instance.RememberZoom)
+                {
+                    try
+                    {
+                        doc.ActiveWindow.View.Zoom.Percentage = djvSet.WindowZoom;
+                        Log("Window zoom restored (" + djvSet.WindowZoom + ").");
+                    }
+                    catch (Exception)
+                    {
+                        Log("Window zoom could not be restored (zoom=" + djvSet.WindowZoom + ").");
+                        doc.ActiveWindow.View.Zoom.Percentage = 100;
+                        Log("Window zoom set to 100%.");
+                    }
+                }
+
+                if (DejaviewConfig.Instance.RememberRulers)
+                {
+                    try
+                    {
+                        doc.ActiveWindow.DisplayRulers = djvSet.DisplayRulers;
+                        Log("Window rulers restored (" + djvSet.DisplayRulers + ").");
+                    }
+                    catch (Exception)
+                    {
+                        Log("Window rulers could not be restored (rulers=" + djvSet.DisplayRulers + ").");
+                    }
+                }
+
+                if (DejaviewConfig.Instance.RememberRibbon)
+                {
+                    Office.CommandBar ribbon = Application.CommandBars["Ribbon"];
+                    if (djvSet.RibbonHeight != 0 && djvSet.RibbonHeight != ribbon.Height)
+                    {
+                        // Use 100 as a toggle threshold instead of simply checking
+                        // the saved hieght against the present display height.
+                        // If the document is opened on another computer with
+                        // a different screen resolution a simple toggle will
+                        // misbehave.
+                        if ((djvSet.RibbonHeight > 100 && ribbon.Height < 100) ||
+                            (djvSet.RibbonHeight < 100 && ribbon.Height > 100))
+                        {
+                            doc.ActiveWindow.ToggleRibbon();
+                            Log("Window ribbon toggled (height: " + djvSet.RibbonHeight + ").");
+                        }
+                    }
+                }
+
+                if (DejaviewConfig.Instance.RememberNavigationPanel)
+                {
+                    if (djvSet.ShowNavigationPanel)
+                    {
+                        Application.TaskPanes[Word.WdTaskPanes.wdTaskPaneNav].Visible = true;
+                        Application.CommandBars["Navigation"].Width = djvSet.NavigationPanelWidth;
+                        Log("Navigation panel restored (" + djvSet.ShowNavigationPanel + ", " + djvSet.NavigationPanelWidth + ").");
+                    }
+                    else
+                    {
+                        Application.TaskPanes[Word.WdTaskPanes.wdTaskPaneNav].Visible = false;
+                    }
+                }
+
+                // Attempt to restore window
+                if (doc.ActiveWindow.WindowState == Word.WdWindowState.wdWindowStateNormal)
+                    SetShowable(doc.Application, djvSet);
+
+                SetDejaviewSet(djvSet);
+
+                DisplayStatus("Document view restored.");
+
+                SetButtonTip();
+
+                views.Add(doc.ActiveWindow.Caption, true);
+            }
+            catch (DejaViewException ex)
+            {
+                Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
+                Log(ex.Message);
+            }
+            catch (NullReferenceException ex)
+            {
+                Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
+                Log("Error: " + ex.Message);
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
+                Log("Index error: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
+                DisplayStatus("Could not restore document view. " + ex.Message);
+                Debug.WriteLine(ex.StackTrace);
             }
         }
 
@@ -1167,8 +1228,9 @@ namespace Dejaview
         {
             this.Startup += new EventHandler(DejaviewAddIn_Startup);
             this.Shutdown += new EventHandler(DejaviewAddIn_Shutdown);
+            // Moved to InitializeCustom()
             //this.Application.DocumentOpen += DejaviewAddIn_DocumentOpen;
-            this.Application.DocumentBeforeSave += DejaviewAddIn_DocumentBeforeSave;
+            //this.Application.DocumentBeforeSave += DejaviewAddIn_DocumentBeforeSave;
         }
 
         #endregion

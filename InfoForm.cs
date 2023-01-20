@@ -12,11 +12,12 @@ namespace Dejaview
 {
     public partial class InfoForm : Form
     {
-        public InfoForm(string info)
+        public InfoForm(string info, string caption = null)
         {
             InitializeComponent();
 
             this.label1.Text = info;
+            if (caption != null) this.Text = caption;
             this.Show();
         }
     }

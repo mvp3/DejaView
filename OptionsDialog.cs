@@ -124,9 +124,11 @@ namespace Dejaview
             DejaviewConfig.Instance.Enable = chkEnable.Checked;
             DejaviewConfig.Instance.Save();
 
+            Microsoft.Office.Interop.Word.Document doc = Globals.DejaviewAddIn.Application.ActiveDocument;
+
             // If switching to enabled invoke DocumentOpen method to read Deja View tags
-            if (chkEnable.Enabled && !Globals.DejaviewAddIn.IsLoaded())
-                Globals.DejaviewAddIn.DejaviewAddIn_DocumentOpen(Globals.DejaviewAddIn.Application.ActiveDocument);
+            if (chkEnable.Enabled && !Globals.DejaviewAddIn.IsLoaded(doc))
+                Globals.DejaviewAddIn.DejaviewAddIn_DocumentOpen(doc);
         }
 
         private void chkPrompt_CheckedChanged(object sender, EventArgs e)

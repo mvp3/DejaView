@@ -1,0 +1,3 @@
+Auto update
+X - Solved by adding DocumentChange event. Add option for detecting and automatically saving view changes (use timer to check?).
+Option for saving settings on server?
