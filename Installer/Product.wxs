@@ -1,44 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
  
   <?define sourceFolder="C:\OneDrive\src\Visual Studio\Projects\Dejaview\"?>
   
   <!-- GUID: 0483DD72-F3A5-4D13-9264-312D2D8621AF -->
   <!-- Not using GUID for upgrade purposes -->
-	<Product Id="*" 
-           Name="Deja View (Microsoft Word Add-in)" 
-           Language="1033" 
-           Version="1.0.0" 
-           Manufacturer="Lexem" 
-           UpgradeCode="a63cf7f8-1206-4b59-acaf-e949effd6afa">
+	<Package Name="Deja View (Microsoft Word Add-in)" Language="1033" Version="1.0.0" Manufacturer="Lexem" UpgradeCode="a63cf7f8-1206-4b59-acaf-e949effd6afa" InstallerVersion="200">
     
-		<Package 
-      InstallerVersion="200" 
-      Compressed="yes" 
-      InstallScope="perMachine" />
+		
     
-		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." 
-                  MigrateFeatures="yes" />
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." MigrateFeatures="yes" />
     
     <MediaTemplate EmbedCab="yes" />
     
     <!-- Verify if VSTO Office Runtime is installed -->
     <Property Id="VSTORUNTIMEREDIST">
-      <RegistrySearch
-        Id="VSTORuntimeRedist"
-        Root="HKLM"
-        Key="SOFTWARE\Microsoft\VSTO Runtime Setup\v4R"
-        Name="Version"
-        Type="raw" />
+      <RegistrySearch Id="VSTORuntimeRedist" Root="HKLM" Key="SOFTWARE\Microsoft\VSTO Runtime Setup\v4R" Name="Version" Type="raw" />
     </Property>
-    <Condition
-      Message="The Visual Studio 2010 Tools for Office Runtime is not installed. 
-  Please download and install from 
-  http://www.microsoft.com/en-us/download/details.aspx?id=20479.">
-      <![CDATA[Installed OR VSTORUNTIMEREDIST>="10.0.30319"]]>
-    </Condition>
+    <Launch Condition="Installed OR VSTORUNTIMEREDIST&gt;=&quot;10.0.30319&quot;" Message="The Visual Studio 2010 Tools for Office Runtime is not installed.    Please download and install from    http://www.microsoft.com/en-us/download/details.aspx?id=20479." />
 
-    <Icon Id="icon.ico" SourceFile="$(var.sourceFolder)\dejaview.ico"/>
+    <Icon Id="icon.ico" SourceFile="$(var.sourceFolder)\dejaview.ico" />
     <Property Id="ARPPRODUCTICON" Value="icon.ico" />
     
     <WixVariable Id="WixUIDialogBmp" Value="logo_dialog.png" />
@@ -49,7 +29,7 @@
       
       <TextStyle Id="WixUI_Font_Normal" FaceName="Calibri" Size="10" />
       <TextStyle Id="WixUI_Font_Bigger" FaceName="Calibri" Size="11" />
-      <TextStyle Id="WixUI_Font_Title"  FaceName="Calibri" Size="12" Bold="yes" />
+      <TextStyle Id="WixUI_Font_Title" FaceName="Calibri" Size="12" Bold="yes" />
       
       <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />      
 
@@ -64,9 +44,9 @@
       <DialogRef Id="UserExit" />
       -->
 
-      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999" />
       <Publish Dialog="WelcomeDlg" Control="Next" Event="EndDialog" Value="Return" Order="2"></Publish>
-      <Publish Dialog="MaintenanceTypeDlg" Control="Reinstall" Event="EndDialog" Value="Return" Order="3">1</Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="Reinstall" Event="EndDialog" Value="Return" Order="3" />
 
     </UI>
     <UIRef Id="WixUI_Common" />
@@ -79,75 +59,47 @@
       <ComponentRef Id="Registry_LoadBehavior" />
     </Feature>
   
-  </Product>
+  </Package>
 
   <Fragment>
-    <Directory Name="SourceDir" Id="TARGETDIR">
-      <Directory Id="AppDataFolder">
+      <StandardDirectory Id="AppDataFolder">
         <Directory Name="Deja View" Id="INSTALLFOLDER">
 
           <Component Id="Registry_FriendlyName">
-            <RegistryValue Id="RegKey_FriendlyName" Root="HKCU"
-                           Key="Software\Microsoft\Office\Word\AddIns\Deja View"
-                           Name="FriendlyName"
-                           Value="Deja View Add-In"
-                           Type="string" KeyPath="yes" />
+            <RegistryValue Id="RegKey_FriendlyName" Root="HKCU" Key="Software\Microsoft\Office\Word\AddIns\Deja View" Name="FriendlyName" Value="Deja View Add-In" Type="string" KeyPath="yes" />
           </Component>
           <Component Id="Registry_Description">
-            <RegistryValue Id="RegKey_Description" Root="HKCU"
-                           Key="Software\Microsoft\Office\Word\AddIns\Deja View"
-                           Name="Description"
-                           Value="A nifty lightweight Word Add-In that allows you to retain a document's view settings per document. When you open your document, Deja View will display it just as you viewed it last--just as if you have seen it this way before."
-                           Type="string" KeyPath="yes" />
+            <RegistryValue Id="RegKey_Description" Root="HKCU" Key="Software\Microsoft\Office\Word\AddIns\Deja View" Name="Description" Value="A nifty lightweight Word Add-In that allows you to retain a document's view settings per document. When you open your document, Deja View will display it just as you viewed it last--just as if you have seen it this way before." Type="string" KeyPath="yes" />
           </Component>
           <Component Id="Registry_Manifest">
-            <RegistryValue Id="RegKey_Manifest" Root="HKCU"
-                           Key="Software\Microsoft\Office\Word\AddIns\Deja View"
-                           Name="Manifest" Value="[INSTALLFOLDER]Dejaview.vsto|vstolocal"
-                           Type="string" KeyPath="yes" />
+            <RegistryValue Id="RegKey_Manifest" Root="HKCU" Key="Software\Microsoft\Office\Word\AddIns\Deja View" Name="Manifest" Value="[INSTALLFOLDER]Dejaview.vsto|vstolocal" Type="string" KeyPath="yes" />
           </Component>
           <Component Id="Registry_LoadBehavior">
-            <RegistryValue Id="RegKey_LoadBehavior" Root="HKCU"
-                           Key="Software\Microsoft\Office\Word\AddIns\Deja View"
-                           Name="LoadBehavior" Value="3"
-                           Type="integer" KeyPath="yes" />
+            <RegistryValue Id="RegKey_LoadBehavior" Root="HKCU" Key="Software\Microsoft\Office\Word\AddIns\Deja View" Name="LoadBehavior" Value="3" Type="integer" KeyPath="yes" />
           </Component>
 
         </Directory>
-      </Directory>
-    </Directory>
-  </Fragment>
+      </StandardDirectory>
+    </Fragment>
 
   <Fragment>
     
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 
-      <Component Id="MSOfficeToolsCommon_dll_Component"
-                 Guid="CCFB903A-EC9A-4F98-9353-CC4E0854134F">
-        <File Id="MSOfficeToolsCommon_dll"
-              Name="Microsoft.Office.Tools.Common.v4.0.Utilities.dll"
-              Source="C:\OneDrive\src\Visual Studio\Projects\Dejaview\bin\Release\Microsoft.Office.Tools.Common.v4.0.Utilities.dll" />
+      <Component Id="MSOfficeToolsCommon_dll_Component" Guid="CCFB903A-EC9A-4F98-9353-CC4E0854134F">
+        <File Id="MSOfficeToolsCommon_dll" Name="Microsoft.Office.Tools.Common.v4.0.Utilities.dll" Source="C:\OneDrive\src\Visual Studio\Projects\Dejaview\bin\Release\Microsoft.Office.Tools.Common.v4.0.Utilities.dll" />
       </Component>
 
-      <Component Id="DejaView_dll_Component" 
-                 Guid="3C67513D-01DD-4637-8A68-80971EB9504F">
-        <File Id="Dejaview_dll"
-              Name="DejaView.dll"
-              Source="C:\OneDrive\src\Visual Studio\Projects\Dejaview\bin\Release\DejaView.dll" />
+      <Component Id="DejaView_dll_Component" Guid="3C67513D-01DD-4637-8A68-80971EB9504F">
+        <File Id="Dejaview_dll" Name="DejaView.dll" Source="C:\OneDrive\src\Visual Studio\Projects\Dejaview\bin\Release\DejaView.dll" />
       </Component>
 
-      <Component Id="DejaView_vsto_Component"
-                 Guid="CE18D6EB-B567-455D-B62A-26B06DB721A7">
-        <File Id="DejaView_vsto"
-              Name="Dejaview.vsto"
-              Source="C:\OneDrive\src\Visual Studio\Projects\Dejaview\bin\Release\DejaView.vsto" />
+      <Component Id="DejaView_vsto_Component" Guid="CE18D6EB-B567-455D-B62A-26B06DB721A7">
+        <File Id="DejaView_vsto" Name="Dejaview.vsto" Source="C:\OneDrive\src\Visual Studio\Projects\Dejaview\bin\Release\DejaView.vsto" />
       </Component>
 
-      <Component Id="DejaView_dll_manifest_Component"
-                 Guid="7BE99C99-06A9-4CAC-92F2-E107D5AA1C69">
-        <File Id="DejaView_dll_manifest"
-              Name="DejaView.dll.manifest"
-              Source="C:\OneDrive\src\Visual Studio\Projects\Dejaview\bin\Release\DejaView.dll.manifest" />
+      <Component Id="DejaView_dll_manifest_Component" Guid="7BE99C99-06A9-4CAC-92F2-E107D5AA1C69">
+        <File Id="DejaView_dll_manifest" Name="DejaView.dll.manifest" Source="C:\OneDrive\src\Visual Studio\Projects\Dejaview\bin\Release\DejaView.dll.manifest" />
       </Component>
 
     </ComponentGroup>

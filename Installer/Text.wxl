@@ -1,23 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+﻿<WixLocalization Culture="en-us" xmlns="http://wixtoolset.org/schemas/v4/wxl">
 
-  <String Id="WelcomeDlg_Title">Deja View (Microsoft Word Add-in)</String>
-  <String Id="WelcomeDlgBitmap">WixUI_Bmp_Dialog</String>
-  <String Id="WelcomeDlgDescription">This will install the Deja View Word add-in. You may be prompted to install a the free certificate used to authenticate Deja View. Once installed, you can access the features from the Add-ins tab in Word.</String>
+  <String Id="WelcomeDlg_Title" Value="Deja View (Microsoft Word Add-in)" />
+  <String Id="WelcomeDlgBitmap" Value="WixUI_Bmp_Dialog" />
+  <String Id="WelcomeDlgDescription" Value="This will install the Deja View Word add-in. You may be prompted to install a the free certificate used to authenticate Deja View. Once installed, you can access the features from the Add-ins tab in Word." />
 
-  <String Id="MaintenanceTypeDlg_Title">Deja View (Microsoft Word Add-in)</String>
-  <String Id="MaintenanceTypeDlgBitmap">WixUI_Bmp_Dialog</String>
-  <String Id="MaintenanceTypeDlgDescription">This will update the Deja View add-in for Microsoft Word.</String>
+  <String Id="MaintenanceTypeDlg_Title" Value="Deja View (Microsoft Word Add-in)" />
+  <String Id="MaintenanceTypeDlgBitmap" Value="WixUI_Bmp_Dialog" />
+  <String Id="MaintenanceTypeDlgDescription" Value="This will update the Deja View add-in for Microsoft Word." />
 
-  <String Id="UserExit_Title">Deja View (Microsoft Word Add-in)</String>
-  <String Id="UserExitBitmap">WixUI_Bmp_Dialog</String>
-  <String Id="UserExitTitle">{\WixUI_Font_Title}Installation Cancelled</String>
-  <String Id="UserExitDescription1">The installation of Deja View was cancelled. Your system has not been modified.</String>
-  <String Id="UserExitDescription2">Click the Finish button to exit.</String>
+  <String Id="UserExit_Title" Value="Deja View (Microsoft Word Add-in)" />
+  <String Id="UserExitBitmap" Value="WixUI_Bmp_Dialog" />
+  <String Id="UserExitTitle" Value="{\WixUI_Font_Title}Installation Cancelled" />
+  <String Id="UserExitDescription1" Value="The installation of Deja View was cancelled. Your system has not been modified." />
+  <String Id="UserExitDescription2" Value="Click the Finish button to exit." />
 
-  <String Id="ExitDialog_Title">Deja View (Microsoft Word Add-in)</String>
-  <String Id="ExitDialogBitmap">WixUI_Bmp_Dialog</String>
-  <String Id="ExitDialogDescription">Deja View was successfully installed. Click the Finish button to exit.</String>
-  <String Id="ExitDialogTitle">{\WixUI_Font_Title}Installation Completed!</String>
+  <String Id="ExitDialog_Title" Value="Deja View (Microsoft Word Add-in)" />
+  <String Id="ExitDialogBitmap" Value="WixUI_Bmp_Dialog" />
+  <String Id="ExitDialogDescription" Value="Deja View was successfully installed. Click the Finish button to exit." />
+  <String Id="ExitDialogTitle" Value="{\WixUI_Font_Title}Installation Completed!" />
 
 </WixLocalization>
