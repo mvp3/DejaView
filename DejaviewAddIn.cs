@@ -65,6 +65,12 @@ namespace Dejaview
         private Hashtable views = new Hashtable();
 
         /// <summary>
+        /// Collection that retains what documents have been saved. This is used
+        /// for saving the very last view before closing the document.
+        /// </summary>
+        private ArrayList saves = new ArrayList();
+
+        /// <summary>
         /// Used by the InitializeCustom() method to prevent registering duplicate 
         /// event handlers.
         /// </summary>
@@ -129,6 +135,7 @@ namespace Dejaview
                 wdEvents4.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(DejaviewAddIn_DocumentBeforeSave);
                 wdEvents4.NewDocument += new Word.ApplicationEvents4_NewDocumentEventHandler(DejaviewAddIn_NewDocument);
                 wdEvents4.DocumentChange += new Word.ApplicationEvents4_DocumentChangeEventHandler(DejaviewAddIn_DocumentChange);
+                wdEvents4.DocumentBeforeClose += new Word.ApplicationEvents4_DocumentBeforeCloseEventHandler(DejaviewAddIn_DocumentBeforeClose);
             }
             initialized = true;
         }
@@ -139,7 +146,30 @@ namespace Dejaview
         /// <param name="doc">Active Word document newly created.</param>
         internal void DejaviewAddIn_NewDocument(Word.Document doc)
         {
+            if (!DejaviewConfig.Instance.Enable) return;
             // TODO: Set defaults!
+        }
+
+        /// <summary>
+        /// Method for intercepting a close and saving the document's view settings just before
+        /// the document is closed. If the document has not been saved during its current view,
+        /// then Deja View will not initiate a save. If, however, it has been saved since it was opened,
+        /// Deja View will save it before closing. If this logic is not in place, then every document
+        /// opened for view will force a save and thereby alter the modified timestamp unecessarily.
+        /// </summary>
+        /// <param name="doc">Active Word document being closed</param>
+        /// <param name="bCancel">Flag to interrupt the close</param>
+        internal void DejaviewAddIn_DocumentBeforeClose(Word.Document doc, ref bool bCancel)
+        {
+            if (!DejaviewConfig.Instance.Enable) return;
+            string title = doc.ActiveWindow.Caption;
+            if (saves.Contains(title))
+            {
+                // Save before closing.
+                doc.Save();
+                // Clear this doc's title from the list.
+                saves.Remove(title);
+            }
         }
 
         /// <summary>
@@ -250,6 +280,9 @@ namespace Dejaview
                 SaveDejaviewToDocument(doc, djvSet);
 
                 SetButtonTip();
+
+                string title = doc.ActiveWindow.Caption;
+                if (!saves.Contains(title)) saves.Add(title);
             }
             catch (Exception ex)
             {
