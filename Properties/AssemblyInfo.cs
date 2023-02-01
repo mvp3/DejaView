@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Deja View")]
-[assembly: AssemblyDescription("A nifty lightweight Word Add-In that allows you to retain your view settings per document. When you open your document, Deja View will display it just as you viewed it last--just as if you have seen it this way before.")]
+[assembly: AssemblyDescription("A nifty lightweight Word Add-In that automatically retains your view settings per document. When you open your document Deja View will display it just as you viewed it last.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Lexem")]
-[assembly: AssemblyProduct("Dejaview")]
+[assembly: AssemblyProduct("Deja View")]
 [assembly: AssemblyCopyright("Copyright © 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.26")]
-[assembly: AssemblyFileVersion("1.0.0.26")]
+[assembly: AssemblyVersion("1.0.0.28")]
+[assembly: AssemblyFileVersion("1.0.0.28")]

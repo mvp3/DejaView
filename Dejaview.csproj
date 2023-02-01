@@ -30,10 +30,10 @@
     <DefineConstants>VSTO40</DefineConstants>
     <IsWebBootstrapper>True</IsWebBootstrapper>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <PublishUrl>C:\OneDrive\www\lexis.cc\dejaview\</PublishUrl>
+    <PublishUrl>C:\OneDrive\www\dejaview.lexem.cc\download\</PublishUrl>
     <InstallUrl>https://dejaview.lexem.cc/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>1.0.0.24</ApplicationVersion>
+    <ApplicationVersion>1.0.0.28</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>1</UpdateInterval>
@@ -235,6 +235,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include=".editorconfig" />
+    <None Include="1420164201.pfx" />
     <None Include="CONTRIBUTING.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -275,11 +276,10 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>
-    </ManifestKeyFile>
+    <ManifestKeyFile>1420164201.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>37ACBDFC139E1E76FCD3F2F356B68241713E33BC</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>A32E608DD48204EE85C766CA19D55222D483D967</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestTimestampUrl>http://timestamp.digicert.com</ManifestTimestampUrl>
@@ -311,13 +311,13 @@
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>VSTO40;TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <LangVersion>7.3</LangVersion>
-    <DocumentationFile>bin\x64\Release\Dejaview.xml</DocumentationFile>
+    <DocumentationFile>docs\Dejaview.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>

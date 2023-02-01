@@ -1,0 +1,890 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Dejaview</name>
+    </assembly>
+    <members>
+        <member name="T:Dejaview.BasicDialog">
+            <summary>
+            A basic form for displaying text in a scrolling pane.
+            </summary>
+        </member>
+        <member name="M:Dejaview.BasicDialog.#ctor(System.String,System.String)">
+            <summary>
+            Default constructor
+            </summary>
+            <param name="caption">String to display as the caption of the dialog</param>
+            <param name="text">String to be displayed as the main text</param>
+        </member>
+        <member name="M:Dejaview.BasicDialog.setText(System.String)">
+            <summary>
+            Sets the string to be displayed as the main text in the body of the dialog.
+            This method is used as an alternative to the default constructor.
+            </summary>
+            <param name="text">String to be displayed as the main text</param>
+        </member>
+        <member name="F:Dejaview.BasicDialog.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Dejaview.BasicDialog.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Dejaview.BasicDialog.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:Dejaview.DejaviewConfig">
+            <summary>
+            Custom configuration class used for persistent memory of Add-in settings.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewConfig.Enable">
+            <summary>
+            Flag for enabling Deja View.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewConfig.Prompt">
+            <summary>
+            Flag for prompting before saving.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewConfig.CheckForUpdates">
+            <summary>
+            Flag for checking for updates.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewConfig.UpdateURL">
+            <summary>
+            Fully formed URL for to check for updates.
+            Example: https://dejaview.lexem.cc/latest/
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewConfig.RememberWindowLocation">
+            <summary>
+            Remember the Word application window location
+            in the DejaviewSet of parameters.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewConfig.RememberNavigationPanel">
+            <summary>
+            Remember the state and width of the Navigation Panel
+            in the DejaviewSet of parameters.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewConfig.RememberWindowType">
+            <summary>
+            Remember the Word application window view type 
+            in the DejaviewSet of parameters.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewConfig.RememberZoom">
+            <summary>
+            Remember the Word application window zoom 
+            in the DejaviewSet of parameters.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewConfig.RememberRulers">
+            <summary>
+            Remember the Word application rulers
+            in the DejaviewSet of parameters.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewConfig.RememberRibbon">
+            <summary>
+            Remember the Word application ribbon 
+            in the DejaviewSet of parameters.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewConfig.Instance">
+            <summary>
+            Standard method for getting an active instance object of 
+            this class.
+            </summary>
+        </member>
+        <member name="M:Dejaview.DejaviewConfig.#ctor">
+            <summary>
+            Instances of this class should be created using DejaviewConfig.Instance.
+            </summary>
+            <see cref="P:Dejaview.DejaviewConfig.Instance"/>
+        </member>
+        <member name="M:Dejaview.DejaviewConfig.SetDefaults">
+            <summary>
+            Reset all in memory configuration settings to default. 
+            Save() must be called to write these to the file.
+            </summary>
+            <see cref="M:Dejaview.DejaviewConfig.Save"/>
+        </member>
+        <member name="M:Dejaview.DejaviewConfig.LoadFromConfig">
+            <summary>
+            A helper method that is automatically called by the constructor.
+            </summary>
+        </member>
+        <member name="M:Dejaview.DejaviewConfig.Save">
+            <summary>
+            Method to save current view settings to document.
+            </summary>
+        </member>
+        <member name="T:Dejaview.DejaViewException">
+            <summary>
+            Foundation class for all Deja View exceptions. 
+            Specific exceptions should use the appropriate subclass.
+            </summary>
+            <seealso cref="T:Dejaview.DejaViewNoTagsException"/>
+            <seealso cref="T:Dejaview.DejaViewInvalidTagException"/>
+        </member>
+        <member name="M:Dejaview.DejaViewException.#ctor">
+            <summary>
+            Use to create a Deja View exception without a message.
+            </summary>
+        </member>
+        <member name="M:Dejaview.DejaViewException.#ctor(System.String)">
+            <summary>
+            Use to create a Deja View exception with a specified message.
+            </summary>
+            <param name="message">Specified text message to display.</param>
+        </member>
+        <member name="M:Dejaview.DejaViewException.#ctor(System.String,System.Exception)">
+            <summary>
+            Use to create a Deja View exception with a specified message and
+            an inner exception that gave rise to this exception.
+            </summary>
+            <param name="message">Specified text message to display.</param>
+            <param name="innerException">The exception that gave rise to this exception.</param>
+        </member>
+        <member name="T:Dejaview.DejaViewNoTagsException">
+            <summary>
+            Exception indicating that the no Deja View tags could be found in the document.
+            </summary>
+        </member>
+        <member name="M:Dejaview.DejaViewNoTagsException.#ctor">
+            <summary>
+            Use to create a DejaViewNoTagsException with the default message.
+            </summary>
+        </member>
+        <member name="M:Dejaview.DejaViewNoTagsException.#ctor(System.String)">
+            <summary>
+            Use to create a DejaViewNoTagsException with a specified message.
+            </summary>
+            <param name="message">Specified text message to display.</param>
+        </member>
+        <member name="M:Dejaview.DejaViewNoTagsException.#ctor(System.String,System.Exception)">
+            <summary>
+            Use to create a DejaViewNoTagsException with a specified message and
+            an inner exception that gave rise to this exception.
+            </summary>
+            <param name="message">Specified text message to display.</param>
+            <param name="innerException">The exception that gave rise to this exception.</param>
+        </member>
+        <member name="T:Dejaview.DejaViewInvalidTagException">
+            <summary>
+            Exception indicating that the Deja View tags were found in the document but were invalid.
+            If an error occurs while trying to read the Deja View tags, this exception is thrown.
+            It can be used to indicated a deprecated tag format of a potentially incompatible verseion.
+            By all means, we will try to keep all Deja View tag versions compatible, but in the event that
+            this is not possible, this exception is a safety net.
+            </summary>
+        </member>
+        <member name="M:Dejaview.DejaViewInvalidTagException.#ctor">
+            <summary>
+            Use to create a DejaViewInvalidTagException with the default message.
+            </summary>
+        </member>
+        <member name="M:Dejaview.DejaViewInvalidTagException.#ctor(System.String)">
+            <summary>
+            Use to create a DejaViewInvalidTagException with a specified message.
+            </summary>
+            <param name="message">Specified text message to display.</param>
+        </member>
+        <member name="M:Dejaview.DejaViewInvalidTagException.#ctor(System.String,System.Exception)">
+            <summary>
+            Use to create a DejaViewInvalidTagException with a specified message and
+            an inner exception that gave rise to this exception.
+            </summary>
+            <param name="message">Specified text message to display.</param>
+            <param name="innerException">The exception that gave rise to this exception.</param>
+        </member>
+        <member name="T:Dejaview.DejaviewRibbon">
+            <summary>
+            Ribbon class for MS Word application interface.
+            </summary>
+        </member>
+        <member name="F:Dejaview.DejaviewRibbon.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Dejaview.DejaviewRibbon.#ctor">
+            <summary>
+            Ribbon object for docking in Microsoft Word.
+            </summary>
+        </member>
+        <member name="M:Dejaview.DejaviewRibbon.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Dejaview.DejaviewRibbon.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:Dejaview.ThisRibbonCollection">
+            
+        </member>
+        <member name="M:Dejaview.ThisRibbonCollection.#ctor(Microsoft.Office.Tools.Ribbon.RibbonFactory)">
+            
+        </member>
+        <member name="T:Dejaview.DejaviewSet">
+            <summary>
+            Dataset representing Deja View parameters.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.Locations">
+            <summary>
+            List of DejaviewSet.Location elements.
+            </summary>
+            <seealso cref="T:Dejaview.DejaviewSet.WindowLocation"/>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.WindowState">
+            <summary>
+            WindowState of Word application window.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.WindowLeft">
+            <summary>
+            Left point of Word application window location.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.WindowTop">
+            <summary>
+            Top point of Word application window location.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.WindowWidth">
+            <summary>
+            Width of Word application window.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.WindowHeight">
+            <summary>
+            Height of Word application window.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.WindowViewType">
+            <summary>
+            Value for this document's "View Type".
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.WindowZoom">
+            <summary>
+            Value for this document's zoom level.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.RibbonHeight">
+            <summary>
+            Height of the application ribbon.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.NavigationPanelWidth">
+            <summary>
+            Width of navigation panel if displayed.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.ShowNavigationPanel">
+            <summary>
+            Flag for showing the navigation panel.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.DraftView">
+            <summary>
+            Flag for "Draft View" view type.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.DisplayRulers">
+            <summary>
+            Value flag for showing rulers.
+            </summary>
+        </member>
+        <member name="M:Dejaview.DejaviewSet.Equals(Dejaview.DejaviewSet)">
+            <summary>
+            Method for comparing two DejaviewSet objects. Only the following
+            attributes will be compared: top, left, height, width, state, 
+            view type, zoom level, rulers, navigation panel, and ribbon.
+            </summary>
+            <param name="djvSet"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Dejaview.DejaviewSet.WindowLocation">
+            <summary>
+            Inner class representing the window location of the document. 
+            This added dimension allows for retainig a document's viewing 
+            location per computer display screen. 
+            
+            The same document can retain its window location on computer C1 
+            with a display resolution of R1 and on computer C2 with a display 
+            resolution of R2. Or, computer C1 with R1 and R2 configurations.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.WindowLocation.DisplayArrangementUID">
+            <summary>
+            Unique Identifier of the Display Arrangement for the current 
+            device. A Display Arrangement represents: (a) the number of screens, 
+            (b) the size of each screen, and (c) the order of each screen in 
+            relation to one another. This allows Deja View to index a document's
+            view settings per Display Arrangement.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.WindowLocation.ScreenUID">
+            <summary>
+            Unique Identifier of the Screen to which this Location belongs.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.WindowLocation.WindowLeft">
+            <summary>
+            Left point of Word application window location.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.WindowLocation.WindowTop">
+            <summary>
+            Top point of Word application window location.
+            </summary>
+        </member>
+        <member name="P:Dejaview.DejaviewSet.WindowLocation.LastViewed">
+            <summary>
+            Timestamp of the last time the window was viewed on this screen.
+            </summary>
+        </member>
+        <member name="M:Dejaview.DejaviewSet.WindowLocation.SameScreenAs(Dejaview.DejaviewSet.WindowLocation)">
+            <summary>
+            Method used to see if two WindowLocation objects refer to the same screen.
+            </summary>
+            <param name="other">The WindowLocation object to compare.</param>
+            <returns>True if the DisplayArrangementUID and ScreenUID match.</returns>
+        </member>
+        <member name="M:Dejaview.DejaviewSet.WindowLocation.CompareTo(Dejaview.DejaviewSet.WindowLocation)">
+            <summary>
+            Method used for comparing and sorting instances of this object.
+            When sorting, the LastViewed property is compared.
+            </summary>
+            <param name="other">The DejaviewSet.WindowLocation object to compare</param>
+            <returns>Compare value</returns>
+            <see cref="T:System.Collections.Generic.Comparer`1"/>
+        </member>
+        <member name="F:Dejaview.InfoForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Dejaview.InfoForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Dejaview.InfoForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:Dejaview.Logger">
+            <summary>
+            This is a class that stores logged events in memory.
+            These logged events may be retrieved at runtime or
+            saved to a file. 
+            </summary>
+        </member>
+        <member name="P:Dejaview.Logger.Instance">
+            <summary>
+            Standard method for getting an active instance object of 
+            this class.
+            </summary>
+        </member>
+        <member name="M:Dejaview.Logger.#ctor">
+            <summary>
+            Shared instances of this class should be created using Logger.Instance.
+            </summary>
+            <see cref="P:Dejaview.Logger.Instance"/>
+        </member>
+        <member name="M:Dejaview.Logger.Add(Dejaview.LoggerEvent)">
+            <summary>
+            Logs an event. Takes a <code>LoggerEvent</code>.
+            </summary>
+            <param name="e">Event</param>
+        </member>
+        <member name="M:Dejaview.Logger.Add(System.String)">
+            <summary>
+            Logs an event. Automatically creates a <code>LoggerEvent</code> given
+            a string description.
+            </summary>
+            <param name="description">String description of event</param>
+        </member>
+        <member name="M:Dejaview.Logger.Add(System.Exception)">
+            <summary>
+            Logs an event. Automatically creates a <code>LoggerEvent</code> given
+            a <code>Exception</code>.
+            </summary>
+            <param name="ex">Exception that represents the event</param>
+        </member>
+        <member name="M:Dejaview.Logger.GetEventCount">
+            <summary>
+            Returns the number of events that are currently logged.
+            </summary>
+            <returns>Total number of events logged.</returns>
+        </member>
+        <member name="M:Dejaview.Logger.GetLastEvent">
+            <summary>
+            Returns the last logged event.
+            </summary>
+            <returns>Last logged event.</returns>
+        </member>
+        <member name="M:Dejaview.Logger.GetEvents">
+            <summary>
+            Returns an array of all logged event.
+            </summary>
+            <returns>All logged events</returns>
+        </member>
+        <member name="M:Dejaview.Logger.ToString">
+            <summary>
+            Returns a string of this Logger instance, which lists every
+            event, one per line.
+            </summary>
+            <returns>All events, one per line</returns>
+        </member>
+        <member name="T:Dejaview.LoggerEvent">
+            <summary>
+            A class that represents an event that can be logged.
+            </summary>
+        </member>
+        <member name="P:Dejaview.LoggerEvent.Description">
+            <summary>
+            String that describes this event.
+            </summary>
+        </member>
+        <member name="P:Dejaview.LoggerEvent.Timestamp">
+            <summary>
+            Timestamp that identifies when this event was raised.
+            </summary>
+        </member>
+        <member name="M:Dejaview.LoggerEvent.#ctor(System.String)">
+            <summary>
+            Default constructor that takes the description and automatically
+            sets the timestamp to the moment when the constructor is called.
+            </summary>
+            <param name="description">String that describes this event.</param>
+        </member>
+        <member name="T:Dejaview.OptionsDialog">
+            <summary>
+            Dialog containing all of the configurable options for Deja View.
+            </summary>
+        </member>
+        <member name="F:Dejaview.OptionsDialog.updateURL">
+            <summary>
+            Used for checking to see if the update URL textbox changes
+            </summary>
+        </member>
+        <member name="F:Dejaview.OptionsDialog.bypassChange">
+            <summary>
+            Used for bypassing the change events
+            </summary>
+        </member>
+        <member name="M:Dejaview.OptionsDialog.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="F:Dejaview.OptionsDialog.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Dejaview.OptionsDialog.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Dejaview.OptionsDialog.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:Dejaview.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Dejaview.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Dejaview.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Dejaview.Properties.Resources.ApplyCodeChanges_16x">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Dejaview.Properties.Resources.DefaultConstraint_16x">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Dejaview.Properties.Resources.Log_16x">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Dejaview.Properties.Resources.Time_yellow_7x_16x">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Dejaview.Properties.Resources.XMLCommentTag_16x">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="T:Dejaview.DejaviewAddIn">
+            <summary>
+            Main Add-in class.
+            </summary>
+            
+        </member>
+        <member name="F:Dejaview.DejaviewAddIn.djvSets">
+            <summary>
+            Collection that retains the dataset of view settings from 
+            documents that have already been viewed. This is especially 
+            needful to retain view settings from views on other 
+            screens.
+            </summary>
+        </member>
+        <member name="F:Dejaview.DejaviewAddIn.loggers">
+            <summary>
+            Collection of unique Logger instances, each keyed to its own 
+            ActiveDocument. This is necessary since Microsoft Word
+            uses a shared instance of this Add-in across all open documents.
+            </summary>
+        </member>
+        <member name="F:Dejaview.DejaviewAddIn.views">
+            <summary>
+            Collection that retains what documents have had their view set 
+            by DV. Each element in this Collection is a bool flag keyed to its own
+            ActiveDocument, indicating if that document's view settings have been 
+            applied. This is necessary since Microsoft Word does not reliably 
+            fire the DocumentOpen event when a document is opened.
+            </summary>
+        </member>
+        <member name="F:Dejaview.DejaviewAddIn.saves">
+            <summary>
+            Collection that retains what documents have been saved. This is used
+            for saving the very last view before closing the document.
+            </summary>
+        </member>
+        <member name="F:Dejaview.DejaviewAddIn.initialized">
+            <summary>
+            Used by the InitializeCustom() method to prevent registering duplicate 
+            event handlers.
+            </summary>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.DejaviewAddIn_Startup(System.Object,System.EventArgs)">
+            <summary>
+            Called when this Add-in is initialized.
+            </summary>
+            <param name="sender">Sender object</param>
+            <param name="e">Event arguments</param>
+            <seealso cref="M:Dejaview.DejaviewAddIn.InternalStartup"/>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.DejaviewAddIn_Shutdown(System.Object,System.EventArgs)">
+            <summary>
+            Called when this Add-in is closing.
+            </summary>
+            <param name="sender">Sender object</param>
+            <param name="e">Event arguments</param>
+            <seealso cref="M:Dejaview.DejaviewAddIn.InternalStartup"/>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.InitializeCustom">
+            <summary>
+            A trigger method to ensure that DejaView initializes a document's 
+            settings upon opening each document.
+            
+            Without this trigger, DejaView properties are not always applied 
+            when a document opens because the VSTO plugin is already initialized.
+            </summary>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.DejaviewAddIn_NewDocument(Microsoft.Office.Interop.Word.Document)">
+            <summary>
+            Method called when a new document is created.
+            </summary>
+            <param name="doc">Active Word document newly created.</param>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.DejaviewAddIn_DocumentBeforeClose(Microsoft.Office.Interop.Word.Document,System.Boolean@)">
+            <summary>
+            Method for intercepting a close and saving the document's view settings just before
+            the document is closed. If the document has not been saved during its current view,
+            then Deja View will not initiate a save. If, however, it has been saved since it was opened,
+            Deja View will save it before closing. If this logic is not in place, then every document
+            opened for view will force a save and thereby alter the modified timestamp unecessarily.
+            </summary>
+            <param name="doc">Active Word document being closed</param>
+            <param name="bCancel">Flag to interrupt the close</param>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.DejaviewAddIn_DocumentChange">
+            <summary>
+            Method called when a change occurs in the document.
+            This method is necessary since opening an existing document
+            is not always caught by ApplicationEvents4_DocumentOpenEventHandler.
+            </summary>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.DejaviewAddIn_DocumentOpen(Microsoft.Office.Interop.Word.Document)">
+            <summary>
+            Method called when a document is opened.
+            </summary>
+            <param name="doc">Active Word document that opened.</param>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.DejaviewAddIn_DocumentBeforeSave(Microsoft.Office.Interop.Word.Document,System.Boolean@,System.Boolean@)">
+            <summary>
+            This methods is called immediately before Microsoft Word saves the active document.
+            Here Deja View gathers the current view parameters and sends them to 
+            <code>SetDejaviewToDocument</code> be saved in the document.
+            </summary>
+            <param name="doc">Active Word document to be saved</param>
+            <param name="saveAsUI"></param>
+            <param name="cancel"></param>
+            <seealso cref="M:Dejaview.DejaviewAddIn.SaveDejaviewToDocument(Microsoft.Office.Interop.Word.Document,Dejaview.DejaviewSet)"/>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.SaveDejaviewToDocument(Microsoft.Office.Interop.Word.Document,Dejaview.DejaviewSet)">
+            <summary>
+            Used to save custom Deja View data to the Word document. 
+            This is used for preserving viewing settings per document.
+            </summary>
+            <param name="doc">Microsoft Word document</param>
+            <param name="djvSet">DejaviewSet object to save to document</param>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.IsLoaded(Microsoft.Office.Interop.Word.Document)">
+            <summary>
+            Status of whether or not Deja View tags were loaded for the specified document.
+            </summary>
+            <param name="doc">Microsoft Word document</param>
+            <returns>Return <code>true</code> if Deja View tags were loaded from <code>doc</code>, 
+            otherwise <code>false</code></returns>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.GetDejaviewSetFromDocument(Microsoft.Office.Interop.Word.Document)">
+            <summary>
+            Retrieve a DejaviewSet from the Word document. 
+            This data is stored in Custom XML parts.
+            </summary>
+            <param name="doc">Microsoft Word document</param>
+            <returns>A DejaviewSet from the Word document</returns>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.RemoveDejaviewFromDocument(Microsoft.Office.Interop.Word.Document)">
+            <summary>
+            Remove the DejaviewSet from this Word document. This data is stored in Custom XML parts.
+            This method will also reset the DejaviewSet collection (<code>djvSets</code>).
+            </summary>
+            <seealso cref="F:Dejaview.DejaviewAddIn.djvSets"/>
+            <param name="doc">Microsoft Word document</param>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.GetLogger">
+            <summary>
+            Get the unique Logger for the ActiveDocument.
+            </summary>
+            <returns>Logger instance</returns>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.Log(System.String)">
+            <summary>
+            Convenience method for logging an event associated with the ActiveDocument.
+            </summary>
+            <example>Globals.DejaviewAddIn.Log("Window restored.");</example>
+            <param name="description">String description of the event.</param>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.Log(System.Exception)">
+            <summary>
+            Convenience method for logging an Deja View exception associated with the ActiveDocument.
+            </summary>
+            <example>Globals.DejaviewAddIn.Log(new Exception("Failed."));</example>
+            <param name="ex">Exception representing the event</param>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.GetDejaviewSet">
+            <summary>
+            This method retrieves the DejaviewSet associated with the ActiveDocument.
+            </summary>
+            <returns>DejaviewSet object associated with the ActiveDocument</returns>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.SetDejaviewSet(Dejaview.DejaviewSet)">
+            <summary>
+            This method links the provided DejaviewSet object to the ActiveDocument and then stores it
+            in a Collection for easy retrieval. If a DejaviewSet object is already associated with the ActiveDocument
+            that object is simply updated.
+            </summary>
+            <param name="djvSet">DejaviewSet object to link to the ActiveDocument</param>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.GetDejaviewSetFromDisplay">
+            <summary>
+            This method creates a new DejaviewSet object and then assigns values to it based
+            on the current ActiveWindow display parameters.
+            </summary>
+            <returns>DejaviewSet object containing current view parameters</returns>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.UpdateDejaviewSet(Dejaview.DejaviewSet)">
+            <summary>
+            Updates the DejaviewSet object associated with the ActiveDocument with the
+            values of the provided DejaviewSet object.
+            </summary>
+            <param name="newSet">DejaviewSet object containing new values</param>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.SetDocumentView(Microsoft.Office.Interop.Word.Document,Dejaview.DejaviewSet)">
+            <summary>
+            Set the view of a given document.
+            </summary>
+            <param name="doc">Document to be displayed</param>
+            <param name="djvSet">DejaviewSet representing the view parameters to be set</param>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.SetShowable(Microsoft.Office.Interop.Word.Application,Dejaview.DejaviewSet)">
+            <summary>
+            Show a given Form ensuring that it is showable. If no Point is provided,
+            the Form will be centered on the primary screen.
+            </summary>
+            <param name="app">Word application</param>
+            <param name="ds">DejaviewSet for the ActiveDocument</param>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.GetDisplayArrangementUID">
+            <summary>
+            Returns a unique identifier (in hash format) uniquely identifying
+            the current Display Arrangement of the computer.
+            </summary>
+            <returns>The current Display Arrangement of the computer</returns>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.GetHashCode(System.String)">
+            <summary>
+            Returns a SHA1 hashcode for the string provided.
+            </summary>
+            <param name="input">Input string for the hashcode generator</param>
+            <returns>SHA1 hashcode for <code>input</code></returns>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.GetActiveScreenUID">
+            <summary>
+            Get the Unique Identifier of the Screen displaying the active document.
+            </summary>
+            <returns>Screen UID</returns>
+            <seealso cref="M:Dejaview.DejaviewAddIn.GetScreenUID(System.Windows.Forms.Screen)"/>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.GetScreenUID(System.Windows.Forms.Screen)">
+            <summary>
+            Get the Unique Identifier of the Screen specified. This ID is comprised
+            of the system assigned device name concatenated with the string representation
+            of the screen's working area.
+            </summary>
+            <param name="scr">Screen to identify</param>
+            <returns>Screen UID</returns>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.GetScreenNameFromUID(System.String)">
+            <summary>
+            Returns a human readable name for the screen based on the screen's UID.
+            
+            For example, a UID is in the form: '\\.\DISPLAY1{X=-1920,Y=0,Width=1920,Height=1050}'
+            The name for this screen would be: 'Display 1 (1920 x 1050) [Left]'
+            </summary>
+            <param name="uid">Screen UID</param>
+            <returns>A human readable name</returns>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.DisplayStatus(System.String)">
+            <summary>
+            Helper method for displaying status to MS Word's status bar.
+            </summary>
+            <param name="txt">Text to display in Word's status bar</param>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.SetButtonTip">
+            <summary>
+            Set tooltip for the Remove Button with details from a DejaviewSet
+            </summary>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.GetTags(Dejaview.DejaviewSet)">
+            <summary>
+            Returns a formatted human readable string with Deja View tag details.
+            </summary>
+            <param name="djvSet">The DejaviewSet object to read</param>
+            <returns>Human readable string with tag details</returns>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.CheckForUpdate(System.Object)">
+            <summary>
+            Thread compatible method invoked to check for updates.
+            </summary>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.InternalStartup">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.#ctor(Microsoft.Office.Tools.Word.ApplicationFactory,System.IServiceProvider)">
+            
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.Initialize">
+            
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.FinishInitialization">
+            
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.InitializeDataBindings">
+            
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.InitializeCachedData">
+            
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.InitializeData">
+            
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.BindToData">
+            
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.StartCaching(System.String)">
+            
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.StopCaching(System.String)">
+            
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.IsCached(System.String)">
+            
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.BeginInitialization">
+            
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.EndInitialization">
+            
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.InitializeControls">
+            
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.InitializeComponents">
+            
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.NeedsFill(System.String)">
+            
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.OnShutdown">
+            
+        </member>
+        <member name="T:Dejaview.Globals">
+            
+        </member>
+        <member name="M:Dejaview.Globals.#ctor">
+            
+        </member>
+    </members>
+</doc>

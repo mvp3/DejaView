@@ -115,6 +115,7 @@ namespace Dejaview
         /// <seealso cref="InternalStartup"/>
         private void DejaviewAddIn_Shutdown(object sender, EventArgs e)
         {
+            // Nothing to do for now.
         }
 
         /// <summary>
