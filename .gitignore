@@ -342,3 +342,5 @@ healthchecksdb
 
 # Custom Ignores
 [Rr]esources/
+/.wix/extensions/WixToolset.UI.wixext/4.0.0-rc.2/wixext4
+/InstallAware
