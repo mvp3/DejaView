@@ -163,26 +163,27 @@ namespace Dejaview
         internal void DejaviewAddIn_DocumentBeforeClose(Word.Document doc, ref bool bCancel)
         {
             if (!DejaviewConfig.Instance.Enable) return;
-            string title = doc.ActiveWindow.Caption;
-            if (saves.Contains(title))
+            int id = doc.DocID;
+            if (saves.Contains(id))
             {
                 // Save before closing.
                 doc.Save();
                 // Clear this doc's title from the list.
-                saves.Remove(title);
+                saves.Remove(id);
             }
         }
 
         /// <summary>
         /// Method called when a change occurs in the document.
-        /// This method is necessary since opening an existing document
-        /// is not always caught by ApplicationEvents4_DocumentOpenEventHandler.
+        /// This method is necessary since opening a document that has 
+        /// already been opened and closed within the same instance of MS Word
+        /// does not always fire ApplicationEvents4_DocumentOpenEventHandler.
         /// </summary>
         internal void DejaviewAddIn_DocumentChange()
         {
-            string title = Application.ActiveWindow.Caption;
+            int key = Application.ActiveDocument.DocID;
             // If the Active document has not had its view set by DJ
-            if (views.ContainsKey(title) && !(bool)views[title])
+            if (views.ContainsKey(key) && !(bool)views[key])
             {
                 // Get Logger
                 Logger logger = GetLogger();
@@ -282,8 +283,7 @@ namespace Dejaview
 
                 SetButtonTip();
 
-                string title = doc.ActiveWindow.Caption;
-                if (!saves.Contains(title)) saves.Add(title);
+                if (!saves.Contains(doc.DocID)) saves.Add(doc.DocID);
             }
             catch (Exception ex)
             {
@@ -413,7 +413,7 @@ namespace Dejaview
         internal bool IsLoaded(Word.Document doc)
         {
             if (doc == null) return false;
-            return (views.ContainsKey(doc.ActiveWindow.Caption) && (bool)views[doc.ActiveWindow.Caption]);
+            return (views.ContainsKey(doc.DocID) && (bool)views[doc.DocID]);
         }
 
         /// <summary>
@@ -820,7 +820,7 @@ namespace Dejaview
 
                 SetButtonTip();
 
-                views.Add(doc.ActiveWindow.Caption, true);
+                views.Add(doc.DocID, true);
             }
             catch (DejaViewException ex)
             {

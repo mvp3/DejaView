@@ -379,6 +379,18 @@
             <returns>Compare value</returns>
             <see cref="T:System.Collections.Generic.Comparer`1"/>
         </member>
+        <member name="T:Dejaview.InfoForm">
+            <summary>
+            This is a basic form designed to display messages.
+            </summary>
+        </member>
+        <member name="M:Dejaview.InfoForm.#ctor(System.String,System.String)">
+            <summary>
+            Constructor that automatically displays the message provided.
+            </summary>
+            <param name="info">Information to display</param>
+            <param name="caption">Caption (title) for message window</param>
+        </member>
         <member name="F:Dejaview.InfoForm.components">
             <summary>
             Required designer variable.
@@ -647,8 +659,9 @@
         <member name="M:Dejaview.DejaviewAddIn.DejaviewAddIn_DocumentChange">
             <summary>
             Method called when a change occurs in the document.
-            This method is necessary since opening an existing document
-            is not always caught by ApplicationEvents4_DocumentOpenEventHandler.
+            This method is necessary since opening a document that has 
+            already been opened and closed within the same instance of MS Word
+            does not always fire ApplicationEvents4_DocumentOpenEventHandler.
             </summary>
         </member>
         <member name="M:Dejaview.DejaviewAddIn.DejaviewAddIn_DocumentOpen(Microsoft.Office.Interop.Word.Document)">

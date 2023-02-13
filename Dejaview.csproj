@@ -33,16 +33,16 @@
     <PublishUrl>C:\OneDrive\www\dejaview.lexem.cc\download\</PublishUrl>
     <InstallUrl>https://dejaview.lexem.cc/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>1.0.0.28</ApplicationVersion>
+    <ApplicationVersion>1.0.0.29</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>1</UpdateInterval>
     <UpdateIntervalUnits>days</UpdateIntervalUnits>
     <ProductName>Deja View</ProductName>
     <PublisherName>Lexem</PublisherName>
-    <SupportUrl>https://lexem.cc/dejaview/</SupportUrl>
+    <SupportUrl>https://dejaview.lexem.cc/</SupportUrl>
     <FriendlyName>Deja View</FriendlyName>
-    <OfficeApplicationDescription>A nifty lightweight Word Add-In that allows you to retain your view settings per document. When you open your document, Deja View will display it just as you viewed it last--just as if you have seen it this way before.</OfficeApplicationDescription>
+    <OfficeApplicationDescription>A nifty lightweight Word Add-In that allows you to retain your view settings per document. When you open your document, Deja View will display it just as you viewed it last.</OfficeApplicationDescription>
     <LoadBehavior>3</LoadBehavior>
   </PropertyGroup>
   <ItemGroup>
@@ -235,7 +235,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include=".editorconfig" />
-    <None Include="1420164201.pfx" />
+    <None Include="Resources\1420164201.pfx" />
     <None Include="CONTRIBUTING.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -327,8 +327,10 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>dejaview.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <!-- Include the build rules for a C# project. -->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

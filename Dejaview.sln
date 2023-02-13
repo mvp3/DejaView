@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Dejaview Setup", "..\Dejaview Setup\Dejaview Setup.vdproj", "{35855171-C37F-4C58-BC15-DFB3BC911229}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		All|Any CPU = All|Any CPU
@@ -59,6 +61,21 @@ Global
 		{AFCD1AB3-D6A2-47CD-94A3-DBFF12D65F7E}.Release|x64.Build.0 = Release|x64
 		{AFCD1AB3-D6A2-47CD-94A3-DBFF12D65F7E}.Release|x86.ActiveCfg = Release|x86
 		{AFCD1AB3-D6A2-47CD-94A3-DBFF12D65F7E}.Release|x86.Build.0 = Release|x86
+		{35855171-C37F-4C58-BC15-DFB3BC911229}.All|Any CPU.ActiveCfg = Debug
+		{35855171-C37F-4C58-BC15-DFB3BC911229}.All|ARM.ActiveCfg = Debug
+		{35855171-C37F-4C58-BC15-DFB3BC911229}.All|ARM64.ActiveCfg = Debug
+		{35855171-C37F-4C58-BC15-DFB3BC911229}.All|x64.ActiveCfg = Debug
+		{35855171-C37F-4C58-BC15-DFB3BC911229}.All|x86.ActiveCfg = Debug
+		{35855171-C37F-4C58-BC15-DFB3BC911229}.Debug|Any CPU.ActiveCfg = Debug
+		{35855171-C37F-4C58-BC15-DFB3BC911229}.Debug|ARM.ActiveCfg = Debug
+		{35855171-C37F-4C58-BC15-DFB3BC911229}.Debug|ARM64.ActiveCfg = Debug
+		{35855171-C37F-4C58-BC15-DFB3BC911229}.Debug|x64.ActiveCfg = Debug
+		{35855171-C37F-4C58-BC15-DFB3BC911229}.Debug|x86.ActiveCfg = Debug
+		{35855171-C37F-4C58-BC15-DFB3BC911229}.Release|Any CPU.ActiveCfg = Release
+		{35855171-C37F-4C58-BC15-DFB3BC911229}.Release|ARM.ActiveCfg = Release
+		{35855171-C37F-4C58-BC15-DFB3BC911229}.Release|ARM64.ActiveCfg = Release
+		{35855171-C37F-4C58-BC15-DFB3BC911229}.Release|x64.ActiveCfg = Release
+		{35855171-C37F-4C58-BC15-DFB3BC911229}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
