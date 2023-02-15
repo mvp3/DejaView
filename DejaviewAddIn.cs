@@ -148,7 +148,16 @@ namespace Dejaview
         internal void DejaviewAddIn_NewDocument(Word.Document doc)
         {
             if (!DejaviewConfig.Instance.Enable) return;
-            // TODO: Set defaults!
+            DejaviewSet s = DejaviewConfig.Instance.DefaultDejaviewSet;
+            if (s != null)
+            {
+                SetDocumentView(doc, s);
+                Logger.Instance.Add("Set new document view to the default view.");
+            }
+            else
+            {
+                Logger.Instance.Add("New document fired, but no default view is set.");
+            }
         }
 
         /// <summary>

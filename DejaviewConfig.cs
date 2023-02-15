@@ -85,6 +85,12 @@ namespace Dejaview
         public bool RememberRibbon { get; set; }
 
         /// <summary>
+        /// DejaviewSet object representing a user-defined default view 
+        /// for documents. Optional.
+        /// </summary>
+        public DejaviewSet DefaultDejaviewSet { get; set; }
+
+        /// <summary>
         /// Standard method for getting an active instance object of 
         /// this class.
         /// </summary>
@@ -178,6 +184,41 @@ namespace Dejaview
                         else if (n.Name == "RememberRibbon" && !string.IsNullOrEmpty(n.InnerText))
                             RememberRibbon = bool.Parse(n.InnerText);
                     }
+
+                    djv = xdoc.SelectSingleNode("//*[local-name()='DefaultDejaviewSet']");
+
+                    if (djv != null)
+                    {
+                        DefaultDejaviewSet = new DejaviewSet();
+                        nodes = djv.ChildNodes;
+                        foreach (XmlNode n in nodes)
+                        {
+                            if (n.Name == "NavigationPanelWidth" && !string.IsNullOrEmpty(n.InnerText))
+                                DefaultDejaviewSet.NavigationPanelWidth = int.Parse(n.InnerText);
+                            else if (n.Name == "ShowNavigationPanel" && !string.IsNullOrEmpty(n.InnerText))
+                                DefaultDejaviewSet.ShowNavigationPanel = bool.Parse(n.InnerText);
+                            else if (n.Name == "WindowWidth" && !string.IsNullOrEmpty(n.InnerText))
+                                DefaultDejaviewSet.WindowWidth = int.Parse(n.InnerText);
+                            else if (n.Name == "WindowHeight" && !string.IsNullOrEmpty(n.InnerText))
+                                DefaultDejaviewSet.WindowHeight = int.Parse(n.InnerText);
+                            else if (n.Name == "WindowLeft" && !string.IsNullOrEmpty(n.InnerText))
+                                DefaultDejaviewSet.WindowLeft = int.Parse(n.InnerText);
+                            else if (n.Name == "WindowTop" && !string.IsNullOrEmpty(n.InnerText))
+                                DefaultDejaviewSet.WindowTop = int.Parse(n.InnerText);
+                            else if (n.Name == "WindowState" && !string.IsNullOrEmpty(n.InnerText))
+                                DefaultDejaviewSet.WindowState = int.Parse(n.InnerText);
+                            else if (n.Name == "WindowViewType" && !string.IsNullOrEmpty(n.InnerText))
+                                DefaultDejaviewSet.WindowViewType = int.Parse(n.InnerText);
+                            else if (n.Name == "DraftView" && !string.IsNullOrEmpty(n.InnerText))
+                                DefaultDejaviewSet.DraftView = bool.Parse(n.InnerText);
+                            else if (n.Name == "DisplayRulers" && !string.IsNullOrEmpty(n.InnerText))
+                                DefaultDejaviewSet.DisplayRulers = bool.Parse(n.InnerText);
+                            else if (n.Name == "WindowZoom" && !string.IsNullOrEmpty(n.InnerText))
+                                DefaultDejaviewSet.WindowZoom = int.Parse(n.InnerText);
+                            else if (n.Name == "RibbonHeight" && !string.IsNullOrEmpty(n.InnerText))
+                                DefaultDejaviewSet.RibbonHeight = int.Parse(n.InnerText);
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -207,8 +248,8 @@ namespace Dejaview
                     using (XmlWriter w = XmlWriter.Create(fs, settings))
                     {
                         w.WriteStartDocument();
-                        w.WriteStartElement("Dejaview");
 
+                        w.WriteStartElement("Dejaview");
                         w.WriteElementString("Enable", Enable.ToString());
                         w.WriteElementString("Prompt", Prompt.ToString());
                         w.WriteElementString("CheckForUpdates", CheckForUpdates.ToString());
@@ -219,22 +260,26 @@ namespace Dejaview
                         w.WriteElementString("RememberZoom", RememberZoom.ToString());
                         w.WriteElementString("RememberRulers", RememberRulers.ToString());
                         w.WriteElementString("RememberRibbon", RememberRibbon.ToString());
-
-                        /*
-                        w.WriteStartElement("Defaults");
-                        w.WriteAttributeString("ShowNavigationPanel", ShowNavigationPanel.ToString());
-                        w.WriteAttributeString("NavigationPanelWidth", NavigationPanelWidth.ToString());
-                        w.WriteAttributeString("WindowWidth", WindowWidth.ToString());
-                        w.WriteAttributeString("WindowHeight", WindowHeight.ToString());
-                        w.WriteAttributeString("WindowTop", WindowTop.ToString());
-                        w.WriteAttributeString("WindowLeft", WindowLeft.ToString());
-                        w.WriteAttributeString("WindowZoom", WindowZoom.ToString());
-                        w.WriteAttributeString("WindowViewType", WindowViewType.ToString());
-                        w.WriteAttributeString("DraftView", DraftView.ToString());
-                        w.WriteFullEndElement();
-                        */
-
                         w.WriteEndElement();
+
+                        if (DefaultDejaviewSet != null)
+                        {
+                            w.WriteStartElement("DefaultDejaviewSet");
+                            w.WriteAttributeString("NavigationPanelWidth", DefaultDejaviewSet.NavigationPanelWidth.ToString());
+                            w.WriteAttributeString("ShowNavigationPanel", DefaultDejaviewSet.ShowNavigationPanel.ToString());
+                            w.WriteAttributeString("WindowWidth", DefaultDejaviewSet.WindowWidth.ToString());
+                            w.WriteAttributeString("WindowHeight", DefaultDejaviewSet.WindowHeight.ToString());
+                            w.WriteAttributeString("WindowLeft", DefaultDejaviewSet.WindowLeft.ToString());
+                            w.WriteAttributeString("WindowTop", DefaultDejaviewSet.WindowTop.ToString());
+                            w.WriteAttributeString("WindowState", DefaultDejaviewSet.WindowState.ToString());
+                            w.WriteAttributeString("WindowViewType", DefaultDejaviewSet.WindowViewType.ToString());
+                            w.WriteAttributeString("DraftView", DefaultDejaviewSet.DraftView.ToString());
+                            w.WriteAttributeString("DisplayRulers", DefaultDejaviewSet.DisplayRulers.ToString());
+                            w.WriteAttributeString("WindowZoom", DefaultDejaviewSet.WindowZoom.ToString());
+                            w.WriteAttributeString("RibbonHeight", DefaultDejaviewSet.RibbonHeight.ToString());
+                            w.WriteFullEndElement();
+                        }
+
                         w.WriteEndDocument();
                         w.Flush();
                     }

@@ -237,5 +237,16 @@ namespace Dejaview
                 Globals.DejaviewAddIn.SetDocumentView(Globals.DejaviewAddIn.Application.ActiveDocument, s);
             }
         }
+
+        private void btnSetDefaultView_Click(object sender, EventArgs e)
+        {
+            DialogResult r = MessageBox.Show(this, "This will set the default new document view to the current document view.\n\nDo you want to continue?", "Set Default View?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (r == DialogResult.Yes)
+            {
+                DejaviewSet s = Globals.DejaviewAddIn.GetDejaviewSet();
+                DejaviewConfig.Instance.DefaultDejaviewSet = s;
+                DejaviewConfig.Instance.Save();
+            }
+        }
     }
 }

@@ -64,6 +64,7 @@ namespace Dejaview
             this.lblVersion = new System.Windows.Forms.Label();
             this.tip = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnSetDefaultView = new System.Windows.Forms.Button();
             this.btnApply = new System.Windows.Forms.Button();
             this.btnSetDefaults = new System.Windows.Forms.Button();
             this.btnLogs = new System.Windows.Forms.Button();
@@ -269,6 +270,7 @@ namespace Dejaview
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.btnSetDefaultView);
             this.groupBox2.Controls.Add(this.btnApply);
             this.groupBox2.Controls.Add(this.btnSetDefaults);
             this.groupBox2.Controls.Add(this.btnLogs);
@@ -280,6 +282,19 @@ namespace Dejaview
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Actions";
+            // 
+            // btnSetDefaultView
+            // 
+            this.btnSetDefaultView.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btnSetDefaultView.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSetDefaultView.Image = global::Dejaview.Properties.Resources.View_16x;
+            this.btnSetDefaultView.Location = new System.Drawing.Point(36, 75);
+            this.btnSetDefaultView.Name = "btnSetDefaultView";
+            this.btnSetDefaultView.Size = new System.Drawing.Size(24, 23);
+            this.btnSetDefaultView.TabIndex = 8;
+            this.tip.SetToolTip(this.btnSetDefaultView, "Set current document view to default view for new documents");
+            this.btnSetDefaultView.UseVisualStyleBackColor = true;
+            this.btnSetDefaultView.Click += new System.EventHandler(this.btnSetDefaultView_Click);
             // 
             // btnApply
             // 
@@ -402,5 +417,6 @@ namespace Dejaview
         private System.Windows.Forms.Button btnLogs;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button btnApply;
+        private System.Windows.Forms.Button btnSetDefaultView;
     }
 }

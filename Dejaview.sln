@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Dejaview Setup", "..\Dejaview Setup\Dejaview Setup.vdproj", "{35855171-C37F-4C58-BC15-DFB3BC911229}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Dejaview Installer", "..\Dejaview Setup\Dejaview Setup.vdproj", "{35855171-C37F-4C58-BC15-DFB3BC911229}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

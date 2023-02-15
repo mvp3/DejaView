@@ -121,9 +121,6 @@
   <data name="DefaultConstraint_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DefaultConstraint_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="XMLCommentTag_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\XMLCommentTag_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Time_yellow_7x_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Time_yellow_7x_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -132,5 +129,11 @@
   </data>
   <data name="ApplyCodeChanges_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ApplyCodeChanges_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="XMLCommentTag_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\XMLCommentTag_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="View_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\View_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

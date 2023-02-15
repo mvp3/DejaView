@@ -33,8 +33,8 @@
     <PublishUrl>C:\OneDrive\www\dejaview.lexem.cc\download\</PublishUrl>
     <InstallUrl>https://dejaview.lexem.cc/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>1.0.0.29</ApplicationVersion>
-    <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
+    <ApplicationVersion>1.0.0.30</ApplicationVersion>
+    <AutoIncrementApplicationRevision>false</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>1</UpdateInterval>
     <UpdateIntervalUnits>days</UpdateIntervalUnits>
@@ -235,6 +235,8 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include=".editorconfig" />
+    <None Include="1420164201.pfx" />
+    <None Include="lexem.private.key" />
     <None Include="Resources\1420164201.pfx" />
     <None Include="CONTRIBUTING.md" />
     <None Include="Properties\Settings.settings">
@@ -262,6 +264,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="dejaview.ico" />
+    <None Include="Resources\View_16x.png" />
     <None Include="Resources\ApplyCodeChanges_16x.png" />
     <None Include="Resources\DefaultConstraint_16x.png" />
     <None Include="Resources\Time_yellow_7x_16x.png" />
@@ -312,7 +315,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>VSTO40;TRACE</DefineConstants>
+    <DefineConstants>TRACE;VSTO40</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -323,19 +326,25 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>lexem.private.key</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>dejaview.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <!-- Include the build rules for a C# project. -->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Include additional build rules for an Office application add-in. -->
   <Import Project="$(VSToolsPath)\OfficeTools\Microsoft.VisualStudio.Tools.Office.targets" Condition="'$(VSToolsPath)' != ''" />
+  <!-- Prevent VSTO MS Office add-ins installation/registering during building of VSTO-projects on build machines. -->
+  <Target Name="RegisterOfficeAddin" Condition="'$(VSTO_ProjectType)' == 'Application'">
+    <Message Text="RegisterOfficeAddin target is redefined in $(MSBuildProjectName) project" Importance="high" />
+    <SetOffice2007AddInRegistration Url="$(AbsolutePathToTheDeploymentManifest)" AddInName="$(TargetName)" OfficeApplication="$(OfficeApplication)" FriendlyName="$(FriendlyName)" Description="$(OfficeApplicationDescription)" LoadBehavior="$(LoadBehavior)" Condition="'$(Disable_RegisterOfficeAddin)' != 'disable'" />
+    <Message Text="SetOffice2007AddInRegistration task is suppressed in $(MSBuildProjectName) project" Condition="'$(Disable_RegisterOfficeAddin)' == 'disable'" Importance="high" />
+    <Message Text="as Disable_RegisterOfficeAddin parameter is $(Disable_RegisterOfficeAddin)" Condition="'$(Disable_RegisterOfficeAddin)' == 'disable'" Importance="high" />
+  </Target>
   <!-- This section defines VSTO properties that describe the host-changeable project properties. -->
   <ProjectExtensions>
     <VisualStudio>
@@ -347,4 +356,7 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>regedit</PostBuildEvent>
+  </PropertyGroup>
 </Project>

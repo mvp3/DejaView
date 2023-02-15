@@ -102,6 +102,12 @@
             in the DejaviewSet of parameters.
             </summary>
         </member>
+        <member name="P:Dejaview.DejaviewConfig.DefaultDejaviewSet">
+            <summary>
+            DejaviewSet object representing a user-defined default view 
+            for documents. Optional.
+            </summary>
+        </member>
         <member name="P:Dejaview.DejaviewConfig.Instance">
             <summary>
             Standard method for getting an active instance object of 
@@ -563,6 +569,11 @@
             </summary>
         </member>
         <member name="P:Dejaview.Properties.Resources.Time_yellow_7x_16x">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Dejaview.Properties.Resources.View_16x">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>

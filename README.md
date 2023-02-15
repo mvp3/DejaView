@@ -53,8 +53,15 @@ This button shows a dialog that displays the Deja View tags currently embedded i
 This button shows a dialog that displays the current view parameters. If Deja View is enabled, 
 these parameters will be saved to the document when the document is saved.
 
+##### Apply Last View
+This button applies the last Deja View view parameters to the current document. This should automatically happen when a document 
+is loaded. This button simply offers a manual method.
+
 ##### Defaults
 This button resets all options to the default. It prompts before performing the reset.
+
+##### View Logs
+This button shows a dialog that displays the Deja View logs that correspond to the active document.
 
 ##### Update URL
 The Internet URL for Deja View to use when checking for updates. 
@@ -69,24 +76,21 @@ number of display screens or a smaller resolution then the computer that the doc
 so that the document would not be visible when displayed, Deja View will automatically detect that the 
 document window is not visible on the present display and center the document on the primary screen.
 
-##### Navigation Panel
-Save and restore the visibility and width details for side navigation panel.
+##### Navigation Pane
+Save and restore the visibility and width details for side navigation pane.
 
-##### Window Type
-Save and restore the document window view type. The value corresponds to Microsoft's [WdViewType Enum](https://docs.microsoft.com/en-us/dotnet/api/microsoft.office.interop.word.wdviewtype?view=word-pia).
+##### View Layout
+Save and restore the document window view layout. The value corresponds to Microsoft's [WdViewType Enum](https://docs.microsoft.com/en-us/dotnet/api/microsoft.office.interop.word.wdviewtype?view=word-pia).
 
 ##### Zoom
 Save and restore the document zoom level.
 
-##### Rulers
+##### Ruler
 Save and restore the setting to show rulers.
 
 ##### Ribbon
 Save and restore the settings for how the ribbon should be displayed. Typically the ribbon is expanded 
 and pinned. But users may wish to hide the ribbon when viewing certain documents.
-
-##### View Logs (button)
-This button shows a dialog that displays the Deja View logs for the current instance corresponding to the active document.
 
 ### Custom XML Parts
 Invisibly and quietly, Deja View embeds a small XML segment (called "tags" in the user interface) 
@@ -126,7 +130,7 @@ The following is an example of an embedded XML segment:
 ## Installation
 
 The **Dejaview.dll**, **Dejaview.dll.manifest**, and **Dejaview.vsto** files have all been packaged by an 
-installation project built using [Wix toolset for Visual Studio](https://wixtoolset.org/).
+installation project built using the Microsoft Installer tool.
 
 #### Binary
 The latest MSI installation binary may be downloaded here: [https://dejaview.lexem.cc/latest](https://dejaview.lexem.cc/latest)
@@ -135,18 +139,14 @@ The latest MSI installation binary may be downloaded here: [https://dejaview.lex
 Visual Studio Community 2019
 
 #### Tested On
-Microsoft Word for Microsoft Office 365 MSO (16.0.13628.20234) 64-bit
+Microsoft Word for Microsoft Office 365 MSO (16.0.16026.20002) 64-bit
 
 ## Certificate Information
-Deja View is signed with a standard SHA256RSA certificate. 
-But the certificate authority (CA) root certificate used is not trusted by default
-because it is not in the Trusted Root Certification Authorities store.
+Deja View is signed with a standard SHA256RSA certificate issued by
+Sectigo Public Code Signing CA R36. It is valid from 1/31/2023 to 2/1/2024.
 
-This is entirely a financial matter. If there is support for the project
-I would be happy to purchase a trusted signing certificate from a 
-public CA.
-
-The present CA Root certificate is issued by [TBC CA](https://trinitybiblechurch.org/TBC-root-authority.crt)
+If there is no support for the project I will be forced to resort 
+to an untrusted self-signed certificate.
 
 ## Support
 Extremely limited support will be offered at this time.
@@ -157,7 +157,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Please make sure to update tests as appropriate.
 
 ## License
-Copyright 2021 M. V. Pereira
+Copyright 2023 M. V. Pereira
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -181,4 +181,4 @@ Project Link: https://github.com/mvp3/DejaView
 The original author of this project and its code is M. V. Pereira.
 
 The code is very simple and much help was derived from online 
-forums and [Visual Studio Docs](https://docs.microsoft.com/en-us/visualstudio/?view=vs-2019).
+forums and [Visual Studio Docs](https://docs.microsoft.com/en-us/visualstudio/?view=vs-2022).

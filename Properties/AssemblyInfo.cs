@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("A nifty lightweight Word Add-In that automatically retains your view settings per document. When you open your document Deja View will display it just as you viewed it last.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Lexem")]
-[assembly: AssemblyProduct("Deja View")]
+[assembly: AssemblyProduct("Deja View Microsoft Word Add-In")]
 [assembly: AssemblyCopyright("Copyright © 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.28")]
-[assembly: AssemblyFileVersion("1.0.0.28")]
+[assembly: AssemblyVersion("1.0.1.30")]
+[assembly: AssemblyFileVersion("1.0.1.30")]
