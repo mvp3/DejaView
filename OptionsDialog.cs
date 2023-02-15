@@ -243,9 +243,9 @@ namespace Dejaview
             DialogResult r = MessageBox.Show(this, "This will set the default new document view to the current document view.\n\nDo you want to continue?", "Set Default View?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (r == DialogResult.Yes)
             {
-                DejaviewSet s = Globals.DejaviewAddIn.GetDejaviewSet();
-                DejaviewConfig.Instance.DefaultDejaviewSet = s;
+                DejaviewConfig.Instance.DefaultDejaviewSet = Globals.DejaviewAddIn.GetDejaviewSetFromDisplay();
                 DejaviewConfig.Instance.Save();
+                MessageBox.Show(this, "Default document view is set.", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
     }

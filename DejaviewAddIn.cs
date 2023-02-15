@@ -31,7 +31,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Collections;
-using System.Drawing.Imaging;
 
 namespace Dejaview
 {
@@ -129,8 +128,6 @@ namespace Dejaview
         {
             if (!initialized)
             {
-                //Globals.DejaviewAddIn.Application.DocumentOpen += new Word.ApplicationEvents4_DocumentOpenEventHandler(DejaviewAddIn_DocumentOpen);
-                //Globals.DejaviewAddIn.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(DejaviewAddIn_DocumentBeforeSave);
                 Word.ApplicationEvents4_Event wdEvents4 = (Word.ApplicationEvents4_Event)this.Application;
                 wdEvents4.DocumentOpen += new Word.ApplicationEvents4_DocumentOpenEventHandler(DejaviewAddIn_DocumentOpen);
                 wdEvents4.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(DejaviewAddIn_DocumentBeforeSave);
@@ -148,15 +145,20 @@ namespace Dejaview
         internal void DejaviewAddIn_NewDocument(Word.Document doc)
         {
             if (!DejaviewConfig.Instance.Enable) return;
+
+            // Create a unique instance of Logger for this document.
+            loggers.Add(doc.DocID, new Logger());
+
+            // See if a default DejaviewSet is set.
             DejaviewSet s = DejaviewConfig.Instance.DefaultDejaviewSet;
             if (s != null)
             {
                 SetDocumentView(doc, s);
-                Logger.Instance.Add("Set new document view to the default view.");
+                Log("Set new document view to the default view.");
             }
             else
             {
-                Logger.Instance.Add("New document fired, but no default view is set.");
+                Log("No default view is set for new documents.");
             }
         }
 
@@ -221,7 +223,7 @@ namespace Dejaview
             if (!DejaviewConfig.Instance.Enable) return;
 
             // Create a unique instance of Logger for this document.
-            loggers.Add(doc.ActiveWindow.Caption, new Logger());
+            loggers.Add(doc.DocID, new Logger());
 
             // Create first log event as the title of the ActiveDocument window.
             Log(doc.ActiveWindow.Caption);
@@ -547,7 +549,7 @@ namespace Dejaview
         {
             try
             {
-                djvSets.Remove(Globals.DejaviewAddIn.Application.ActiveWindow.Caption);
+                djvSets.Remove(doc.DocID);
                 var xml = doc.CustomXMLParts["Dejaview"];
                 if (xml != null) xml.Delete();
                 doc.Save();
@@ -567,7 +569,7 @@ namespace Dejaview
         /// <returns>Logger instance</returns>
         internal Logger GetLogger()
         {
-            return (Logger)loggers[Globals.DejaviewAddIn.Application.ActiveWindow.Caption];
+            return (Logger)loggers[Globals.DejaviewAddIn.Application.ActiveDocument.DocID];
         }
 
         /// <summary>
@@ -610,7 +612,7 @@ namespace Dejaview
         /// <returns>DejaviewSet object associated with the ActiveDocument</returns>
         internal DejaviewSet GetDejaviewSet()
         {
-            DejaviewSet djvSet = (DejaviewSet)djvSets[Globals.DejaviewAddIn.Application.ActiveWindow.Caption];
+            DejaviewSet djvSet = (DejaviewSet)djvSets[Globals.DejaviewAddIn.Application.ActiveDocument.DocID];
             return djvSet ?? new DejaviewSet();
         }
 
@@ -622,9 +624,9 @@ namespace Dejaview
         /// <param name="djvSet">DejaviewSet object to link to the ActiveDocument</param>
         internal void SetDejaviewSet(DejaviewSet djvSet)
         {
-            string c = Globals.DejaviewAddIn.Application.ActiveWindow.Caption;
-            if (djvSets.Contains(c)) djvSets.Remove(c);
-            djvSets.Add(c, djvSet);
+            int id = Globals.DejaviewAddIn.Application.ActiveDocument.DocID;
+            if (djvSets.Contains(id)) djvSets.Remove(id);
+            djvSets.Add(id, djvSet);
         }
 
         /// <summary>

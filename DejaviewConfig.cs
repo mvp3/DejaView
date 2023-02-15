@@ -17,12 +17,8 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace Dejaview
@@ -183,40 +179,37 @@ namespace Dejaview
                             RememberRulers = bool.Parse(n.InnerText);
                         else if (n.Name == "RememberRibbon" && !string.IsNullOrEmpty(n.InnerText))
                             RememberRibbon = bool.Parse(n.InnerText);
-                    }
-
-                    djv = xdoc.SelectSingleNode("//*[local-name()='DefaultDejaviewSet']");
-
-                    if (djv != null)
-                    {
-                        DefaultDejaviewSet = new DejaviewSet();
-                        nodes = djv.ChildNodes;
-                        foreach (XmlNode n in nodes)
+                        else if (n.Name == "DefaultDejaviewSet")
                         {
-                            if (n.Name == "NavigationPanelWidth" && !string.IsNullOrEmpty(n.InnerText))
-                                DefaultDejaviewSet.NavigationPanelWidth = int.Parse(n.InnerText);
-                            else if (n.Name == "ShowNavigationPanel" && !string.IsNullOrEmpty(n.InnerText))
-                                DefaultDejaviewSet.ShowNavigationPanel = bool.Parse(n.InnerText);
-                            else if (n.Name == "WindowWidth" && !string.IsNullOrEmpty(n.InnerText))
-                                DefaultDejaviewSet.WindowWidth = int.Parse(n.InnerText);
-                            else if (n.Name == "WindowHeight" && !string.IsNullOrEmpty(n.InnerText))
-                                DefaultDejaviewSet.WindowHeight = int.Parse(n.InnerText);
-                            else if (n.Name == "WindowLeft" && !string.IsNullOrEmpty(n.InnerText))
-                                DefaultDejaviewSet.WindowLeft = int.Parse(n.InnerText);
-                            else if (n.Name == "WindowTop" && !string.IsNullOrEmpty(n.InnerText))
-                                DefaultDejaviewSet.WindowTop = int.Parse(n.InnerText);
-                            else if (n.Name == "WindowState" && !string.IsNullOrEmpty(n.InnerText))
-                                DefaultDejaviewSet.WindowState = int.Parse(n.InnerText);
-                            else if (n.Name == "WindowViewType" && !string.IsNullOrEmpty(n.InnerText))
-                                DefaultDejaviewSet.WindowViewType = int.Parse(n.InnerText);
-                            else if (n.Name == "DraftView" && !string.IsNullOrEmpty(n.InnerText))
-                                DefaultDejaviewSet.DraftView = bool.Parse(n.InnerText);
-                            else if (n.Name == "DisplayRulers" && !string.IsNullOrEmpty(n.InnerText))
-                                DefaultDejaviewSet.DisplayRulers = bool.Parse(n.InnerText);
-                            else if (n.Name == "WindowZoom" && !string.IsNullOrEmpty(n.InnerText))
-                                DefaultDejaviewSet.WindowZoom = int.Parse(n.InnerText);
-                            else if (n.Name == "RibbonHeight" && !string.IsNullOrEmpty(n.InnerText))
-                                DefaultDejaviewSet.RibbonHeight = int.Parse(n.InnerText);
+                            DefaultDejaviewSet = new DejaviewSet();
+                            var attrs = n.Attributes;
+                            foreach (XmlAttribute a in attrs)
+                            {
+                                if (a.Name == "NavigationPanelWidth" && !string.IsNullOrEmpty(a.Value))
+                                    DefaultDejaviewSet.NavigationPanelWidth = int.Parse(a.Value);
+                                else if (a.Name == "ShowNavigationPanel" && !string.IsNullOrEmpty(a.Value))
+                                    DefaultDejaviewSet.ShowNavigationPanel = bool.Parse(a.Value);
+                                else if (a.Name == "WindowWidth" && !string.IsNullOrEmpty(a.Value))
+                                    DefaultDejaviewSet.WindowWidth = int.Parse(a.Value);
+                                else if (a.Name == "WindowHeight" && !string.IsNullOrEmpty(a.Value))
+                                    DefaultDejaviewSet.WindowHeight = int.Parse(a.Value);
+                                else if (a.Name == "WindowLeft" && !string.IsNullOrEmpty(a.Value))
+                                    DefaultDejaviewSet.WindowLeft = int.Parse(a.Value);
+                                else if (a.Name == "WindowTop" && !string.IsNullOrEmpty(a.Value))
+                                    DefaultDejaviewSet.WindowTop = int.Parse(a.Value);
+                                else if (a.Name == "WindowState" && !string.IsNullOrEmpty(a.Value))
+                                    DefaultDejaviewSet.WindowState = int.Parse(a.Value);
+                                else if (a.Name == "WindowViewType" && !string.IsNullOrEmpty(a.Value))
+                                    DefaultDejaviewSet.WindowViewType = int.Parse(a.Value);
+                                else if (a.Name == "DraftView" && !string.IsNullOrEmpty(a.Value))
+                                    DefaultDejaviewSet.DraftView = bool.Parse(a.Value);
+                                else if (a.Name == "DisplayRulers" && !string.IsNullOrEmpty(a.Value))
+                                    DefaultDejaviewSet.DisplayRulers = bool.Parse(a.Value);
+                                else if (a.Name == "WindowZoom" && !string.IsNullOrEmpty(a.Value))
+                                    DefaultDejaviewSet.WindowZoom = int.Parse(a.Value);
+                                else if (a.Name == "RibbonHeight" && !string.IsNullOrEmpty(a.Value))
+                                    DefaultDejaviewSet.RibbonHeight = int.Parse(a.Value);
+                            }
                         }
                     }
                 }
@@ -260,7 +253,6 @@ namespace Dejaview
                         w.WriteElementString("RememberZoom", RememberZoom.ToString());
                         w.WriteElementString("RememberRulers", RememberRulers.ToString());
                         w.WriteElementString("RememberRibbon", RememberRibbon.ToString());
-                        w.WriteEndElement();
 
                         if (DefaultDejaviewSet != null)
                         {
@@ -277,9 +269,10 @@ namespace Dejaview
                             w.WriteAttributeString("DisplayRulers", DefaultDejaviewSet.DisplayRulers.ToString());
                             w.WriteAttributeString("WindowZoom", DefaultDejaviewSet.WindowZoom.ToString());
                             w.WriteAttributeString("RibbonHeight", DefaultDejaviewSet.RibbonHeight.ToString());
-                            w.WriteFullEndElement();
+                            w.WriteEndElement();
                         }
 
+                        w.WriteFullEndElement();
                         w.WriteEndDocument();
                         w.Flush();
                     }

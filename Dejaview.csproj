@@ -235,8 +235,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include=".editorconfig" />
-    <None Include="1420164201.pfx" />
-    <None Include="lexem.private.key" />
     <None Include="Resources\1420164201.pfx" />
     <None Include="CONTRIBUTING.md" />
     <None Include="Properties\Settings.settings">
@@ -326,7 +324,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>lexem.private.key</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>dejaview.ico</ApplicationIcon>
