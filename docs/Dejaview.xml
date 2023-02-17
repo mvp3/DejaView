@@ -772,27 +772,36 @@
             </summary>
             <param name="newSet">DejaviewSet object containing new values</param>
         </member>
-        <member name="M:Dejaview.DejaviewAddIn.SetDocumentView(Microsoft.Office.Interop.Word.Document,Dejaview.DejaviewSet)">
+        <member name="M:Dejaview.DejaviewAddIn.ShowDocumentView(Microsoft.Office.Interop.Word.Document,Dejaview.DejaviewSet)">
             <summary>
             Set the view of a given document.
             </summary>
             <param name="doc">Document to be displayed</param>
             <param name="djvSet">DejaviewSet representing the view parameters to be set</param>
         </member>
-        <member name="M:Dejaview.DejaviewAddIn.SetShowable(Microsoft.Office.Interop.Word.Application,Dejaview.DejaviewSet)">
+        <member name="M:Dejaview.DejaviewAddIn.ShowLocation(Microsoft.Office.Interop.Word.Application,Dejaview.DejaviewSet)">
             <summary>
-            Show a given Form ensuring that it is showable. If no Point is provided,
-            the Form will be centered on the primary screen.
+            This is the main display method of Deja View. It ensures that the 
+            document window is showable on the screen. This is helpful when
+            opening documents between computers with a different number of 
+            screens.
             </summary>
             <param name="app">Word application</param>
             <param name="ds">DejaviewSet for the ActiveDocument</param>
         </member>
         <member name="M:Dejaview.DejaviewAddIn.GetDisplayArrangementUID">
             <summary>
-            Returns a unique identifier (in hash format) uniquely identifying
+            Returns a unique identifier (in hash format) for
             the current Display Arrangement of the computer.
             </summary>
             <returns>The current Display Arrangement of the computer</returns>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.GetUID(Microsoft.Office.Interop.Word.Document)">
+            <summary>
+            Returns a unique identifier for a given Document.
+            </summary>
+            <param name="doc">Word Document object</param>
+            <returns>Unique identifier (hash code) representing the provided Document</returns>
         </member>
         <member name="M:Dejaview.DejaviewAddIn.GetHashCode(System.String)">
             <summary>

@@ -147,13 +147,13 @@ namespace Dejaview
             if (!DejaviewConfig.Instance.Enable) return;
 
             // Create a unique instance of Logger for this document.
-            loggers.Add(doc.DocID, new Logger());
+            loggers.Add(GetUID(doc), new Logger());
 
             // See if a default DejaviewSet is set.
             DejaviewSet s = DejaviewConfig.Instance.DefaultDejaviewSet;
             if (s != null)
             {
-                SetDocumentView(doc, s);
+                ShowDocumentView(doc, s);
                 Log("Set new document view to the default view.");
             }
             else
@@ -174,7 +174,7 @@ namespace Dejaview
         internal void DejaviewAddIn_DocumentBeforeClose(Word.Document doc, ref bool bCancel)
         {
             if (!DejaviewConfig.Instance.Enable) return;
-            int id = doc.DocID;
+            int id = GetUID(doc);
             if (saves.Contains(id))
             {
                 // Save before closing.
@@ -192,7 +192,7 @@ namespace Dejaview
         /// </summary>
         internal void DejaviewAddIn_DocumentChange()
         {
-            int key = Application.ActiveDocument.DocID;
+            int key = GetUID(Application.ActiveDocument);
             // If the Active document has not had its view set by DJ
             if (views.ContainsKey(key) && !(bool)views[key])
             {
@@ -209,7 +209,7 @@ namespace Dejaview
                 else
                 {
                     logger.Add("  Applying saved view.");
-                    SetDocumentView(Application.ActiveDocument, s);
+                    ShowDocumentView(Application.ActiveDocument, s);
                 }
             }
         }
@@ -223,7 +223,7 @@ namespace Dejaview
             if (!DejaviewConfig.Instance.Enable) return;
 
             // Create a unique instance of Logger for this document.
-            loggers.Add(doc.DocID, new Logger());
+            loggers.Add(GetUID(doc), new Logger());
 
             // Create first log event as the title of the ActiveDocument window.
             Log(doc.ActiveWindow.Caption);
@@ -231,7 +231,7 @@ namespace Dejaview
             try
             {
                 DejaviewSet djvSet = GetDejaviewSetFromDocument(doc);
-                SetDocumentView(doc, djvSet);
+                ShowDocumentView(doc, djvSet);
             }
             catch (DejaViewException ex)
             {
@@ -294,7 +294,9 @@ namespace Dejaview
 
                 SetButtonTip();
 
-                if (!saves.Contains(doc.DocID)) saves.Add(doc.DocID);
+                int id = GetUID(doc);
+
+                if (!saves.Contains(id)) saves.Add(id);
             }
             catch (Exception ex)
             {
@@ -424,7 +426,8 @@ namespace Dejaview
         internal bool IsLoaded(Word.Document doc)
         {
             if (doc == null) return false;
-            return (views.ContainsKey(doc.DocID) && (bool)views[doc.DocID]);
+            int id = GetUID(doc);
+            return (views.ContainsKey(id) && (bool)views[id]);
         }
 
         /// <summary>
@@ -549,7 +552,7 @@ namespace Dejaview
         {
             try
             {
-                djvSets.Remove(doc.DocID);
+                djvSets.Remove(GetUID(doc));
                 var xml = doc.CustomXMLParts["Dejaview"];
                 if (xml != null) xml.Delete();
                 doc.Save();
@@ -569,7 +572,7 @@ namespace Dejaview
         /// <returns>Logger instance</returns>
         internal Logger GetLogger()
         {
-            return (Logger)loggers[Globals.DejaviewAddIn.Application.ActiveDocument.DocID];
+            return (Logger)loggers[GetUID(Globals.DejaviewAddIn.Application.ActiveDocument)];
         }
 
         /// <summary>
@@ -612,7 +615,7 @@ namespace Dejaview
         /// <returns>DejaviewSet object associated with the ActiveDocument</returns>
         internal DejaviewSet GetDejaviewSet()
         {
-            DejaviewSet djvSet = (DejaviewSet)djvSets[Globals.DejaviewAddIn.Application.ActiveDocument.DocID];
+            DejaviewSet djvSet = (DejaviewSet)djvSets[GetUID(Globals.DejaviewAddIn.Application.ActiveDocument)];
             return djvSet ?? new DejaviewSet();
         }
 
@@ -624,7 +627,7 @@ namespace Dejaview
         /// <param name="djvSet">DejaviewSet object to link to the ActiveDocument</param>
         internal void SetDejaviewSet(DejaviewSet djvSet)
         {
-            int id = Globals.DejaviewAddIn.Application.ActiveDocument.DocID;
+            int id = GetUID(Globals.DejaviewAddIn.Application.ActiveDocument);
             if (djvSets.Contains(id)) djvSets.Remove(id);
             djvSets.Add(id, djvSet);
         }
@@ -736,7 +739,7 @@ namespace Dejaview
         /// </summary>
         /// <param name="doc">Document to be displayed</param>
         /// <param name="djvSet">DejaviewSet representing the view parameters to be set</param>
-        internal void SetDocumentView(Word.Document doc, DejaviewSet djvSet)
+        internal void ShowDocumentView(Word.Document doc, DejaviewSet djvSet)
         {
             try
             {
@@ -823,7 +826,7 @@ namespace Dejaview
 
                 // Attempt to restore window
                 if (doc.ActiveWindow.WindowState == Word.WdWindowState.wdWindowStateNormal)
-                    SetShowable(doc.Application, djvSet);
+                    ShowLocation(doc.Application, djvSet);
 
                 SetDejaviewSet(djvSet);
 
@@ -831,7 +834,7 @@ namespace Dejaview
 
                 SetButtonTip();
 
-                views.Add(doc.DocID, true);
+                views.Add(GetUID(doc), true);
             }
             catch (DejaViewException ex)
             {
@@ -857,12 +860,14 @@ namespace Dejaview
         }
 
         /// <summary>
-        /// Show a given Form ensuring that it is showable. If no Point is provided,
-        /// the Form will be centered on the primary screen.
+        /// This is the main display method of Deja View. It ensures that the 
+        /// document window is showable on the screen. This is helpful when
+        /// opening documents between computers with a different number of 
+        /// screens.
         /// </summary>
         /// <param name="app">Word application</param>
         /// <param name="ds">DejaviewSet for the ActiveDocument</param>
-        private static void SetShowable(Word.Application app, DejaviewSet ds)
+        private static void ShowLocation(Word.Application app, DejaviewSet ds)
         {
             // Get Logger
             Logger logger = Globals.DejaviewAddIn.GetLogger();
@@ -995,7 +1000,7 @@ namespace Dejaview
         }
 
         /// <summary>
-        /// Returns a unique identifier (in hash format) uniquely identifying
+        /// Returns a unique identifier (in hash format) for
         /// the current Display Arrangement of the computer.
         /// </summary>
         /// <returns>The current Display Arrangement of the computer</returns>
@@ -1007,6 +1012,16 @@ namespace Dejaview
                 str.Append(GetScreenUID(scr));
             }
             return GetHashCode(str.ToString());
+        }
+
+        /// <summary>
+        /// Returns a unique identifier for a given Document.
+        /// </summary>
+        /// <param name="doc">Word Document object</param>
+        /// <returns>Unique identifier (hash code) representing the provided Document</returns>
+        internal static int GetUID(Word.Document doc)
+        {
+            return doc.FullName.GetHashCode();
         }
 
         /// <summary>

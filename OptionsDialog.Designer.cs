@@ -63,13 +63,14 @@ namespace Dejaview
             this.txtUpdateURL = new System.Windows.Forms.TextBox();
             this.lblVersion = new System.Windows.Forms.Label();
             this.tip = new System.Windows.Forms.ToolTip(this.components);
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btnSetDefaultView = new System.Windows.Forms.Button();
             this.btnApply = new System.Windows.Forms.Button();
             this.btnSetDefaults = new System.Windows.Forms.Button();
             this.btnLogs = new System.Windows.Forms.Button();
             this.btnViewTags = new System.Windows.Forms.Button();
             this.btnViewCurrent = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lblDocID = new System.Windows.Forms.Label();
             this.grpRemember.SuspendLayout();
             this.grpSettings.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -173,7 +174,7 @@ namespace Dejaview
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Location = new System.Drawing.Point(210, 286);
+            this.btnClose.Location = new System.Drawing.Point(210, 292);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 1;
@@ -260,28 +261,11 @@ namespace Dejaview
             // 
             this.lblVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblVersion.AutoSize = true;
-            this.lblVersion.Location = new System.Drawing.Point(15, 291);
+            this.lblVersion.Location = new System.Drawing.Point(15, 297);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(47, 13);
             this.lblVersion.TabIndex = 3;
             this.lblVersion.Text = "(version)";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.btnSetDefaultView);
-            this.groupBox2.Controls.Add(this.btnApply);
-            this.groupBox2.Controls.Add(this.btnSetDefaults);
-            this.groupBox2.Controls.Add(this.btnLogs);
-            this.groupBox2.Controls.Add(this.btnViewTags);
-            this.groupBox2.Controls.Add(this.btnViewCurrent);
-            this.groupBox2.Location = new System.Drawing.Point(225, 12);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(66, 105);
-            this.groupBox2.TabIndex = 6;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Actions";
             // 
             // btnSetDefaultView
             // 
@@ -358,13 +342,40 @@ namespace Dejaview
             this.btnViewCurrent.UseVisualStyleBackColor = true;
             this.btnViewCurrent.Click += new System.EventHandler(this.btnViewCurrent_Click);
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.btnSetDefaultView);
+            this.groupBox2.Controls.Add(this.btnApply);
+            this.groupBox2.Controls.Add(this.btnSetDefaults);
+            this.groupBox2.Controls.Add(this.btnLogs);
+            this.groupBox2.Controls.Add(this.btnViewTags);
+            this.groupBox2.Controls.Add(this.btnViewCurrent);
+            this.groupBox2.Location = new System.Drawing.Point(225, 12);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(66, 105);
+            this.groupBox2.TabIndex = 6;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Actions";
+            // 
+            // lblDocID
+            // 
+            this.lblDocID.AutoSize = true;
+            this.lblDocID.Location = new System.Drawing.Point(15, 281);
+            this.lblDocID.Name = "lblDocID";
+            this.lblDocID.Size = new System.Drawing.Size(42, 13);
+            this.lblDocID.TabIndex = 7;
+            this.lblDocID.Text = "(doc id)";
+            // 
             // OptionsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(303, 321);
+            this.ClientSize = new System.Drawing.Size(303, 327);
             this.ControlBox = false;
+            this.Controls.Add(this.lblDocID);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lblVersion);
@@ -418,5 +429,6 @@ namespace Dejaview
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button btnApply;
         private System.Windows.Forms.Button btnSetDefaultView;
+        private System.Windows.Forms.Label lblDocID;
     }
 }

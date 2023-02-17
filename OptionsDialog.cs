@@ -82,6 +82,7 @@ namespace Dejaview
 
             Version lVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             lblVersion.Text = "Version: " + lVersion.ToString();
+            lblDocID.Text = "Doc ID: " + DejaviewAddIn.GetUID(Globals.DejaviewAddIn.Application.ActiveDocument);
 
             bypassChange = false;
         }
@@ -234,7 +235,7 @@ namespace Dejaview
             else
             {
                 logger.Add("  Applying saved view.");
-                Globals.DejaviewAddIn.SetDocumentView(Globals.DejaviewAddIn.Application.ActiveDocument, s);
+                Globals.DejaviewAddIn.ShowDocumentView(Globals.DejaviewAddIn.Application.ActiveDocument, s);
             }
         }
 
