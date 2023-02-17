@@ -724,39 +724,43 @@
             <seealso cref="F:Dejaview.DejaviewAddIn.djvSets"/>
             <param name="doc">Microsoft Word document</param>
         </member>
-        <member name="M:Dejaview.DejaviewAddIn.GetLogger">
+        <member name="M:Dejaview.DejaviewAddIn.GetLogger(Microsoft.Office.Interop.Word.Document)">
             <summary>
             Get the unique Logger for the ActiveDocument.
             </summary>
             <returns>Logger instance</returns>
         </member>
-        <member name="M:Dejaview.DejaviewAddIn.Log(System.String)">
+        <member name="M:Dejaview.DejaviewAddIn.Log(System.String,Microsoft.Office.Interop.Word.Document)">
             <summary>
             Convenience method for logging an event associated with the ActiveDocument.
             </summary>
             <example>Globals.DejaviewAddIn.Log("Window restored.");</example>
             <param name="description">String description of the event.</param>
+            <param name="doc">MS Word Document with which this message should be logged.</param>
         </member>
-        <member name="M:Dejaview.DejaviewAddIn.Log(System.Exception)">
+        <member name="M:Dejaview.DejaviewAddIn.Log(System.Exception,Microsoft.Office.Interop.Word.Document)">
             <summary>
             Convenience method for logging an Deja View exception associated with the ActiveDocument.
             </summary>
             <example>Globals.DejaviewAddIn.Log(new Exception("Failed."));</example>
             <param name="ex">Exception representing the event</param>
+            <param name="doc">MS Word Document with which this exception should be logged.</param>
         </member>
-        <member name="M:Dejaview.DejaviewAddIn.GetDejaviewSet">
+        <member name="M:Dejaview.DejaviewAddIn.GetDejaviewSet(Microsoft.Office.Interop.Word.Document)">
             <summary>
             This method retrieves the DejaviewSet associated with the ActiveDocument.
             </summary>
+            <param name="doc">MS Word Document from which to get this DejaviewSet</param>
             <returns>DejaviewSet object associated with the ActiveDocument</returns>
         </member>
-        <member name="M:Dejaview.DejaviewAddIn.SetDejaviewSet(Dejaview.DejaviewSet)">
+        <member name="M:Dejaview.DejaviewAddIn.SetDejaviewSet(Dejaview.DejaviewSet,Microsoft.Office.Interop.Word.Document)">
             <summary>
             This method links the provided DejaviewSet object to the ActiveDocument and then stores it
             in a Collection for easy retrieval. If a DejaviewSet object is already associated with the ActiveDocument
             that object is simply updated.
             </summary>
             <param name="djvSet">DejaviewSet object to link to the ActiveDocument</param>
+            <param name="doc">MS Word Document to apply this DejaviewSet</param>
         </member>
         <member name="M:Dejaview.DejaviewAddIn.GetDejaviewSetFromDisplay">
             <summary>

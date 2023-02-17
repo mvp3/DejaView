@@ -61,7 +61,7 @@ namespace Dejaview
         /// applied. This is necessary since Microsoft Word does not reliably 
         /// fire the DocumentOpen event when a document is opened.
         /// </summary>
-        private Hashtable views = new Hashtable();
+        private ArrayList views = new ArrayList();
 
         /// <summary>
         /// Collection that retains what documents have been saved. This is used
@@ -175,13 +175,22 @@ namespace Dejaview
         {
             if (!DejaviewConfig.Instance.Enable) return;
             int id = GetUID(doc);
+            if (views.Contains(id))
+            {
+                // Clear this doc's title from the active lists.
+                Log("Removing (" + id + ") from views list.", doc);
+                views.Remove(id);
+            }
             if (saves.Contains(id))
             {
                 // Save before closing.
+                Log("Forcing save on close.", doc);
                 doc.Save();
-                // Clear this doc's title from the list.
+
+                Log("Removing from saves list.", doc);
                 saves.Remove(id);
             }
+            Log("All is done before close.", doc);
         }
 
         /// <summary>
@@ -193,22 +202,21 @@ namespace Dejaview
         internal void DejaviewAddIn_DocumentChange()
         {
             int key = GetUID(Application.ActiveDocument);
+
             // If the Active document has not had its view set by DJ
-            if (views.ContainsKey(key) && !(bool)views[key])
+            if (!views.Contains(key))
             {
-                // Get Logger
-                Logger logger = GetLogger();
-                logger.Add("Checking views...");
+                Log("Checking for Deja View settings...");
 
                 DejaviewSet s = GetDejaviewSet();
                 DejaviewSet d = GetDejaviewSetFromDisplay();
                 if (d.Equals(s))
                 {
-                    logger.Add("  Current view and saved view match, no changes.");
+                    Log("  Current view and saved view match, no changes.");
                 }
                 else
                 {
-                    logger.Add("  Applying saved view.");
+                    Log("  Applying saved view.");
                     ShowDocumentView(Application.ActiveDocument, s);
                 }
             }
@@ -226,7 +234,7 @@ namespace Dejaview
             loggers.Add(GetUID(doc), new Logger());
 
             // Create first log event as the title of the ActiveDocument window.
-            Log(doc.ActiveWindow.Caption);
+            Log(doc.ActiveWindow.Caption, doc);
 
             try
             {
@@ -236,17 +244,17 @@ namespace Dejaview
             catch (DejaViewException ex)
             {
                 Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
-                Log(ex.Message);
+                Log(ex.Message, doc);
             }
             catch (NullReferenceException ex)
             {
                 Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
-                Log("Error: " + ex.Message);
+                Log("Error: " + ex.Message, doc);
             }
             catch (IndexOutOfRangeException ex)
             {
                 Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
-                Log("Index error: " + ex.Message);
+                Log("Index error: " + ex.Message, doc);
             }
             catch (Exception ex)
             {
@@ -271,7 +279,7 @@ namespace Dejaview
             if (!DejaviewConfig.Instance.Enable) return;
 
             DejaviewSet djvSetDisplay = GetDejaviewSetFromDisplay();
-            DejaviewSet djvSet = GetDejaviewSet();
+            DejaviewSet djvSet = GetDejaviewSet(doc);
 
             // If the window has not changed then abort the save.
             if (djvSetDisplay.Equals(djvSet)) return;
@@ -288,7 +296,7 @@ namespace Dejaview
 
                 UpdateDejaviewSet(djvSetDisplay);
 
-                djvSet = GetDejaviewSet();
+                djvSet = GetDejaviewSet(doc);
 
                 SaveDejaviewToDocument(doc, djvSet);
 
@@ -427,7 +435,7 @@ namespace Dejaview
         {
             if (doc == null) return false;
             int id = GetUID(doc);
-            return (views.ContainsKey(id) && (bool)views[id]);
+            return (views.Contains(id));
         }
 
         /// <summary>
@@ -537,7 +545,7 @@ namespace Dejaview
                 }
             }
 
-            SetDejaviewSet(djvSet);
+            SetDejaviewSet(djvSet, doc);
 
             return djvSet;
         }
@@ -570,9 +578,10 @@ namespace Dejaview
         /// Get the unique Logger for the ActiveDocument.
         /// </summary>
         /// <returns>Logger instance</returns>
-        internal Logger GetLogger()
+        internal Logger GetLogger(Word.Document doc = null)
         {
-            return (Logger)loggers[GetUID(Globals.DejaviewAddIn.Application.ActiveDocument)];
+            if (doc == null) doc = Application.ActiveDocument;
+            return (Logger)loggers[GetUID(doc)];
         }
 
         /// <summary>
@@ -580,11 +589,12 @@ namespace Dejaview
         /// </summary>
         /// <example>Globals.DejaviewAddIn.Log("Window restored.");</example>
         /// <param name="description">String description of the event.</param>
-        internal void Log(string description)
+        /// <param name="doc">MS Word Document with which this message should be logged.</param>
+        internal void Log(string description, Word.Document doc = null)
         {
             try
             {
-                GetLogger().Add(description);
+                GetLogger(doc).Add(description);
             }
             catch (Exception ex)
             {
@@ -597,11 +607,12 @@ namespace Dejaview
         /// </summary>
         /// <example>Globals.DejaviewAddIn.Log(new Exception("Failed."));</example>
         /// <param name="ex">Exception representing the event</param>
-        internal void Log(Exception ex)
+        /// <param name="doc">MS Word Document with which this exception should be logged.</param>
+        internal void Log(Exception ex, Word.Document doc = null)
         {
             try
             {
-                GetLogger().Add(ex);
+                GetLogger(doc).Add(ex);
             }
             catch (Exception e)
             {
@@ -612,10 +623,12 @@ namespace Dejaview
         /// <summary>
         /// This method retrieves the DejaviewSet associated with the ActiveDocument.
         /// </summary>
+        /// <param name="doc">MS Word Document from which to get this DejaviewSet</param>
         /// <returns>DejaviewSet object associated with the ActiveDocument</returns>
-        internal DejaviewSet GetDejaviewSet()
+        internal DejaviewSet GetDejaviewSet(Word.Document doc = null)
         {
-            DejaviewSet djvSet = (DejaviewSet)djvSets[GetUID(Globals.DejaviewAddIn.Application.ActiveDocument)];
+            if (doc == null) doc = Application.ActiveDocument;
+            DejaviewSet djvSet = (DejaviewSet)djvSets[GetUID(doc)];
             return djvSet ?? new DejaviewSet();
         }
 
@@ -625,9 +638,11 @@ namespace Dejaview
         /// that object is simply updated.
         /// </summary>
         /// <param name="djvSet">DejaviewSet object to link to the ActiveDocument</param>
-        internal void SetDejaviewSet(DejaviewSet djvSet)
+        /// <param name="doc">MS Word Document to apply this DejaviewSet</param>
+        internal void SetDejaviewSet(DejaviewSet djvSet, Word.Document doc = null)
         {
-            int id = GetUID(Globals.DejaviewAddIn.Application.ActiveDocument);
+            if (doc == null) doc = Application.ActiveDocument;
+            int id = GetUID(doc);
             if (djvSets.Contains(id)) djvSets.Remove(id);
             djvSets.Add(id, djvSet);
         }
@@ -828,13 +843,13 @@ namespace Dejaview
                 if (doc.ActiveWindow.WindowState == Word.WdWindowState.wdWindowStateNormal)
                     ShowLocation(doc.Application, djvSet);
 
-                SetDejaviewSet(djvSet);
+                SetDejaviewSet(djvSet, doc);
 
                 DisplayStatus("Document view restored.");
 
                 SetButtonTip();
 
-                views.Add(GetUID(doc), true);
+                views.Add(GetUID(doc));
             }
             catch (DejaViewException ex)
             {
