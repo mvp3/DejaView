@@ -177,6 +177,8 @@ M. V. Pereira - truthbearer@gmail.com
 
 Project Link: https://github.com/mvp3/DejaView
 
+Public Site: https://dejaview.lexem.cc
+
 ## Acknowledgements
 The original author of this project and its code is M. V. Pereira.
 
