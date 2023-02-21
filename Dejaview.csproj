@@ -235,7 +235,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include=".editorconfig" />
-    <None Include="Resources\1420164201.pfx" />
     <None Include="CONTRIBUTING.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -262,6 +261,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="dejaview.ico" />
+    <Content Include="TODOs.txt" />
     <None Include="Resources\View_16x.png" />
     <None Include="Resources\ApplyCodeChanges_16x.png" />
     <None Include="Resources\DefaultConstraint_16x.png" />
