@@ -146,19 +146,16 @@ namespace Dejaview
         {
             if (!DejaviewConfig.Instance.Enable) return;
 
-            // Create a unique instance of Logger for this document.
-            loggers.Add(GetUID(doc), new Logger());
-
             // See if a default DejaviewSet is set.
             DejaviewSet s = DejaviewConfig.Instance.DefaultDejaviewSet;
             if (s != null)
             {
                 ShowDocumentView(doc, s);
-                Log("Set new document view to the default view.");
+                Log("Set new document view to the default view.", doc);
             }
             else
             {
-                Log("No default view is set for new documents.");
+                Log("No default view is set for new documents.", doc);
             }
         }
 
@@ -190,6 +187,24 @@ namespace Dejaview
                 Log("Removing from saves list.", doc);
                 saves.Remove(id);
             }
+            else
+            {
+                if (DejaviewConfig.Instance.AlwaysSave)
+                {
+                    // Check to see if the view is different from its last save
+                    DejaviewSet s = GetDejaviewSet();
+                    DejaviewSet d = GetDejaviewSetFromDisplay();
+                    if (!d.Equals(s))
+                    {
+                        DialogResult r = MessageBox.Show(null, "Do you want to save this document's view settings?\n\nThis will save the file, updating it's timestamp.", "Save View?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (r == DialogResult.Yes)
+                        {
+                            Log("User opted to save view settings on close.", doc);
+                            doc.Save();
+                        }
+                    }
+                }
+            }
             Log("All is done before close.", doc);
         }
 
@@ -201,24 +216,31 @@ namespace Dejaview
         /// </summary>
         internal void DejaviewAddIn_DocumentChange()
         {
-            int key = GetUID(Application.ActiveDocument);
-
-            // If the Active document has not had its view set by DJ
-            if (!views.Contains(key))
+            try
             {
-                Log("Checking for Deja View settings...");
+                int key = GetUID(Application.ActiveDocument);
 
-                DejaviewSet s = GetDejaviewSet();
-                DejaviewSet d = GetDejaviewSetFromDisplay();
-                if (d.Equals(s))
+                // If the Active document has not had its view set by DJ
+                if (!views.Contains(key))
                 {
-                    Log("  Current view and saved view match, no changes.");
+                    Log("Checking for Deja View settings...");
+
+                    DejaviewSet s = GetDejaviewSet();
+                    DejaviewSet d = GetDejaviewSetFromDisplay();
+                    if (d.Equals(s))
+                    {
+                        Log("  Current view and saved view match, no changes.");
+                    }
+                    else
+                    {
+                        Log("  Applying saved view.");
+                        ShowDocumentView(Application.ActiveDocument, s);
+                    }
                 }
-                else
-                {
-                    Log("  Applying saved view.");
-                    ShowDocumentView(Application.ActiveDocument, s);
-                }
+            }
+            catch (Exception ex)
+            {
+                Log("Could not process document change: " + ex.Message);
             }
         }
 
@@ -229,9 +251,6 @@ namespace Dejaview
         internal void DejaviewAddIn_DocumentOpen(Word.Document doc)
         {
             if (!DejaviewConfig.Instance.Enable) return;
-
-            // Create a unique instance of Logger for this document.
-            loggers.Add(GetUID(doc), new Logger());
 
             // Create first log event as the title of the ActiveDocument window.
             Log(doc.ActiveWindow.Caption, doc);
@@ -581,7 +600,14 @@ namespace Dejaview
         internal Logger GetLogger(Word.Document doc = null)
         {
             if (doc == null) doc = Application.ActiveDocument;
-            return (Logger)loggers[GetUID(doc)];
+            int uid = GetUID(doc);
+            Logger logger = (Logger)loggers[uid];
+            if (logger == null)
+            {
+                logger = new Logger();
+                loggers.Add(uid, logger);
+            }
+            return logger;
         }
 
         /// <summary>
@@ -629,7 +655,7 @@ namespace Dejaview
         {
             if (doc == null) doc = Application.ActiveDocument;
             DejaviewSet djvSet = (DejaviewSet)djvSets[GetUID(doc)];
-            return djvSet ?? new DejaviewSet();
+            return djvSet ?? DejaviewConfig.Instance.DefaultDejaviewSet;
         }
 
         /// <summary>
@@ -886,6 +912,10 @@ namespace Dejaview
         {
             // Get Logger
             Logger logger = Globals.DejaviewAddIn.GetLogger();
+
+            // Check to see if a valid DejaviewSet is provided
+            if (ds == null || (ds.Locations == null && ds.WindowWidth == 0 && ds.WindowHeight == 0 && ds.WindowTop == 0 && ds.WindowLeft == 0))
+                return;
 
             // Setup key variables
             Screen screen = Screen.FromPoint(new Point(app.Left, app.Top));

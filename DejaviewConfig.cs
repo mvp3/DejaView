@@ -41,6 +41,10 @@ namespace Dejaview
         /// </summary>
         public bool Prompt { get; set; }
         /// <summary>
+        /// Flag for always saving.
+        /// </summary>
+        public bool AlwaysSave { get; set; }
+        /// <summary>
         /// Flag for checking for updates.
         /// </summary>
         public bool CheckForUpdates { get; set; }
@@ -128,6 +132,7 @@ namespace Dejaview
             Enable = true;
             RememberWindowLocation = true;
             Prompt = false;
+            AlwaysSave = false;
             CheckForUpdates = true;
             UpdateURL = "https://dejaview.lexem.cc/autoupdate";
 
@@ -163,6 +168,8 @@ namespace Dejaview
                             Enable = bool.Parse(n.InnerText);
                         else if (n.Name == "Prompt" && !string.IsNullOrEmpty(n.InnerText))
                             Prompt = bool.Parse(n.InnerText);
+                        else if (n.Name == "AlwaysSave" && !string.IsNullOrEmpty(n.InnerText))
+                            AlwaysSave = bool.Parse(n.InnerText);
                         else if (n.Name == "CheckForUpdates" && !string.IsNullOrEmpty(n.InnerText))
                             CheckForUpdates = bool.Parse(n.InnerText);
                         else if (n.Name == "UpdateURL" && !string.IsNullOrEmpty(n.InnerText))
@@ -245,6 +252,7 @@ namespace Dejaview
                         w.WriteStartElement("Dejaview");
                         w.WriteElementString("Enable", Enable.ToString());
                         w.WriteElementString("Prompt", Prompt.ToString());
+                        w.WriteElementString("AlwaysSave", AlwaysSave.ToString());
                         w.WriteElementString("CheckForUpdates", CheckForUpdates.ToString());
                         w.WriteElementString("UpdateURL", UpdateURL);
                         w.WriteElementString("RememberWindowLocation", RememberWindowLocation.ToString());

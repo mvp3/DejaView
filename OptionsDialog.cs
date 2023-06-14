@@ -65,6 +65,7 @@ namespace Dejaview
             chkEnable.Checked = DejaviewConfig.Instance.Enable;
             chkAutoUpdate.Checked = DejaviewConfig.Instance.CheckForUpdates;
             chkPrompt.Checked = DejaviewConfig.Instance.Prompt;
+            chkAlways.Checked = DejaviewConfig.Instance.AlwaysSave;
 
             chkLocation.Checked = DejaviewConfig.Instance.RememberWindowLocation;
             chkNavigationPanel.Checked = DejaviewConfig.Instance.RememberNavigationPanel;
@@ -103,6 +104,7 @@ namespace Dejaview
         private void setEnabled(bool enabled)
         {
             chkPrompt.Enabled = enabled;
+            chkAlways.Enabled = enabled;
             chkAutoUpdate.Enabled = enabled;
 
             foreach (Control x in grpRemember.Controls)
@@ -248,6 +250,13 @@ namespace Dejaview
                 DejaviewConfig.Instance.Save();
                 MessageBox.Show(this, "Default document view is set.", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void chkAlways_CheckedChanged(object sender, EventArgs e)
+        {
+            if (bypassChange) return;
+            DejaviewConfig.Instance.AlwaysSave = chkAlways.Checked;
+            DejaviewConfig.Instance.Save();
         }
     }
 }

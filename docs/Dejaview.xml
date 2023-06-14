@@ -55,6 +55,11 @@
             Flag for prompting before saving.
             </summary>
         </member>
+        <member name="P:Dejaview.DejaviewConfig.AlwaysSave">
+            <summary>
+            Flag for always saving.
+            </summary>
+        </member>
         <member name="P:Dejaview.DejaviewConfig.CheckForUpdates">
             <summary>
             Flag for checking for updates.

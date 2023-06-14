@@ -71,6 +71,7 @@ namespace Dejaview
             this.btnViewCurrent = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lblDocID = new System.Windows.Forms.Label();
+            this.chkAlways = new System.Windows.Forms.CheckBox();
             this.grpRemember.SuspendLayout();
             this.grpSettings.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -87,7 +88,7 @@ namespace Dejaview
             this.grpRemember.Controls.Add(this.chkRibbon);
             this.grpRemember.Controls.Add(this.chkNavigationPanel);
             this.grpRemember.Controls.Add(this.chkLocation);
-            this.grpRemember.Location = new System.Drawing.Point(12, 178);
+            this.grpRemember.Location = new System.Drawing.Point(12, 201);
             this.grpRemember.Name = "grpRemember";
             this.grpRemember.Size = new System.Drawing.Size(279, 100);
             this.grpRemember.TabIndex = 0;
@@ -174,7 +175,7 @@ namespace Dejaview
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Location = new System.Drawing.Point(210, 292);
+            this.btnClose.Location = new System.Drawing.Point(210, 315);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 1;
@@ -185,12 +186,13 @@ namespace Dejaview
             // 
             // grpSettings
             // 
+            this.grpSettings.Controls.Add(this.chkAlways);
             this.grpSettings.Controls.Add(this.chkEnable);
             this.grpSettings.Controls.Add(this.chkPrompt);
             this.grpSettings.Controls.Add(this.chkAutoUpdate);
             this.grpSettings.Location = new System.Drawing.Point(12, 12);
             this.grpSettings.Name = "grpSettings";
-            this.grpSettings.Size = new System.Drawing.Size(207, 105);
+            this.grpSettings.Size = new System.Drawing.Size(207, 127);
             this.grpSettings.TabIndex = 2;
             this.grpSettings.TabStop = false;
             this.grpSettings.Text = "Add-in Settings";
@@ -212,7 +214,7 @@ namespace Dejaview
             // chkPrompt
             // 
             this.chkPrompt.AutoSize = true;
-            this.chkPrompt.Location = new System.Drawing.Point(6, 50);
+            this.chkPrompt.Location = new System.Drawing.Point(6, 48);
             this.chkPrompt.Name = "chkPrompt";
             this.chkPrompt.Padding = new System.Windows.Forms.Padding(6, 2, 3, 2);
             this.chkPrompt.Size = new System.Drawing.Size(199, 21);
@@ -225,7 +227,7 @@ namespace Dejaview
             // chkAutoUpdate
             // 
             this.chkAutoUpdate.AutoSize = true;
-            this.chkAutoUpdate.Location = new System.Drawing.Point(6, 77);
+            this.chkAutoUpdate.Location = new System.Drawing.Point(6, 100);
             this.chkAutoUpdate.Name = "chkAutoUpdate";
             this.chkAutoUpdate.Padding = new System.Windows.Forms.Padding(6, 2, 3, 2);
             this.chkAutoUpdate.Size = new System.Drawing.Size(186, 21);
@@ -241,7 +243,7 @@ namespace Dejaview
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.txtUpdateURL);
-            this.groupBox1.Location = new System.Drawing.Point(12, 123);
+            this.groupBox1.Location = new System.Drawing.Point(12, 145);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(279, 50);
             this.groupBox1.TabIndex = 5;
@@ -261,7 +263,7 @@ namespace Dejaview
             // 
             this.lblVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblVersion.AutoSize = true;
-            this.lblVersion.Location = new System.Drawing.Point(15, 297);
+            this.lblVersion.Location = new System.Drawing.Point(15, 320);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(47, 13);
             this.lblVersion.TabIndex = 3;
@@ -354,7 +356,7 @@ namespace Dejaview
             this.groupBox2.Controls.Add(this.btnViewCurrent);
             this.groupBox2.Location = new System.Drawing.Point(225, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(66, 105);
+            this.groupBox2.Size = new System.Drawing.Size(66, 127);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Actions";
@@ -362,18 +364,33 @@ namespace Dejaview
             // lblDocID
             // 
             this.lblDocID.AutoSize = true;
-            this.lblDocID.Location = new System.Drawing.Point(15, 281);
+            this.lblDocID.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lblDocID.Location = new System.Drawing.Point(15, 304);
             this.lblDocID.Name = "lblDocID";
             this.lblDocID.Size = new System.Drawing.Size(42, 13);
             this.lblDocID.TabIndex = 7;
             this.lblDocID.Text = "(doc id)";
+            // 
+            // chkAlways
+            // 
+            this.chkAlways.AutoSize = true;
+            this.chkAlways.Location = new System.Drawing.Point(6, 75);
+            this.chkAlways.Name = "chkAlways";
+            this.chkAlways.Padding = new System.Windows.Forms.Padding(6, 2, 3, 2);
+            this.chkAlways.Size = new System.Drawing.Size(158, 21);
+            this.chkAlways.TabIndex = 3;
+            this.chkAlways.Text = "Always save view settings";
+            this.tip.SetToolTip(this.chkAlways, "If checked, Deja View will always attempt to save a document\'s view settings upon" +
+        " closing.");
+            this.chkAlways.UseVisualStyleBackColor = true;
+            this.chkAlways.CheckedChanged += new System.EventHandler(this.chkAlways_CheckedChanged);
             // 
             // OptionsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(303, 327);
+            this.ClientSize = new System.Drawing.Size(303, 350);
             this.ControlBox = false;
             this.Controls.Add(this.lblDocID);
             this.Controls.Add(this.groupBox2);
@@ -430,5 +447,6 @@ namespace Dejaview
         private System.Windows.Forms.Button btnApply;
         private System.Windows.Forms.Button btnSetDefaultView;
         private System.Windows.Forms.Label lblDocID;
+        private System.Windows.Forms.CheckBox chkAlways;
     }
 }
