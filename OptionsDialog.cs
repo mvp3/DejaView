@@ -16,6 +16,7 @@
  * limitations under the License. 
  */
 
+using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -66,6 +67,7 @@ namespace Dejaview
             chkAutoUpdate.Checked = DejaviewConfig.Instance.CheckForUpdates;
             chkPrompt.Checked = DejaviewConfig.Instance.Prompt;
             chkAlways.Checked = DejaviewConfig.Instance.AlwaysSave;
+            chkNewDoc.Checked = DejaviewConfig.Instance.ApplyToNewDocument;
 
             chkLocation.Checked = DejaviewConfig.Instance.RememberWindowLocation;
             chkNavigationPanel.Checked = DejaviewConfig.Instance.RememberNavigationPanel;
@@ -81,7 +83,7 @@ namespace Dejaview
 
             btnViewTags.Enabled = Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled;
 
-            Version lVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            System.Version lVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             lblVersion.Text = "Version: " + lVersion.ToString();
             lblDocID.Text = "Doc ID: " + DejaviewAddIn.GetUID(Globals.DejaviewAddIn.Application.ActiveDocument);
 
@@ -106,6 +108,7 @@ namespace Dejaview
             chkPrompt.Enabled = enabled;
             chkAlways.Enabled = enabled;
             chkAutoUpdate.Enabled = enabled;
+            chkNewDoc.Enabled = enabled;
 
             foreach (Control x in grpRemember.Controls)
                 x.Enabled = enabled;
@@ -257,6 +260,23 @@ namespace Dejaview
             if (bypassChange) return;
             DejaviewConfig.Instance.AlwaysSave = chkAlways.Checked;
             DejaviewConfig.Instance.Save();
+        }
+
+        private void chkNewDoc_CheckedChanged(object sender, EventArgs e)
+        {
+            if (bypassChange) return;
+            DejaviewConfig.Instance.ApplyToNewDocument = chkNewDoc.Checked;
+            DejaviewConfig.Instance.Save();
+        }
+
+        private void updateLayout()
+        {
+            flowLayoutPanel1.FlowDirection = FlowDirection.LeftToRight;
+        }
+
+        private void OptionsDialog_Resize(object sender, EventArgs e)
+        {
+            this.Text = this.Width.ToString();
         }
     }
 }

@@ -45,6 +45,10 @@ namespace Dejaview
         /// </summary>
         public bool AlwaysSave { get; set; }
         /// <summary>
+        /// Flag for applying the default view to New Documents.
+        /// </summary>
+        public bool ApplyToNewDocument { get; set; }
+        /// <summary>
         /// Flag for checking for updates.
         /// </summary>
         public bool CheckForUpdates { get; set; }
@@ -134,6 +138,7 @@ namespace Dejaview
             Prompt = false;
             AlwaysSave = false;
             CheckForUpdates = true;
+            ApplyToNewDocument = true;
             UpdateURL = "https://dejaview.lexem.cc/autoupdate";
 
             RememberWindowLocation = true;
@@ -170,6 +175,8 @@ namespace Dejaview
                             Prompt = bool.Parse(n.InnerText);
                         else if (n.Name == "AlwaysSave" && !string.IsNullOrEmpty(n.InnerText))
                             AlwaysSave = bool.Parse(n.InnerText);
+                        else if (n.Name == "ApplyToNewDocument" && !string.IsNullOrEmpty(n.InnerText))
+                            ApplyToNewDocument = bool.Parse(n.InnerText);
                         else if (n.Name == "CheckForUpdates" && !string.IsNullOrEmpty(n.InnerText))
                             CheckForUpdates = bool.Parse(n.InnerText);
                         else if (n.Name == "UpdateURL" && !string.IsNullOrEmpty(n.InnerText))
@@ -253,6 +260,7 @@ namespace Dejaview
                         w.WriteElementString("Enable", Enable.ToString());
                         w.WriteElementString("Prompt", Prompt.ToString());
                         w.WriteElementString("AlwaysSave", AlwaysSave.ToString());
+                        w.WriteElementString("ApplyToNewDocument", ApplyToNewDocument.ToString());
                         w.WriteElementString("CheckForUpdates", CheckForUpdates.ToString());
                         w.WriteElementString("UpdateURL", UpdateURL);
                         w.WriteElementString("RememberWindowLocation", RememberWindowLocation.ToString());

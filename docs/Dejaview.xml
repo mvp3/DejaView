@@ -60,6 +60,11 @@
             Flag for always saving.
             </summary>
         </member>
+        <member name="P:Dejaview.DejaviewConfig.ApplyToNewDocument">
+            <summary>
+            Flag for applying the default view to New Documents.
+            </summary>
+        </member>
         <member name="P:Dejaview.DejaviewConfig.CheckForUpdates">
             <summary>
             Flag for checking for updates.

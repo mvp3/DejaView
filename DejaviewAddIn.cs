@@ -148,10 +148,14 @@ namespace Dejaview
 
             // See if a default DejaviewSet is set.
             DejaviewSet s = DejaviewConfig.Instance.DefaultDejaviewSet;
-            if (s != null)
+            if (s != null && DejaviewConfig.Instance.ApplyToNewDocument)
             {
-                ShowDocumentView(doc, s);
-                Log("Set new document view to the default view.", doc);
+                DialogResult r = MessageBox.Show(null, "Do you want to apply the default view to this new document?", "Apply Default View?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (r == DialogResult.Yes)
+                {
+                    ShowDocumentView(doc, s);
+                    Log("Set new document view to the default view.", doc);
+                }
             }
             else
             {
@@ -218,10 +222,8 @@ namespace Dejaview
         {
             try
             {
-                int key = GetUID(Application.ActiveDocument);
-
                 // If the Active document has not had its view set by DJ
-                if (!views.Contains(key))
+                if (!IsLoaded(Application.ActiveDocument))
                 {
                     Log("Checking for Deja View settings...");
 
@@ -234,7 +236,7 @@ namespace Dejaview
                     else
                     {
                         Log("  Applying saved view.");
-                        ShowDocumentView(Application.ActiveDocument, s);
+                        //ShowDocumentView(Application.ActiveDocument, s);
                     }
                 }
             }
@@ -1066,6 +1068,7 @@ namespace Dejaview
         /// <returns>Unique identifier (hash code) representing the provided Document</returns>
         internal static int GetUID(Word.Document doc)
         {
+            if (doc == null) return 0;
             return doc.FullName.GetHashCode();
         }
 

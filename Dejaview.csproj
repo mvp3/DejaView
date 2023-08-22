@@ -33,7 +33,7 @@
     <PublishUrl>C:\OneDrive\www\dejaview.lexem.cc\download\</PublishUrl>
     <InstallUrl>https://dejaview.lexem.cc/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>1.0.0.31</ApplicationVersion>
+    <ApplicationVersion>1.0.2.35</ApplicationVersion>
     <AutoIncrementApplicationRevision>false</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>1</UpdateInterval>
@@ -356,6 +356,7 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>regedit</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
