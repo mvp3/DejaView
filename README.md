@@ -133,13 +133,13 @@ The **Dejaview.dll**, **Dejaview.dll.manifest**, and **Dejaview.vsto** files hav
 installation project built using the Microsoft Installer tool.
 
 #### Binary
-The latest MSI installation binary may be downloaded here: [https://dejaview.lexem.cc/latest](https://dejaview.lexem.cc/latest)
+The latest installation binary may be downloaded here: [https://dejaview.lexem.cc/latest](https://dejaview.lexem.cc/latest)
 
 #### Built With
-Visual Studio Community 2019
+Visual Studio Community 2022
 
 #### Tested On
-Microsoft Word for Microsoft Office 365 MSO (16.0.16026.20002) 64-bit
+Microsoft® Word for Microsoft 365 MSO (Version 2308 Build 16.0.16731.20052) 64-bit 
 
 ## Certificate Information
 Deja View is signed with a standard SHA256RSA certificate issued by
