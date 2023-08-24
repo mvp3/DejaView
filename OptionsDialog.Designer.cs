@@ -178,7 +178,7 @@ namespace Dejaview
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Location = new System.Drawing.Point(224, 386);
+            this.btnClose.Location = new System.Drawing.Point(224, 360);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 1;
@@ -296,7 +296,7 @@ namespace Dejaview
             // 
             this.lblVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblVersion.AutoSize = true;
-            this.lblVersion.Location = new System.Drawing.Point(3, 24);
+            this.lblVersion.Location = new System.Drawing.Point(12, 365);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(47, 13);
             this.lblVersion.TabIndex = 3;
@@ -417,7 +417,7 @@ namespace Dejaview
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(308, 380);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(308, 354);
             this.flowLayoutPanel1.TabIndex = 8;
             // 
             // tableLayoutPanel1
@@ -425,7 +425,6 @@ namespace Dejaview
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.Controls.Add(this.lblDocID, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.lblVersion, 0, 1);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 333);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
@@ -440,9 +439,10 @@ namespace Dejaview
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(310, 421);
+            this.ClientSize = new System.Drawing.Size(310, 395);
             this.ControlBox = false;
             this.Controls.Add(this.flowLayoutPanel1);
+            this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.btnClose);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -455,7 +455,6 @@ namespace Dejaview
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OptionsDialog_FormClosing);
             this.Load += new System.EventHandler(this.OptionsDialog_Load);
             this.DoubleClick += new System.EventHandler(this.OptionsDialog_DoubleClick);
-            this.Resize += new System.EventHandler(this.OptionsDialog_Resize);
             this.grpRemember.ResumeLayout(false);
             this.grpRemember.PerformLayout();
             this.grpSettings.ResumeLayout(false);
@@ -468,6 +467,7 @@ namespace Dejaview
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -499,7 +499,7 @@ namespace Dejaview
         private System.Windows.Forms.Label lblDocID;
         private System.Windows.Forms.CheckBox chkAlways;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.CheckBox chkNewDoc;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }

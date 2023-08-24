@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 
+using Microsoft.Office.Interop.Word;
 using Microsoft.Office.Tools.Ribbon;
-using System;
-using System.Diagnostics;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace Dejaview
 {
@@ -30,7 +30,7 @@ namespace Dejaview
     {
         private void DejaviewRibbon_Load(object sender, RibbonUIEventArgs e)
         {
-            Version lVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            System.Version lVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             btnUpdate.SuperTip = "Check the Deja View website for updates to this Add-in.\n\nDeja View version: " + lVersion.ToString();
         }
 
@@ -51,5 +51,23 @@ namespace Dejaview
             optionsDialog.ShowDialog();
         }
 
+        private void btnApplyDefault_Click(object sender, RibbonControlEventArgs e)
+        {
+            Document doc = Globals.DejaviewAddIn.Application.ActiveDocument;
+            DejaviewSet s = DejaviewConfig.Instance.DefaultDejaviewSet;
+            if (s != null)
+            {
+                DialogResult r = MessageBox.Show(null, "Do you want to apply the default view to the current document?", "Apply Default View?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (r == DialogResult.Yes)
+                {
+                    Globals.DejaviewAddIn.ShowDocumentView(doc, s);
+                    Globals.DejaviewAddIn.Log("Applied default view to current document.", doc);
+                }
+            }
+            else
+            {
+                Globals.DejaviewAddIn.Log("No default view is set.", doc);
+            }
+        }
     }
 }

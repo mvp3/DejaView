@@ -58,6 +58,7 @@ namespace Dejaview
             this.groupDejaview = this.Factory.CreateRibbonGroup();
             this.btnRemove = this.Factory.CreateRibbonButton();
             this.btnUpdate = this.Factory.CreateRibbonButton();
+            this.btnApplyDefault = this.Factory.CreateRibbonButton();
             this.btnSettings = this.Factory.CreateRibbonButton();
             this.tab1.SuspendLayout();
             this.groupDejaview.SuspendLayout();
@@ -74,6 +75,7 @@ namespace Dejaview
             // 
             this.groupDejaview.Items.Add(this.btnRemove);
             this.groupDejaview.Items.Add(this.btnUpdate);
+            this.groupDejaview.Items.Add(this.btnApplyDefault);
             this.groupDejaview.Items.Add(this.btnSettings);
             this.groupDejaview.Label = "Deja View";
             this.groupDejaview.Name = "groupDejaview";
@@ -98,7 +100,19 @@ namespace Dejaview
             this.btnUpdate.ScreenTip = "Check for Updates";
             this.btnUpdate.ShowImage = true;
             this.btnUpdate.SuperTip = "Check the Deja View website for updates to this Add-in.";
+            this.btnUpdate.Visible = false;
             this.btnUpdate.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnUpdate_Click);
+            // 
+            // btnApplyDefault
+            // 
+            this.btnApplyDefault.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btnApplyDefault.Label = "Apply Default View";
+            this.btnApplyDefault.Name = "btnApplyDefault";
+            this.btnApplyDefault.OfficeImageId = "ZoomFitToWindow";
+            this.btnApplyDefault.ScreenTip = "Open Options Dialog";
+            this.btnApplyDefault.ShowImage = true;
+            this.btnApplyDefault.SuperTip = "View Deja View options dialog.";
+            this.btnApplyDefault.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnApplyDefault_Click);
             // 
             // btnSettings
             // 
@@ -132,6 +146,7 @@ namespace Dejaview
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btnRemove;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btnSettings;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btnUpdate;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btnApplyDefault;
     }
 
     partial class ThisRibbonCollection

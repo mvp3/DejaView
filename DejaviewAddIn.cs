@@ -154,7 +154,7 @@ namespace Dejaview
                 if (r == DialogResult.Yes)
                 {
                     ShowDocumentView(doc, s);
-                    Log("Set new document view to the default view.", doc);
+                    Log("Applied default view to new document.", doc);
                 }
             }
             else

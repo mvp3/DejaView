@@ -25,20 +25,20 @@
     <OutputType>Library</OutputType>
     <NoStandardLibraries>false</NoStandardLibraries>
     <RootNamespace>Dejaview</RootNamespace>
-    <AssemblyName>Dejaview</AssemblyName>
+    <AssemblyName>DejaView</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <DefineConstants>VSTO40</DefineConstants>
     <IsWebBootstrapper>True</IsWebBootstrapper>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <PublishUrl>C:\OneDrive\www\dejaview.lexem.cc\download\</PublishUrl>
-    <InstallUrl>https://dejaview.lexem.cc/</InstallUrl>
+    <InstallUrl>https://dejaview.lexem.cc/download/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>1.0.2.35</ApplicationVersion>
-    <AutoIncrementApplicationRevision>false</AutoIncrementApplicationRevision>
+    <ApplicationVersion>1.0.2.39</ApplicationVersion>
+    <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>1</UpdateInterval>
-    <UpdateIntervalUnits>days</UpdateIntervalUnits>
-    <ProductName>Deja View</ProductName>
+    <UpdateIntervalUnits>weeks</UpdateIntervalUnits>
+    <ProductName>Deja View %28Microsoft Word Add-In%29</ProductName>
     <PublisherName>Lexem</PublisherName>
     <SupportUrl>https://dejaview.lexem.cc/</SupportUrl>
     <FriendlyName>Deja View</FriendlyName>
@@ -235,6 +235,8 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include=".editorconfig" />
+    <None Include="1420164201.pfx" />
+    <None Include="assembly-key.snk" />
     <None Include="CONTRIBUTING.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -321,11 +323,10 @@
     <DocumentationFile>docs\Dejaview.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>assembly-key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>dejaview.ico</ApplicationIcon>
@@ -340,7 +341,7 @@
   <!-- Prevent VSTO MS Office add-ins installation/registering during building of VSTO-projects on build machines. -->
   <Target Name="RegisterOfficeAddin" Condition="'$(VSTO_ProjectType)' == 'Application'">
     <Message Text="RegisterOfficeAddin target is redefined in $(MSBuildProjectName) project" Importance="high" />
-    <SetOffice2007AddInRegistration Url="$(AbsolutePathToTheDeploymentManifest)" AddInName="$(TargetName)" OfficeApplication="$(OfficeApplication)" FriendlyName="$(FriendlyName)" Description="$(OfficeApplicationDescription)" LoadBehavior="$(LoadBehavior)" Condition="'$(Disable_RegisterOfficeAddin)' != 'disable'" />
+    <SetOffice2007AddInRegistration Url="$(AbsolutePathToTheDeploymentManifest)" AddInName="$(TargetName)" OfficeApplication="$(OfficeApplication)" FriendlyName="$(FriendlyName)" Description="$(OfficeApplicationDescription)" LoadBehavior="$(LoadBehavior)" Condition="'disable' != 'disable'" />
     <Message Text="SetOffice2007AddInRegistration task is suppressed in $(MSBuildProjectName) project" Condition="'$(Disable_RegisterOfficeAddin)' == 'disable'" Importance="high" />
     <Message Text="as Disable_RegisterOfficeAddin parameter is $(Disable_RegisterOfficeAddin)" Condition="'$(Disable_RegisterOfficeAddin)' == 'disable'" Importance="high" />
   </Target>
@@ -358,5 +359,9 @@
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

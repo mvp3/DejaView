@@ -268,15 +268,5 @@ namespace Dejaview
             DejaviewConfig.Instance.ApplyToNewDocument = chkNewDoc.Checked;
             DejaviewConfig.Instance.Save();
         }
-
-        private void updateLayout()
-        {
-            flowLayoutPanel1.FlowDirection = FlowDirection.LeftToRight;
-        }
-
-        private void OptionsDialog_Resize(object sender, EventArgs e)
-        {
-            this.Text = this.Width.ToString();
-        }
     }
 }
