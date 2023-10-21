@@ -91,7 +91,7 @@ namespace Dejaview
             this.grpRemember.Controls.Add(this.chkRibbon);
             this.grpRemember.Controls.Add(this.chkNavigationPanel);
             this.grpRemember.Controls.Add(this.chkLocation);
-            this.grpRemember.Location = new System.Drawing.Point(3, 171);
+            this.grpRemember.Location = new System.Drawing.Point(3, 173);
             this.grpRemember.Name = "grpRemember";
             this.grpRemember.Size = new System.Drawing.Size(296, 100);
             this.grpRemember.TabIndex = 0;
@@ -178,7 +178,7 @@ namespace Dejaview
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Location = new System.Drawing.Point(224, 360);
+            this.btnClose.Location = new System.Drawing.Point(224, 270);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 1;
@@ -198,7 +198,7 @@ namespace Dejaview
             this.grpSettings.Location = new System.Drawing.Point(3, 3);
             this.grpSettings.Name = "grpSettings";
             this.grpSettings.Padding = new System.Windows.Forms.Padding(3, 3, 3, 0);
-            this.grpSettings.Size = new System.Drawing.Size(223, 162);
+            this.grpSettings.Size = new System.Drawing.Size(223, 164);
             this.grpSettings.TabIndex = 2;
             this.grpSettings.TabStop = false;
             this.grpSettings.Text = "Add-in Settings";
@@ -206,7 +206,7 @@ namespace Dejaview
             // chkNewDoc
             // 
             this.chkNewDoc.AutoSize = true;
-            this.chkNewDoc.Location = new System.Drawing.Point(6, 127);
+            this.chkNewDoc.Location = new System.Drawing.Point(6, 102);
             this.chkNewDoc.Name = "chkNewDoc";
             this.chkNewDoc.Padding = new System.Windows.Forms.Padding(6, 2, 3, 0);
             this.chkNewDoc.Size = new System.Drawing.Size(211, 19);
@@ -259,7 +259,7 @@ namespace Dejaview
             // chkAutoUpdate
             // 
             this.chkAutoUpdate.AutoSize = true;
-            this.chkAutoUpdate.Location = new System.Drawing.Point(6, 100);
+            this.chkAutoUpdate.Location = new System.Drawing.Point(6, 127);
             this.chkAutoUpdate.Name = "chkAutoUpdate";
             this.chkAutoUpdate.Padding = new System.Windows.Forms.Padding(6, 2, 3, 2);
             this.chkAutoUpdate.Size = new System.Drawing.Size(186, 21);
@@ -268,6 +268,7 @@ namespace Dejaview
             this.tip.SetToolTip(this.chkAutoUpdate, "Automatically check for updates on startup. Will not check more than once per day" +
         ".");
             this.chkAutoUpdate.UseVisualStyleBackColor = true;
+            this.chkAutoUpdate.Visible = false;
             this.chkAutoUpdate.CheckedChanged += new System.EventHandler(this.chkAutoUpdate_CheckedChanged);
             // 
             // groupBox1
@@ -275,13 +276,14 @@ namespace Dejaview
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.txtUpdateURL);
-            this.groupBox1.Location = new System.Drawing.Point(3, 277);
+            this.groupBox1.Location = new System.Drawing.Point(3, 279);
             this.groupBox1.MinimumSize = new System.Drawing.Size(280, 0);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(296, 50);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Update URL";
+            this.groupBox1.Visible = false;
             // 
             // txtUpdateURL
             // 
@@ -296,7 +298,7 @@ namespace Dejaview
             // 
             this.lblVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblVersion.AutoSize = true;
-            this.lblVersion.Location = new System.Drawing.Point(12, 365);
+            this.lblVersion.Location = new System.Drawing.Point(12, 275);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(47, 13);
             this.lblVersion.TabIndex = 3;
@@ -417,7 +419,7 @@ namespace Dejaview
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(308, 354);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(308, 264);
             this.flowLayoutPanel1.TabIndex = 8;
             // 
             // tableLayoutPanel1
@@ -425,7 +427,7 @@ namespace Dejaview
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.Controls.Add(this.lblDocID, 0, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 333);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 335);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -439,7 +441,7 @@ namespace Dejaview
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(310, 395);
+            this.ClientSize = new System.Drawing.Size(310, 305);
             this.ControlBox = false;
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.lblVersion);

@@ -18,6 +18,8 @@
 
 using Microsoft.Office.Interop.Word;
 using Microsoft.Office.Tools.Ribbon;
+using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -57,11 +59,11 @@ namespace Dejaview
             DejaviewSet s = DejaviewConfig.Instance.DefaultDejaviewSet;
             if (s != null)
             {
-                DialogResult r = MessageBox.Show(null, "Do you want to apply the default view to the current document?", "Apply Default View?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (r == DialogResult.Yes)
+                DialogResult dr = MessageBox.Show(null, "Do you want to apply the default view to this document?", "Apply Default View?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dr == DialogResult.Yes)
                 {
                     Globals.DejaviewAddIn.ShowDocumentView(doc, s);
-                    Globals.DejaviewAddIn.Log("Applied default view to current document.", doc);
+                    Globals.DejaviewAddIn.Log("Set document view to the default view.", doc);
                 }
             }
             else

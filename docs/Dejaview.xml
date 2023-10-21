@@ -45,6 +45,16 @@
             Custom configuration class used for persistent memory of Add-in settings.
             </summary>
         </member>
+        <member name="F:Dejaview.DejaviewConfig._instance">
+            <summary>
+            A private member for retaining the global instance of this class.
+            </summary>
+        </member>
+        <member name="F:Dejaview.DejaviewConfig._defaultSet">
+            <summary>
+            A private member for retainig the default DejaView Set.
+            </summary>
+        </member>
         <member name="P:Dejaview.DejaviewConfig.Enable">
             <summary>
             Flag for enabling Deja View.
@@ -771,6 +781,12 @@
             </summary>
             <param name="djvSet">DejaviewSet object to link to the ActiveDocument</param>
             <param name="doc">MS Word Document to apply this DejaviewSet</param>
+        </member>
+        <member name="M:Dejaview.DejaviewAddIn.GetDefaultDejaviewSet">
+            <summary>
+            This method creates a new DejaviewSet object based on the current display.
+            </summary>
+            <returns>DejaviewSet object containing the default view parameters</returns>
         </member>
         <member name="M:Dejaview.DejaviewAddIn.GetDejaviewSetFromDisplay">
             <summary>

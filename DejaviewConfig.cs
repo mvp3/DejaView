@@ -30,7 +30,15 @@ namespace Dejaview
     {
         private static readonly string configFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dejaview.config");
 
+        /// <summary>
+        /// A private member for retaining the global instance of this class.
+        /// </summary>
         private static DejaviewConfig _instance = null;
+
+        /// <summary>
+        /// A private member for retainig the default DejaView Set.
+        /// </summary>
+        private DejaviewSet _defaultSet = null;
 
         /// <summary>
         /// Flag for enabling Deja View.
@@ -92,7 +100,10 @@ namespace Dejaview
         /// DejaviewSet object representing a user-defined default view 
         /// for documents. Optional.
         /// </summary>
-        public DejaviewSet DefaultDejaviewSet { get; set; }
+        public DejaviewSet DefaultDejaviewSet {
+            get { return _defaultSet ?? Globals.DejaviewAddIn.GetDefaultDejaviewSet(); }
+            set { _defaultSet = value; }
+        }
 
         /// <summary>
         /// Standard method for getting an active instance object of 
@@ -147,6 +158,7 @@ namespace Dejaview
             RememberZoom = true;
             RememberRulers = true;
             RememberRibbon = true;
+            DefaultDejaviewSet = Globals.DejaviewAddIn.GetDefaultDejaviewSet();
 
             Debug.WriteLine("DejaviewConfig::SetDefaults() -> done");
         }

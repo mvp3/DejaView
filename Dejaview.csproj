@@ -33,11 +33,11 @@
     <PublishUrl>C:\OneDrive\www\dejaview.lexem.cc\download\</PublishUrl>
     <InstallUrl>https://dejaview.lexem.cc/download/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>1.0.2.39</ApplicationVersion>
+    <ApplicationVersion>1.0.3.48</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>1</UpdateInterval>
-    <UpdateIntervalUnits>weeks</UpdateIntervalUnits>
+    <UpdateIntervalUnits>days</UpdateIntervalUnits>
     <ProductName>Deja View %28Microsoft Word Add-In%29</ProductName>
     <PublisherName>Lexem</PublisherName>
     <SupportUrl>https://dejaview.lexem.cc/</SupportUrl>
@@ -279,7 +279,8 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>1420164201.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>A32E608DD48204EE85C766CA19D55222D483D967</ManifestCertificateThumbprint>
@@ -321,6 +322,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <LangVersion>7.3</LangVersion>
     <DocumentationFile>docs\Dejaview.xml</DocumentationFile>
+    <RegisterForComInterop>false</RegisterForComInterop>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>

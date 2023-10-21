@@ -196,7 +196,7 @@ namespace Dejaview
                 if (DejaviewConfig.Instance.AlwaysSave)
                 {
                     // Check to see if the view is different from its last save
-                    DejaviewSet s = GetDejaviewSet();
+                    DejaviewSet s = GetDejaviewSet(doc);
                     DejaviewSet d = GetDejaviewSetFromDisplay();
                     if (!d.Equals(s))
                     {
@@ -240,6 +240,10 @@ namespace Dejaview
                     }
                 }
             }
+            catch (System.Runtime.InteropServices.COMException)
+            {
+                // Ignore: startup of MS Word
+            }
             catch (Exception ex)
             {
                 Log("Could not process document change: " + ex.Message);
@@ -265,17 +269,17 @@ namespace Dejaview
             catch (DejaViewException ex)
             {
                 Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
-                Log(ex.Message, doc);
+                Log(ex.StackTrace, doc);
             }
             catch (NullReferenceException ex)
             {
                 Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
-                Log("Error: " + ex.Message, doc);
+                Log("*ERROR: " + ex.StackTrace, doc);
             }
             catch (IndexOutOfRangeException ex)
             {
                 Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
-                Log("Index error: " + ex.Message, doc);
+                Log("*INDEX ERROR: " + ex.Message, doc);
             }
             catch (Exception ex)
             {
@@ -472,6 +476,7 @@ namespace Dejaview
             try
             {
                 xml = doc.CustomXMLParts["Dejaview"];
+                Log("Obtained CustomXMLParts");
             }
             catch (Exception)
             {
@@ -490,7 +495,10 @@ namespace Dejaview
             Debug.WriteLine(root.OuterXml);
             Debug.WriteLine("**********************************");
 
-            DejaviewSet djvSet = GetDejaviewSet();
+            DejaviewSet djvSet = GetDejaviewSet(doc);
+            Debug.WriteLine("**********************************");
+            Debug.WriteLine("djvSet: " + djvSet.ToString());
+            Debug.WriteLine("**********************************");
 
             var categories = root.ChildNodes;
             foreach (XmlNode x in categories)
@@ -673,6 +681,37 @@ namespace Dejaview
             int id = GetUID(doc);
             if (djvSets.Contains(id)) djvSets.Remove(id);
             djvSets.Add(id, djvSet);
+        }
+
+        /// <summary>
+        /// This method creates a new DejaviewSet object based on the current display.
+        /// </summary>
+        /// <returns>DejaviewSet object containing the default view parameters</returns>
+        internal DejaviewSet GetDefaultDejaviewSet()
+        {
+            DejaviewSet djvSet = new DejaviewSet();
+            djvSet.WindowState = (int)Word.WdWindowState.wdWindowStateNormal;
+
+            int w = Screen.PrimaryScreen.WorkingArea.Width;
+            int h = Screen.PrimaryScreen.WorkingArea.Height;
+            int ww = Math.Max((int)(w * .3), 600);
+            int wh = (int)(h * .9);
+
+            djvSet.WindowTop = (h - wh) / 2;
+            djvSet.WindowLeft = (w - ww) / 2;
+            djvSet.WindowWidth = w;
+            djvSet.WindowHeight = h;
+            djvSet.WindowViewType = (int)Word.WdViewType.wdNormalView;
+            djvSet.DraftView = true;
+
+            djvSet.WindowZoom = 100;
+            djvSet.DisplayRulers = true;
+
+            djvSet.ShowNavigationPanel = true;
+            djvSet.NavigationPanelWidth = (int)(ww * .2);
+            djvSet.RibbonHeight = 150;
+
+            return djvSet;
         }
 
         /// <summary>
@@ -882,12 +921,12 @@ namespace Dejaview
             catch (DejaViewException ex)
             {
                 Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
-                Log(ex.Message);
+                Log(ex.StackTrace);
             }
             catch (NullReferenceException ex)
             {
                 Globals.Ribbons.DejaviewRibbon.btnRemove.Enabled = false;
-                Log("Error: " + ex.Message);
+                Log("Error: " + ex.StackTrace);
             }
             catch (IndexOutOfRangeException ex)
             {
@@ -1068,7 +1107,7 @@ namespace Dejaview
         /// <returns>Unique identifier (hash code) representing the provided Document</returns>
         internal static int GetUID(Word.Document doc)
         {
-            if (doc == null) return 0;
+            Logger.Instance.Add("GetUID(" + doc.Name + ")");
             return doc.FullName.GetHashCode();
         }
 
