@@ -86,7 +86,11 @@ namespace Dejaview
             //new InfoForm("DejaView started " + DateTime.Now, Application.ActiveDocument.Name);
             try
             {
+                // Do not load if disabled in user setting
                 if (!DejaviewConfig.Instance.Enable) return;
+
+                // Do not load if document is loaded invisibly by an application
+                if (!Application.Visible) return;
 
                 // Fire the DocumentOpen event for the first time
                 DejaviewAddIn_DocumentOpen(Application.ActiveDocument);
