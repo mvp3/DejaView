@@ -35,7 +35,7 @@ This button will show the Deja View options dialog.
 
 #### Options Dialog
 
-![Options Dialog](https://dejaview.lexem.cc/images/options_dialog_1.0.2.png)
+![Options Dialog](https://dejaview.lexem.cc/images/options_dialog_1.0.3.png)
 
 ##### Enable Deja View
 This option allows a quick and easy means to temporarily enable / disable the Deja View add-in. 
