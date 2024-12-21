@@ -33,10 +33,10 @@
     <PublishUrl>C:\OneDrive\www\dejaview.lexem.cc\download\</PublishUrl>
     <InstallUrl>https://dejaview.lexem.cc/download/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>1.0.3.48</ApplicationVersion>
+    <ApplicationVersion>1.0.3.51</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
-    <UpdateEnabled>true</UpdateEnabled>
-    <UpdateInterval>1</UpdateInterval>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateInterval>0</UpdateInterval>
     <UpdateIntervalUnits>days</UpdateIntervalUnits>
     <ProductName>Deja View %28Microsoft Word Add-In%29</ProductName>
     <PublisherName>Lexem</PublisherName>
@@ -238,6 +238,7 @@
     <None Include="1420164201.pfx" />
     <None Include="assembly-key.snk" />
     <None Include="CONTRIBUTING.md" />
+    <None Include="Dejaview_1_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -279,11 +280,10 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>
-    </ManifestKeyFile>
+    <ManifestKeyFile>Dejaview_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>A32E608DD48204EE85C766CA19D55222D483D967</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>F19A049077F48D5C39991DB15BE8F63ADDC15F72</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestTimestampUrl>http://timestamp.digicert.com</ManifestTimestampUrl>
@@ -325,7 +325,7 @@
     <RegisterForComInterop>false</RegisterForComInterop>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>assembly-key.snk</AssemblyOriginatorKeyFile>
@@ -341,12 +341,14 @@
   <!-- Include additional build rules for an Office application add-in. -->
   <Import Project="$(VSToolsPath)\OfficeTools\Microsoft.VisualStudio.Tools.Office.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- Prevent VSTO MS Office add-ins installation/registering during building of VSTO-projects on build machines. -->
+  <!--
   <Target Name="RegisterOfficeAddin" Condition="'$(VSTO_ProjectType)' == 'Application'">
     <Message Text="RegisterOfficeAddin target is redefined in $(MSBuildProjectName) project" Importance="high" />
     <SetOffice2007AddInRegistration Url="$(AbsolutePathToTheDeploymentManifest)" AddInName="$(TargetName)" OfficeApplication="$(OfficeApplication)" FriendlyName="$(FriendlyName)" Description="$(OfficeApplicationDescription)" LoadBehavior="$(LoadBehavior)" Condition="'disable' != 'disable'" />
     <Message Text="SetOffice2007AddInRegistration task is suppressed in $(MSBuildProjectName) project" Condition="'$(Disable_RegisterOfficeAddin)' == 'disable'" Importance="high" />
     <Message Text="as Disable_RegisterOfficeAddin parameter is $(Disable_RegisterOfficeAddin)" Condition="'$(Disable_RegisterOfficeAddin)' == 'disable'" Importance="high" />
   </Target>
+  -->
   <!-- This section defines VSTO properties that describe the host-changeable project properties. -->
   <ProjectExtensions>
     <VisualStudio>

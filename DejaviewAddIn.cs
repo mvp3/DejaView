@@ -31,6 +31,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Collections;
+using System.Threading.Tasks;
 
 namespace Dejaview
 {
@@ -93,8 +94,8 @@ namespace Dejaview
                 if (!Application.Visible) return;
 
                 // Fire the DocumentOpen event for the first time
-                DejaviewAddIn_DocumentOpen(Application.ActiveDocument);
-                this.Log("DejaView loaded (" + Application.ActiveDocument.Name + "): " + DateTime.Now);
+                //DejaviewAddIn_DocumentOpen(Application.ActiveDocument);
+                //this.Log("DejaView loaded (" + Application.ActiveDocument.Name + "): " + DateTime.Now);
             }
             catch (Exception ex)
             {
@@ -180,11 +181,11 @@ namespace Dejaview
         {
             if (!DejaviewConfig.Instance.Enable) return;
             int id = GetUID(doc);
-            if (views.Contains(id))
+            if (views.Contains(doc))
             {
                 // Clear this doc's title from the active lists.
-                Log("Removing (" + id + ") from views list.", doc);
-                views.Remove(id);
+                Log("Removing (" + doc + ") from views list.", doc);
+                views.Remove(doc);
             }
             if (saves.Contains(id))
             {
@@ -226,10 +227,10 @@ namespace Dejaview
         {
             try
             {
-                // If the Active document has not had its view set by DJ
+                // If the active document has not had its view set by DJ
                 if (!IsLoaded(Application.ActiveDocument))
                 {
-                    Log("Checking for Deja View settings...");
+                    Log("Document changed: Checking for Deja View settings for " + Application.ActiveDocument.Name + "...");
 
                     DejaviewSet s = GetDejaviewSet();
                     DejaviewSet d = GetDejaviewSetFromDisplay();
@@ -260,10 +261,15 @@ namespace Dejaview
         /// <param name="doc">Active Word document that opened.</param>
         internal void DejaviewAddIn_DocumentOpen(Word.Document doc)
         {
+            // If DJ is not enabled, abort.
             if (!DejaviewConfig.Instance.Enable) return;
 
+            // Prevent this method from running more than once per document.
+            // This significantly improves startup and document open performance.
+            if (IsLoaded(doc)) return;
+
             // Create first log event as the title of the ActiveDocument window.
-            Log(doc.ActiveWindow.Caption, doc);
+            Log("Opening: " + doc.ActiveWindow.Caption, doc);
 
             try
             {
@@ -463,8 +469,8 @@ namespace Dejaview
         internal bool IsLoaded(Word.Document doc)
         {
             if (doc == null) return false;
-            int id = GetUID(doc);
-            return (views.Contains(id));
+            //int id = GetUID(doc);
+            return (views.Contains(doc));
         }
 
         /// <summary>
@@ -920,7 +926,7 @@ namespace Dejaview
 
                 SetButtonTip();
 
-                views.Add(GetUID(doc));
+                views.Add(doc);
             }
             catch (DejaViewException ex)
             {
@@ -1041,11 +1047,8 @@ namespace Dejaview
             if (ds.WindowWidth < 100) ds.WindowWidth = (int)(workingArea.Width - Math.Round(workingArea.Width * 0.3));
             if (ds.WindowHeight < 100) ds.WindowHeight = (int)(workingArea.Height - Math.Round(workingArea.Height * 0.2));
 
-            app.Width = ds.WindowWidth;
-            logger.Add("Window width restored (" + ds.WindowWidth + ")");
-
-            app.Height = ds.WindowHeight;
-            logger.Add("Window height restored (" + ds.WindowHeight + ")");
+            app.Resize(ds.WindowWidth, ds.WindowHeight);
+            logger.Add("Window resized (" + ds.WindowWidth + ", " + ds.WindowHeight + ")");
 
             // If 'Window Location' option is not selected then do not set window location
             if (!DejaviewConfig.Instance.RememberWindowLocation) return;
@@ -1057,10 +1060,10 @@ namespace Dejaview
             if (windowLocation != null)
             {
                 Debug.WriteLine("     >> setting location");
-                app.Left = windowLocation.WindowLeft;
-                app.Top = windowLocation.WindowTop;
+                app.Move(windowLocation.WindowLeft, windowLocation.WindowTop);
                 logger.Add("Window location restored (" + app.Left + ", " + app.Top + ").");
             }
+            // Otherwise let Word display as normal.
             else
             {
                 Debug.WriteLine("     >> constructing new location");
@@ -1080,13 +1083,32 @@ namespace Dejaview
                         float dpi = graphics.DpiX;
                         dpiAdjust = res / dpi;
                     }
-                    app.Left = (int)((workingArea.Width / 2) * dpiAdjust - (app.Width / 2));
-                    app.Top = (int)((workingArea.Height / 2) * dpiAdjust - (app.Height / 2));
+                    var l = (int)((workingArea.Width / 2) * dpiAdjust - (app.Width / 2));
+                    var t = (int)((workingArea.Height / 2) * dpiAdjust - (app.Height / 2));
+                    app.Move(l, t);
 
                     logger.Add("Window location reset (was not viewable).");
                 }
-                // Otherwise let Word display as normal.
             }
+
+            // Work around for MS Word bug (window will resize but content remains misaligned).
+            try
+            {
+                var windowResizeFix = Task.Run(async delegate
+                {
+                    await Task.Delay(500);
+                    app.Resize(ds.WindowWidth + 1, ds.WindowHeight + 1);
+                    await Task.Delay(500);
+                    app.Resize(ds.WindowWidth - 1, ds.WindowHeight - 1);
+                    logger.Add("MS Word bug work around completed.");
+                });
+                windowResizeFix.Start();
+            }
+            catch 
+            { 
+                // Ignore
+            }
+
         }
 
         /// <summary>
@@ -1111,7 +1133,7 @@ namespace Dejaview
         /// <returns>Unique identifier (hash code) representing the provided Document</returns>
         internal static int GetUID(Word.Document doc)
         {
-            Logger.Instance.Add("GetUID(" + doc.Name + ")");
+            //Logger.Instance.Add("GetUID(" + doc.Name + ")");
             return doc.FullName.GetHashCode();
         }
 
